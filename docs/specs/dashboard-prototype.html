@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teachable Dashboard</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; color: #1a1a1a; display: flex; height: 100vh; overflow: hidden; }
+
+  /* Sidebar */
+  .sidebar {
+    width: 196px; background: #fff; border-right: 1px solid #e8e8e8;
+    display: flex; flex-direction: column; flex-shrink: 0; overflow-y: auto;
+  }
+  .sidebar-logo { padding: 18px 16px 12px; font-size: 18px; font-weight: 700; color: #1a1a1a; }
+  .school-selector {
+    margin: 0 10px 8px; padding: 8px 10px; border-radius: 8px; border: 1px solid #e8e8e8;
+    display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px;
+  }
+  .school-avatar { width: 26px; height: 26px; border-radius: 6px; background: #7c5cbf; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  .school-name { font-size: 13px; font-weight: 500; flex: 1; }
+  .school-selector .chevron { color: #999; font-size: 11px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+    font-size: 13.5px; color: #444; cursor: pointer; border-radius: 0; text-decoration: none;
+    position: relative;
+  }
+  .nav-item:hover { background: #f5f5f5; }
+  .nav-item.active { background: #d4f53c; color: #1a1a1a; font-weight: 600; border-radius: 6px; margin: 0 6px; padding: 8px 10px; }
+  .nav-icon { font-size: 15px; width: 18px; text-align: center; }
+  .nav-badge { margin-left: auto; background: #1a1a1a; color: #fff; border-radius: 10px; font-size: 10px; font-weight: 600; padding: 1px 6px; }
+  .nav-section-label { font-size: 10px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.08em; padding: 14px 14px 4px; }
+  .sidebar-bottom { margin-top: auto; padding: 12px 14px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #e8e8e8; }
+  .user-avatar { width: 30px; height: 30px; border-radius: 50%; background: #1a1a1a; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
+  .user-name { font-size: 13px; font-weight: 500; }
+  .user-role { font-size: 11px; color: #888; }
+
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* Topbar */
+  .topbar { background: #fff; border-bottom: 1px solid #e8e8e8; padding: 10px 24px; display: flex; align-items: center; gap: 12px; }
+  .search-bar { flex: 1; max-width: 420px; display: flex; align-items: center; gap: 8px; background: #f5f5f5; border: 1px solid #e8e8e8; border-radius: 8px; padding: 7px 12px; font-size: 13px; color: #999; cursor: text; }
+  .search-kbd { margin-left: auto; background: #e8e8e8; border-radius: 4px; font-size: 11px; padding: 1px 5px; color: #666; }
+  .topbar-actions { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+  .notif-btn { position: relative; background: none; border: none; cursor: pointer; font-size: 18px; color: #444; }
+  .notif-dot { position: absolute; top: 0; right: 0; width: 8px; height: 8px; background: #ff4444; border-radius: 50%; border: 2px solid #fff; }
+  .user-avatar-top { width: 32px; height: 32px; border-radius: 50%; background: #1a1a1a; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; cursor: pointer; }
+
+  /* Content */
+  .content { flex: 1; display: flex; overflow: hidden; }
+  .content-main { flex: 1; overflow-y: auto; padding: 28px 28px 28px; }
+  .content-sidebar { width: 220px; background: #fff; border-left: 1px solid #e8e8e8; overflow-y: auto; flex-shrink: 0; }
+
+  /* Dashboard header */
+  .dash-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+  .dash-title h1 { font-size: 26px; font-weight: 700; }
+  .dash-title p { font-size: 13.5px; color: #666; margin-top: 2px; }
+  .dash-controls { display: flex; align-items: center; gap: 10px; }
+  .time-tabs { display: flex; border: 1px solid #e8e8e8; border-radius: 8px; overflow: hidden; background: #fff; }
+  .time-tab { padding: 6px 14px; font-size: 12.5px; font-weight: 500; color: #666; cursor: pointer; border: none; background: none; }
+  .time-tab.active { background: #1a1a1a; color: #fff; }
+  .time-tab:hover:not(.active) { background: #f5f5f5; }
+  .btn-new { background: #d4f53c; color: #1a1a1a; border: none; border-radius: 8px; padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .btn-new:hover { background: #c5e82e; }
+
+  /* Stat cards */
+  .stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+  .stat-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 16px 18px; }
+  .stat-label { font-size: 10px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; }
+  .stat-value { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .stat-delta { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 600; margin-left: 8px; }
+  .stat-delta.up { color: #22a06b; }
+  .stat-delta.down { color: #e53e3e; }
+
+  /* Chart card */
+  .chart-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+  .chart-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+  .chart-title { font-size: 15px; font-weight: 600; }
+  .chart-subtitle { font-size: 12px; color: #888; margin-top: 2px; }
+  .chart-stats { display: flex; gap: 28px; text-align: right; }
+  .chart-stat-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 2px; }
+  .chart-stat-value { font-size: 15px; font-weight: 700; }
+  .chart-stat-value.accent { color: #22a06b; }
+  .chart-area { position: relative; height: 180px; }
+  svg.line-chart { width: 100%; height: 100%; }
+
+  /* Bottom grid */
+  .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .card { background: #fff; border: 1px solid #e8e8e8; border-radius: 10px; padding: 20px; }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .card-title { font-size: 14px; font-weight: 600; }
+  .card-link { font-size: 12.5px; color: #666; text-decoration: none; }
+  .card-link:hover { color: #1a1a1a; }
+  .attention-label { font-size: 12px; font-weight: 600; color: #e53e3e; }
+
+  /* Bar chart */
+  .bar-chart { display: flex; align-items: flex-end; gap: 14px; height: 100px; }
+  .bar-group { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .bar { width: 100%; border-radius: 4px 4px 0 0; transition: opacity 0.2s; cursor: pointer; }
+  .bar:hover { opacity: 0.8; }
+  .bar.normal { background: #1a1a1a; }
+  .bar.attention { background: #e53e3e; }
+  .bar-pct { font-size: 10px; font-weight: 600; color: #444; }
+  .bar-label { font-size: 10px; color: #888; }
+
+  /* Products table */
+  .products-table { width: 100%; border-collapse: collapse; }
+  .products-table th { font-size: 10px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.07em; padding: 0 0 10px; text-align: left; border-bottom: 1px solid #e8e8e8; }
+  .products-table th:last-child, .products-table td:last-child { text-align: right; }
+  .products-table td { padding: 11px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; vertical-align: top; }
+  .product-name { font-weight: 600; font-size: 13px; }
+  .product-type { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+  .product-revenue { font-weight: 700; font-size: 13.5px; }
+
+  /* Where they come from */
+  .source-chart { display: flex; align-items: center; gap: 20px; }
+  .donut-container { position: relative; width: 90px; height: 90px; flex-shrink: 0; }
+  .source-list { flex: 1; }
+  .source-item { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; font-size: 12.5px; }
+  .source-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .source-pct { margin-left: auto; font-weight: 600; font-size: 12px; }
+
+  /* Enrollments chart */
+  .enroll-header { font-size: 13px; font-weight: 500; margin-bottom: 12px; }
+  .enroll-stat { font-size: 12px; color: #666; }
+  .mini-bar-chart { display: flex; align-items: flex-end; gap: 4px; height: 60px; }
+  .mini-bar { flex: 1; border-radius: 2px 2px 0 0; }
+  .mini-bar.primary { background: #1a1a1a; }
+  .mini-bar.secondary { background: #e8e8e8; }
+
+  /* Right sidebar — needs attention */
+  .attention-panel { padding: 16px; }
+  .attention-header { font-size: 10px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+  .attention-badge { background: #e53e3e; color: #fff; border-radius: 10px; font-size: 10px; font-weight: 700; padding: 1px 6px; }
+  .attention-card { border: 1px solid #e8e8e8; border-radius: 8px; padding: 12px; margin-bottom: 10px; }
+  .attention-card-header { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+  .attention-icon { font-size: 14px; margin-top: 1px; }
+  .attention-title { font-size: 13px; font-weight: 600; line-height: 1.3; }
+  .attention-meta { font-size: 12px; color: #666; margin-bottom: 10px; }
+  .attention-btn { border: 1px solid #e8e8e8; background: #fff; border-radius: 6px; padding: 5px 12px; font-size: 12px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 4px; width: fit-content; }
+  .attention-btn:hover { background: #f5f5f5; }
+
+  /* Live activity */
+  .live-header { font-size: 10px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.08em; display: flex; align-items: center; justify-content: space-between; margin: 4px 0 10px; padding: 0 16px; }
+  .live-dot { display: flex; align-items: center; gap: 4px; color: #22a06b; font-size: 11px; font-weight: 600; }
+  .live-dot::before { content: ''; width: 6px; height: 6px; background: #22a06b; border-radius: 50%; display: inline-block; }
+  .activity-item { display: flex; align-items: center; gap: 8px; padding: 6px 16px; font-size: 12px; border-bottom: 1px solid #f5f5f5; }
+  .activity-time { color: #888; width: 32px; flex-shrink: 0; }
+  .activity-desc { flex: 1; color: #444; }
+  .activity-desc strong { color: #1a1a1a; }
+  .activity-amount { font-weight: 700; font-size: 12px; }
+  .activity-amount.positive { color: #22a06b; }
+  .activity-amount.negative { color: #e53e3e; }
+  .activity-amount.alert { color: #e53e3e; }
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-logo">teachable</div>
+  <div class="school-selector">
+    <div class="school-avatar">SA</div>
+    <span class="school-name">Sarah's School</span>
+    <span class="chevron">⌄</span>
+  </div>
+
+  <a class="nav-item active"><span class="nav-icon">⊞</span> Home</a>
+  <a class="nav-item"><span class="nav-icon">📦</span> Products</a>
+  <a class="nav-item"><span class="nav-icon">👥</span> Students</a>
+  <a class="nav-item"><span class="nav-icon">💳</span> Sales</a>
+  <a class="nav-item"><span class="nav-icon">🎙</span> Coaching</a>
+  <a class="nav-item"><span class="nav-icon">✉️</span> Emails <span class="nav-badge">3</span></a>
+  <a class="nav-item"><span class="nav-icon">🌐</span> Site &amp; pages</a>
+
+  <div class="nav-section-label">Grow</div>
+  <a class="nav-item"><span class="nav-icon">📈</span> Analytics</a>
+  <a class="nav-item"><span class="nav-icon">⚡</span> Automations</a>
+  <a class="nav-item"><span class="nav-icon">✦</span> AI tools</a>
+
+  <div class="sidebar-bottom">
+    <div class="user-avatar">SS</div>
+    <div>
+      <div class="user-name">Sarah S.</div>
+      <div class="user-role">Owner</div>
+    </div>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="search-bar">
+      <span>🔍</span> Search…<span class="search-kbd">⌘K</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="notif-btn">🔔<span class="notif-dot"></span></button>
+      <div class="user-avatar-top">SS</div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="content-main">
+
+      <!-- Header -->
+      <div class="dash-header">
+        <div class="dash-title">
+          <h1>Dashboard</h1>
+          <p>Good morning, Sarah · Here's what to focus on today.</p>
+        </div>
+        <div class="dash-controls">
+          <div class="time-tabs">
+            <button class="time-tab">7D</button>
+            <button class="time-tab">30D</button>
+            <button class="time-tab active">90D</button>
+            <button class="time-tab">YTD</button>
+          </div>
+          <button class="btn-new">＋ New product</button>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-label">Revenue · 90D</div>
+          <div><span class="stat-value">$14,280</span><span class="stat-delta up">▲ +18.4%</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">New Students</div>
+          <div><span class="stat-value">412</span><span class="stat-delta up">▲ +31</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Conv. Rate</div>
+          <div><span class="stat-value">3.8%</span><span class="stat-delta up">▲ +0.6 pt</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Completion</div>
+          <div><span class="stat-value">78%</span><span class="stat-delta down">▼ −2.1 pt</span></div>
+        </div>
+      </div>
+
+      <!-- Revenue chart -->
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Revenue · weekly</div>
+            <div class="chart-subtitle">Last 12 weeks</div>
+          </div>
+          <div class="chart-stats">
+            <div><div class="chart-stat-label">Gross</div><div class="chart-stat-value">$14,280</div></div>
+            <div><div class="chart-stat-label">Net</div><div class="chart-stat-value">$12,138</div></div>
+            <div><div class="chart-stat-label">Forecast · EOM</div><div class="chart-stat-value">$18,940</div></div>
+            <div><div class="chart-stat-label">Delta</div><div class="chart-stat-value accent">+18.4%</div></div>
+          </div>
+        </div>
+        <div class="chart-area">
+          <svg class="line-chart" viewBox="0 0 800 180" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#d4f53c" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#d4f53c" stop-opacity="0.05"/>
+              </linearGradient>
+            </defs>
+            <!-- Y axis labels -->
+            <text x="2" y="18" font-size="11" fill="#aaa">$3,500</text>
+            <text x="2" y="62" font-size="11" fill="#aaa">$2,625</text>
+            <text x="2" y="106" font-size="11" fill="#aaa">$1,750</text>
+            <text x="2" y="150" font-size="11" fill="#aaa">$875</text>
+            <text x="2" y="175" font-size="11" fill="#aaa">$0</text>
+            <!-- Grid lines -->
+            <line x1="52" y1="15" x2="800" y2="15" stroke="#f0f0f0" stroke-width="1"/>
+            <line x1="52" y1="58" x2="800" y2="58" stroke="#f0f0f0" stroke-width="1"/>
+            <line x1="52" y1="101" x2="800" y2="101" stroke="#f0f0f0" stroke-width="1"/>
+            <line x1="52" y1="144" x2="800" y2="144" stroke="#f0f0f0" stroke-width="1"/>
+            <line x1="52" y1="170" x2="800" y2="170" stroke="#f0f0f0" stroke-width="1"/>
+            <!-- Area fill -->
+            <path d="M52,148 C110,145 160,140 220,132 C280,124 330,118 390,108 C450,98 500,86 560,72 C620,58 670,42 730,28 C760,21 780,16 800,12 L800,170 L52,170 Z" fill="url(#areaGrad)"/>
+            <!-- Line -->
+            <path d="M52,148 C110,145 160,140 220,132 C280,124 330,118 390,108 C450,98 500,86 560,72 C620,58 670,42 730,28 C760,21 780,16 800,12" fill="none" stroke="#1a1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- End dot -->
+            <circle cx="800" cy="12" r="5" fill="#d4f53c" stroke="#1a1a1a" stroke-width="2"/>
+            <!-- X labels -->
+            <text x="52" y="180" font-size="10" fill="#aaa" text-anchor="middle">W1</text>
+            <text x="118" y="180" font-size="10" fill="#aaa" text-anchor="middle">W3</text>
+            <text x="250" y="180" font-size="10" fill="#aaa" text-anchor="middle">W5</text>
+            <text x="382" y="180" font-size="10" fill="#aaa" text-anchor="middle">W7</text>
+            <text x="514" y="180" font-size="10" fill="#aaa" text-anchor="middle">W9</text>
+            <text x="646" y="180" font-size="10" fill="#aaa" text-anchor="middle">W11</text>
+            <text x="790" y="180" font-size="10" fill="#aaa" text-anchor="middle">W12</text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Bottom grid -->
+      <div class="bottom-grid">
+        <!-- Completion by module -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Completion · by module</div>
+            <div class="attention-label">M3 needs attention</div>
+          </div>
+          <div class="bar-chart">
+            <div class="bar-group">
+              <span class="bar-pct">93%</span>
+              <div class="bar normal" style="height:93px"></div>
+              <span class="bar-label">M1</span>
+              <span class="bar-label" style="color:#aaa;font-size:9px">Intro</span>
+            </div>
+            <div class="bar-group">
+              <span class="bar-pct">86%</span>
+              <div class="bar normal" style="height:86px"></div>
+              <span class="bar-label">M2</span>
+              <span class="bar-label" style="color:#aaa;font-size:9px">Composition</span>
+            </div>
+            <div class="bar-group">
+              <span class="bar-pct">64%</span>
+              <div class="bar attention" style="height:64px"></div>
+              <span class="bar-label">M3</span>
+              <span class="bar-label" style="color:#aaa;font-size:9px">Lighting</span>
+            </div>
+            <div class="bar-group">
+              <span class="bar-pct">78%</span>
+              <div class="bar normal" style="height:78px"></div>
+              <span class="bar-label">M4</span>
+              <span class="bar-label" style="color:#aaa;font-size:9px">Editing</span>
+            </div>
+            <div class="bar-group">
+              <span class="bar-pct">71%</span>
+              <div class="bar normal" style="height:71px"></div>
+              <span class="bar-label">M5</span>
+              <span class="bar-label" style="color:#aaa;font-size:9px">Retouching</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Top products -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Top products</div>
+            <a class="card-link" href="#">View all →</a>
+          </div>
+          <table class="products-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Students</th>
+                <th>Revenue</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><div class="product-name">Intro to product photography</div><div class="product-type">Course</div></td>
+                <td>412</td>
+                <td class="product-revenue">$5,928</td>
+              </tr>
+              <tr>
+                <td><div class="product-name">Advanced retouching</div><div class="product-type">Course</div></td>
+                <td>286</td>
+                <td class="product-revenue">$4,482</td>
+              </tr>
+              <tr>
+                <td><div class="product-name">Portfolio review · 45 min</div><div class="product-type">Coaching</div></td>
+                <td>24</td>
+                <td class="product-revenue">$2,640</td>
+              </tr>
+              <tr>
+                <td><div class="product-name">Lightroom preset pack</div><div class="product-type">Download</div></td>
+                <td>87</td>
+                <td class="product-revenue">$1,230</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Where they come from -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Where they come from</div>
+          </div>
+          <div class="source-chart">
+            <div class="donut-container">
+              <svg viewBox="0 0 80 80" width="80" height="80">
+                <circle cx="40" cy="40" r="30" fill="none" stroke="#e8e8e8" stroke-width="14"/>
+                <circle cx="40" cy="40" r="30" fill="none" stroke="#1a1a1a" stroke-width="14" stroke-dasharray="113 75" stroke-dashoffset="-23" stroke-linecap="butt"/>
+                <circle cx="40" cy="40" r="30" fill="none" stroke="#d4f53c" stroke-width="14" stroke-dasharray="45 143" stroke-dashoffset="-136" stroke-linecap="butt"/>
+                <circle cx="40" cy="40" r="30" fill="none" stroke="#7c5cbf" stroke-width="14" stroke-dasharray="20 168" stroke-dashoffset="-181" stroke-linecap="butt"/>
+              </svg>
+            </div>
+            <div class="source-list">
+              <div class="source-item"><span class="source-dot" style="background:#1a1a1a"></span> Instagram bio <span class="source-pct">54%</span></div>
+              <div class="source-item"><span class="source-dot" style="background:#d4f53c"></span> Google search <span class="source-pct">24%</span></div>
+              <div class="source-item"><span class="source-dot" style="background:#7c5cbf"></span> Word of mouth <span class="source-pct">12%</span></div>
+              <div class="source-item"><span class="source-dot" style="background:#e8e8e8"></span> Other <span class="source-pct">10%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- New enrollments weekly -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">New enrollments · weekly</div>
+            <span class="enroll-stat">412 total · +31 this week</span>
+          </div>
+          <div class="mini-bar-chart">
+            <div class="mini-bar secondary" style="height:28px"></div>
+            <div class="mini-bar secondary" style="height:22px"></div>
+            <div class="mini-bar secondary" style="height:35px"></div>
+            <div class="mini-bar secondary" style="height:30px"></div>
+            <div class="mini-bar secondary" style="height:25px"></div>
+            <div class="mini-bar secondary" style="height:38px"></div>
+            <div class="mini-bar secondary" style="height:32px"></div>
+            <div class="mini-bar secondary" style="height:42px"></div>
+            <div class="mini-bar secondary" style="height:36px"></div>
+            <div class="mini-bar secondary" style="height:48px"></div>
+            <div class="mini-bar primary" style="height:55px"></div>
+            <div class="mini-bar primary" style="height:60px"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right sidebar -->
+    <aside class="content-sidebar">
+      <div class="attention-panel">
+        <div class="attention-header">Needs Attention <span class="attention-badge">3</span></div>
+
+        <div class="attention-card">
+          <div class="attention-card-header">
+            <span class="attention-icon" style="color:#e53e3e">⊘</span>
+            <div class="attention-title">1 payment failed</div>
+          </div>
+          <div class="attention-meta">Jordan W. · $249</div>
+          <button class="attention-btn">Review →</button>
+        </div>
+
+        <div class="attention-card">
+          <div class="attention-card-header">
+            <span class="attention-icon" style="color:#f59e0b">⚠</span>
+            <div class="attention-title">Tax form incomplete</div>
+          </div>
+          <div class="attention-meta">Due Apr 28</div>
+          <button class="attention-btn">Complete →</button>
+        </div>
+
+        <div class="attention-card">
+          <div class="attention-card-header">
+            <span class="attention-icon" style="color:#888">ℹ</span>
+            <div class="attention-title">19 near completion · M2</div>
+          </div>
+          <div class="attention-meta">Send a nudge</div>
+          <button class="attention-btn">Nudge →</button>
+        </div>
+      </div>
+
+      <div class="live-header">Live Activity <span class="live-dot">LIVE</span></div>
+      <div class="activity-item"><span class="activity-time">14:22</span><span class="activity-desc"><strong>Sofia R.</strong> enrolled · Intro…</span><span class="activity-amount positive">+$129</span></div>
+      <div class="activity-item"><span class="activity-time">14:10</span><span class="activity-desc"><strong>Maya L.</strong> completed Module 2</span></div>
+      <div class="activity-item"><span class="activity-time">14:08</span><span class="activity-desc"><strong>Jordan W.</strong> payment failed</span><span class="activity-amount alert">!$249</span></div>
+      <div class="activity-item"><span class="activity-time">13:55</span><span class="activity-desc"><strong>Aiden K.</strong> asked Q · Lighting</span></div>
+      <div class="activity-item"><span class="activity-time">13:40</span><span class="activity-desc"><strong>Nora O.</strong> reviewed ★5</span></div>
+      <div class="activity-item"><span class="activity-time">13:12</span><span class="activity-desc"><strong>Ming X.</strong> enrolled · Lightroom</span><span class="activity-amount positive">+$29</span></div>
+      <div class="activity-item"><span class="activity-time">12:55</span><span class="activity-desc"><strong>Sam C.</strong> refunded · Portfolio</span><span class="activity-amount negative">−$120</span></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+  // Time tab switching
+  document.querySelectorAll('.time-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.time-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Nav item switching
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', () => {
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+
+  // Simulate live activity updates
+  const activities = [
+    { time: '14:22', desc: '<strong>Sofia R.</strong> enrolled · Intro…', amount: '+$129', cls: 'positive' },
+    { time: '14:10', desc: '<strong>Maya L.</strong> completed Module 2', amount: '', cls: '' },
+    { time: '14:08', desc: '<strong>Jordan W.</strong> payment failed', amount: '!$249', cls: 'alert' },
+    { time: '13:55', desc: '<strong>Aiden K.</strong> asked Q · Lighting', amount: '', cls: '' },
+    { time: '13:40', desc: '<strong>Nora O.</strong> reviewed ★5', amount: '', cls: '' },
+    { time: '13:12', desc: '<strong>Ming X.</strong> enrolled · Lightroom', amount: '+$29', cls: 'positive' },
+    { time: '12:55', desc: '<strong>Sam C.</strong> refunded · Portfolio', amount: '−$120', cls: 'negative' },
+  ];
+  let idx = 0;
+  setInterval(() => {
+    const container = document.querySelector('.content-sidebar');
+    const items = container.querySelectorAll('.activity-item');
+    const a = activities[idx % activities.length];
+    const newItem = document.createElement('div');
+    newItem.className = 'activity-item';
+    newItem.style.background = '#fffbe6';
+    newItem.innerHTML = `<span class="activity-time">${a.time}</span><span class="activity-desc">${a.desc}</span>${a.amount ? `<span class="activity-amount ${a.cls}">${a.amount}</span>` : ''}`;
+    items[0].parentNode.insertBefore(newItem, items[0]);
+    setTimeout(() => newItem.style.background = '', 800);
+    if (items.length > 8) items[items.length - 1].remove();
+    idx++;
+  }, 4000);
+</script>
+</body>
+</html>
