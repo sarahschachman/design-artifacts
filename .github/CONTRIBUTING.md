@@ -135,11 +135,14 @@ project's Root Directory. Nothing outside `site/` is ever uploaded, which is exa
 what keeps internal docs (`personas.md`, `DESIGN.md`, etc.) off the public internet.
 So:
 
-- ✅ Anything you put in `site/` (prototypes, presentations, the landing page) becomes
-  **publicly reachable by anyone with the link.** Links are unlisted (a random hash)
-  but *not* password-protected on our plan — treat `site/` as public.
-- 🚫 **Never put anything confidential in `site/`.** No real customer data, no
-  unreleased-and-sensitive strategy. Prototypes should use fake/sample data.
+- 🔒 The site is **password-protected** by an HTTP Basic Auth gate in
+  `site/middleware.ts`. It reads `SITE_USER` / `SITE_PASSWORD` from Vercel
+  environment variables (set for Production *and* Preview) and challenges every
+  request — so previews are gated too. If the env vars aren't set, it fails closed
+  (503) rather than serving the site unprotected.
+- 🚫 **Still keep `site/` fake-data only.** Basic Auth is a light gate (one shared
+  password, no per-user access), so treat it as "keep randoms out," not as real
+  confidentiality. No real customer data, no unreleased-and-sensitive strategy.
 
 **How a deploy happens:**
 
