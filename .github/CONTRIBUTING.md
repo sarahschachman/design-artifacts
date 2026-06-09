@@ -149,6 +149,12 @@ So:
    a comment — share that link for review.
 3. Merge to `main`. Vercel deploys to the **production** URL.
 
+**Only `site/` changes deploy.** The Vercel project has **Skip deployment** enabled
+(Settings → Build and Deployment → Root Directory), so a commit that doesn't touch
+`site/` produces **no deployment and no preview link** — by design. If you edit
+`docs/`, `DESIGN.md`, `CLAUDE.md`, or this file and your PR has no Vercel preview,
+that's expected, not a failure. Only changes inside `site/` build and deploy.
+
 **Adding a new prototype/presentation — checklist:**
 
 - [ ] File lives under `site/prototypes/` or `site/presentations/`
