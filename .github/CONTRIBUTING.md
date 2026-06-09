@@ -135,11 +135,13 @@ project's Root Directory. Nothing outside `site/` is ever uploaded, which is exa
 what keeps internal docs (`personas.md`, `DESIGN.md`, etc.) off the public internet.
 So:
 
-- ✅ Anything you put in `site/` (prototypes, presentations, the landing page) becomes
-  **publicly reachable by anyone with the link.** Links are unlisted (a random hash)
-  but *not* password-protected on our plan — treat `site/` as public.
-- 🚫 **Never put anything confidential in `site/`.** No real customer data, no
-  unreleased-and-sensitive strategy. Prototypes should use fake/sample data.
+- 🔑 There's a **light client-side password gate** (`site/gate.js`): each page
+  loads it via `<script src="…/gate.js"></script>` and shows a password box before
+  revealing content. It's a **deterrent, not security** — the password is in the JS
+  and anyone can bypass it (view source, disable JS, fetch the HTML directly).
+- 🚫 **Treat `site/` as effectively public — keep it fake-data only.** No real
+  customer data, no unreleased-and-sensitive strategy. The gate just keeps casual
+  visitors out.
 
 **How a deploy happens:**
 
@@ -160,6 +162,7 @@ that's expected, not a failure. Only changes inside `site/` build and deploy.
 - [ ] File lives under `site/prototypes/` or `site/presentations/`
 - [ ] It contains no confidential data
 - [ ] It's linked from `site/index.html`
+- [ ] Loads the password gate: `<script src="../gate.js"></script>` in the `<head>` (adjust the relative path to reach `site/gate.js`)
 - [ ] PR opened → grab the preview URL from Vercel's comment to share
 
 Static files need no build config; `site/vercel.json` only sets `cleanUrls` so links
