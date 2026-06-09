@@ -2,6 +2,8 @@
 
 Repository of design artifacts: JTBD, PRDs, vision, brand, specs, plans, and presentations under `docs/`.
 
+@AGENTS.md
+
 ## User personas
 
 User personas live in `docs/context/personas.md`. Read that file before any
