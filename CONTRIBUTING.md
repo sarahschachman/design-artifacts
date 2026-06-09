@@ -44,6 +44,15 @@ A **pull request** is a request to merge your branch into `main`. It gives the t
 a place to see the diff, comment, and approve *before* the change lands. The merge is
 the action; the PR is the reviewable wrapper around it.
 
+## How to merge: Squash and merge
+
+When you merge a PR on GitHub, use **Squash and merge**. It collapses the branch into
+a single clean commit on `main`, so the history stays one-entry-per-change even if the
+branch had messy work-in-progress commits (`wip`, `fix typo`, …). Prefer it over
+"Create a merge commit" (adds graph noise) and "Rebase and merge" (lands every WIP
+commit on `main`). Set it as the repo default in **Settings → General → Pull
+Requests**, and enable "Automatically delete head branches" there too.
+
 ## When a PR is non-negotiable vs. nice-to-have
 
 - **Always branch + PR** for the shared, machine-consumed files: anything under
