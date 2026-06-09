@@ -247,7 +247,7 @@ The color strategy centers on a **monochromatic grey foundation** punctuated by 
 
 ### Brand Colors
 
-- **Teachable Mustard (#E7FF33):** The signature brand color that drives all primary actions, highlights, and brand moments. This vibrant yellow-green evokes energy, optimism, and forward momentum—the feeling of unlocking knowledge and possibility.
+- **Teachable Mustard (#E7FF33):** The signature brand color that drives all primary actions, highlights, and brand moments. This vibrant yellow-green evokes energy, optimism, and forward momentum—the feeling of unlocking knowledge and possibility. **Accessibility Note:** When using Teachable Mustard on white backgrounds, always add a black (#000000) border to improve contrast and definition. This ensures the bright yellow remains accessible and clearly defined. Avoid overusing this combination—reserve it for primary actions only.
 - **Obsidian (#222222):** The primary text color across the UI. A near-black grey that provides excellent readability while feeling slightly warmer and less harsh than pure black.
 
 ### Neutral Greys
@@ -406,8 +406,10 @@ All badges use 12px bold text with 4-12px horizontal padding, maintaining access
 
 - **Do** use Teachable Mustard exclusively for primary actions—the single most important thing on each screen
 - **Do** rely on the neutral grey scale for most UI chrome and hierarchy
+- **Do** add a black (#000000) border when using Teachable Mustard on white backgrounds for accessibility (improves contrast and definition)
 - **Don't** create new brand colors or introduce accent colors beyond the defined palette
 - **Don't** use pure black (#000000) for text—always use Obsidian (#222222) or lighter
+- **Don't** overuse Teachable Mustard on white backgrounds—use sparingly to maintain accessibility and visual hierarchy
 
 ### Typography
 
