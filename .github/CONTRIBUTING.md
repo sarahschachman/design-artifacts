@@ -65,6 +65,29 @@ Requests**, and enable "Automatically delete head branches" there too.
 
 When in doubt, branch. "Always branch" is simpler to remember than "branch sometimes."
 
+## Where files live
+
+Placement follows one question: **is the file *discovered by convention* or *reached
+by reference*?**
+
+- **Discovered by convention** — a tool or platform looks for it at a fixed path you
+  can't configure. Move it and it silently breaks. Put it exactly where its consumer
+  expects.
+- **Reached by reference** — a pointer, link, or person leads to it; nothing hardcodes
+  its path. File it wherever makes semantic sense for humans, and add the pointer.
+
+| File | Found by | Lives at |
+| --- | --- | --- |
+| `CLAUDE.md` | Convention — Claude Code auto-loads it from root | repo root |
+| `DESIGN.md` | Convention — frontend-design tooling scans a fixed path | repo root |
+| `CONTRIBUTING.md` | Convention — GitHub surfaces it only from root, `.github/`, or `docs/` | `.github/` |
+| `personas.md` | Reference — `CLAUDE.md` points to it; the `persona-panel` agent reads it | `docs/context/` |
+| PRDs, specs, vision, brand docs | Reference — humans cite them | the matching `docs/` subfolder |
+
+When adding a file, ask: *does a tool read it by a hardcoded path?* If yes, put it
+where the tool looks. If no, file it for humans in the right `docs/` subfolder and add
+a pointer to it (often a line in `CLAUDE.md`) so it's discoverable.
+
 ## Branch naming
 
 `<your-name>/<short-description>`, kebab-case. Examples:
