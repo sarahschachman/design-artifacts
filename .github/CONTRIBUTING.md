@@ -83,7 +83,8 @@ by reference*?**
 | `CONTRIBUTING.md` | Convention — GitHub surfaces it only from root, `.github/`, or `docs/` | `.github/` |
 | `personas.md` | Reference — `CLAUDE.md` points to it; the `persona-panel` agent reads it | `docs/context/` |
 | PRDs, specs, vision, brand docs | Reference — humans cite them | the matching `docs/` subfolder |
-| Prototypes (e.g. `dashboard-prototype.html`) | Reference — you open them in a browser | `prototypes/` (top-level) |
+| Prototypes & presentations (HTML you open/present) | Reference — but also **deployed** to Vercel | `site/prototypes/`, `site/presentations/` |
+| `vercel.json`, deploy landing page | Convention — Vercel reads them from the deploy root | inside `site/` |
 
 When adding a file, ask: *does a tool read it by a hardcoded path?* If yes, put it
 where the tool looks. If no, file it for humans and add a pointer to it (often a line
@@ -91,9 +92,11 @@ in `CLAUDE.md`) so it's discoverable.
 
 **Read vs. run.** Among reference files, mind the kind: `docs/` holds artifacts you
 *read* (specs, PRDs, vision, brand, decks — markdown or PDF, doesn't matter), while
-`prototypes/` holds artifacts you *run* (HTML you open and click). Both are peers at
-the top level; neither belongs at root. Don't bury a runnable prototype inside the
-documents tree.
+`site/` holds artifacts you *run* and *ship* (HTML prototypes and presentations you
+open, click, and deploy). Both are peers at the top level; neither belongs at root.
+Don't bury a runnable prototype inside the documents tree — and, just as important,
+**never put anything internal inside `site/`**: it is the only directory Vercel
+serves publicly (see "Deploying" below).
 
 ## Branch naming
 
@@ -121,3 +124,37 @@ git merge main        # or: git rebase main, if you prefer linear history
 ```
 
 Resolve any conflicts, commit, and push. Then your PR reflects the merge cleanly.
+
+## Deploying prototypes & presentations
+
+Prototypes and presentations are deployed to Vercel automatically through the GitHub
+integration. You don't run any deploy command.
+
+**The golden rule:** Vercel serves **only the `site/` directory** — that's set as the
+project's Root Directory. Nothing outside `site/` is ever uploaded, which is exactly
+what keeps internal docs (`personas.md`, `DESIGN.md`, etc.) off the public internet.
+So:
+
+- ✅ Anything you put in `site/` (prototypes, presentations, the landing page) becomes
+  **publicly reachable by anyone with the link.** Links are unlisted (a random hash)
+  but *not* password-protected on our plan — treat `site/` as public.
+- 🚫 **Never put anything confidential in `site/`.** No real customer data, no
+  unreleased-and-sensitive strategy. Prototypes should use fake/sample data.
+
+**How a deploy happens:**
+
+1. Add or edit a file under `site/` (e.g. `site/prototypes/my-prototype.html`) and add
+   a link to it from `site/index.html`.
+2. Open a PR. Vercel automatically builds a **preview deployment** and posts its URL as
+   a comment — share that link for review.
+3. Merge to `main`. Vercel deploys to the **production** URL.
+
+**Adding a new prototype/presentation — checklist:**
+
+- [ ] File lives under `site/prototypes/` or `site/presentations/`
+- [ ] It contains no confidential data
+- [ ] It's linked from `site/index.html`
+- [ ] PR opened → grab the preview URL from Vercel's comment to share
+
+Static files need no build config; `site/vercel.json` only sets `cleanUrls` so links
+drop the `.html`.
