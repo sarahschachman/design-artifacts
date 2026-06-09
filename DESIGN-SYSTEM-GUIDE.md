@@ -1,390 +1,250 @@
 # Fedora Design System Guide
 
-A comprehensive guide to understanding and working with the Fedora Design System documentation.
-
-## Overview
-
-The Fedora Design System uses two complementary systems to manage design tokens and documentation:
-
-1. **Style Dictionary** (`tokens.json`) - For building SCSS variables
-2. **DESIGN.md** - For design documentation and AI agent context
-
-Both serve important but different purposes and are intentionally kept separate.
+**A simple guide for designers working with the Fedora Design System.**
 
 ---
 
-## System 1: Style Dictionary (Current Build Process)
+## What You Need to Know
 
-### What It Is
+The Fedora Design System is documented in a single file called **DESIGN.md**. This file contains:
 
-Style Dictionary transforms our design tokens from JSON format into SCSS variables that components can use.
+- 🎨 **All design tokens** (colors, fonts, spacing, corner radii)
+- 📐 **Component specifications** (buttons, inputs, cards, badges)
+- 📝 **Design philosophy** (why we make certain design choices)
+- ✅ **Guidelines** (Do's and Don'ts)
 
-### Location
-
-```
-📁 packages/ui/src/shared-styles/design-tokens/
-  └── json/
-      └── tokens.json          # Source design tokens
-  └── scss/
-      └── _base.scss           # Generated SCSS variables
-      └── _button.scss         # Component-specific tokens
-      └── ...
-```
-
-### How to Use It
-
-**Update tokens:**
-```bash
-# 1. Edit the source tokens
-vim packages/ui/src/shared-styles/design-tokens/json/tokens.json
-
-# 2. Rebuild SCSS files
-yarn build-tokens
-```
-
-**Use in components:**
-```scss
-// Button.module.scss
-@import '../shared-styles/design-tokens/scss/base';
-
-.button {
-  background-color: $color-brand-primary-100;
-  padding: $space-12 $space-20;
-  border-radius: $size-12;
-}
-```
-
-### When to Update
-
-- ✅ Adding new colors, spacing values, or typography scales
-- ✅ Building or updating components
-- ✅ Day-to-day component development
-- ✅ Any time you need new design tokens in SCSS
+**Location:** [DESIGN.md on GitHub](https://github.com/sarahschachman/design-artifacts/blob/main/DESIGN.md)
 
 ---
 
-## System 2: DESIGN.md (Design Documentation)
+## When Do I Use DESIGN.md?
 
-### What It Is
+### ✅ Use DESIGN.md when you're:
+- Creating mockups or prototypes
+- Designing new features or screens
+- Working with AI tools (Claude, ChatGPT, etc.) to generate designs
+- Onboarding new team members
+- Making decisions about colors, typography, or spacing
 
-DESIGN.md is a comprehensive design system specification that combines:
-- **Machine-readable tokens** (YAML frontmatter)
-- **Human-readable rationale** (Markdown prose)
+### 📖 Read DESIGN.md to find:
+- **Exact color values** → Example: Teachable Mustard is `#E7FF33`
+- **Font sizes and styles** → Example: Headings use `Reckless-Light` at 32px
+- **Spacing values** → Example: Use 24px between major sections
+- **Component patterns** → Example: Primary buttons are 40px tall with 12px rounded corners
+- **Design rationale** → Example: Why we use Obsidian (#222222) instead of pure black
 
-It's based on the [DESIGN.md format specification](https://github.com/google-labs-code/design.md) by Google Labs.
-
-### Location
-
-```
-📁 Primary location (for AI agents):
-  └── https://github.com/sarahschachman/design-artifacts/blob/main/.claude/agents/DESIGN.md
-
-📁 Local copy (for reference):
-  └── packages/ui/DESIGN.md
-```
-
-### Structure
-
-```markdown
 ---
-# YAML Frontmatter: Machine-readable tokens
-name: Fedora Design System
+
+## How to Update DESIGN.md
+
+### When Should I Update It?
+
+Update DESIGN.md when:
+- ✅ You're making a major design system change (rebrand, new direction)
+- ✅ You're adding new component patterns or guidelines
+- ✅ You're documenting the "why" behind design decisions
+- ✅ During quarterly design system reviews
+
+**You don't need to update it for every small change!** Only document significant changes that should be shared across the team.
+
+### How to Edit the File
+
+**For Designers (No Coding Required):**
+
+1. **Open the file on GitHub:** [DESIGN.md](https://github.com/sarahschachman/design-artifacts/blob/main/DESIGN.md)
+2. **Click the pencil icon** (✏️) to edit
+3. **Make your changes** in the editor
+4. **Scroll down** and describe what you changed
+5. **Click "Commit changes"**
+
+**What to Edit:**
+
+The file has two parts:
+
+**Part 1: Design Tokens (YAML - Top Section)**
+```yaml
 colors:
-  primary: "#E7FF33"
-  obsidian: "#222222"
+  primary: "#E7FF33"           # Teachable Mustard
+  obsidian: "#222222"          # Main text color
+
 typography:
   heading-lg:
-    fontFamily: system-ui
     fontSize: 32px
----
-
-## Brand & Style
-<!-- Human-readable design rationale -->
-The design philosophy balances institutional trust with creative expression...
-
-## Colors
-<!-- Explanation of color strategy -->
-The color strategy centers on a monochromatic grey foundation...
-```
-
-### How to Use It
-
-**Read it for context:**
-```bash
-# View the design system documentation
-cat packages/ui/DESIGN.md
-
-# Or view online
-open https://github.com/sarahschachman/design-artifacts/blob/main/.claude/agents/DESIGN.md
-```
-
-**Validate it:**
-```bash
-# Check for design system issues (contrast ratios, broken references, etc.)
-npx @google/design.md lint packages/ui/DESIGN.md
-```
-
-**Update it:**
-```bash
-# Edit the file
-vim packages/ui/DESIGN.md
-
-# Validate your changes
-npx @google/design.md lint packages/ui/DESIGN.md
-
-# Commit to both repos if needed
-git add DESIGN.md
-git commit -m "Update design system documentation"
-```
-
-### When to Update
-
-- ✅ Major design system changes (rebrand, new design direction)
-- ✅ Updating design philosophy or brand guidelines
-- ✅ Adding new component patterns or usage guidelines
-- ✅ Quarterly or semi-annual design system reviews
-- ✅ When onboarding new designers or developers
-
-### Who Uses It
-
-**Humans:**
-- Designers learning the design system
-- Developers understanding design rationale
-- New team members during onboarding
-- Product managers reviewing design decisions
-
-**AI Agents:**
-- Claude Code, GitHub Copilot, Cursor
-- Any AI tool that generates UI code
-- Automated design-to-code workflows
-
----
-
-## How They Work Together
-
-### Two Sources of Truth (By Design)
-
-We intentionally keep these systems separate because they serve different purposes:
-
-| Aspect | tokens.json | DESIGN.md |
-|--------|-------------|-----------|
-| **Purpose** | Build-time SCSS generation | Documentation & AI context |
-| **Audience** | Build pipeline & developers | Humans & AI agents |
-| **Update Frequency** | Daily/weekly (as needed) | Monthly/quarterly |
-| **Format** | JSON (Style Dictionary) | YAML + Markdown |
-| **Output** | SCSS variables | Design rationale + validation |
-
-### Keeping Them In Sync
-
-You don't need to keep them perfectly synchronized. Update each when it makes sense:
-
-**When you change tokens.json:**
-- Components get new SCSS variables immediately
-- Update DESIGN.md only if it's a significant change worth documenting
-
-**When you change DESIGN.md:**
-- Documentation reflects new design direction
-- Update tokens.json when you're ready to implement the changes in code
-
-### Sync Checklist (Quarterly Review)
-
-Run this checklist every quarter or before major releases:
-
-```bash
-# 1. Review tokens.json for any undocumented changes
-git log -p packages/ui/src/shared-styles/design-tokens/json/tokens.json
-
-# 2. Update DESIGN.md frontmatter to match current tokens
-vim packages/ui/DESIGN.md
-
-# 3. Update design rationale prose if design philosophy changed
-# (Edit the markdown sections)
-
-# 4. Validate the updated DESIGN.md
-npx @google/design.md lint packages/ui/DESIGN.md
-
-# 5. Commit changes
-git add packages/ui/DESIGN.md
-git commit -m "chore: sync DESIGN.md with current design tokens"
-```
-
----
-
-## Common Tasks
-
-### Adding a New Color
-
-**Step 1: Add to tokens.json**
-```json
-// packages/ui/src/shared-styles/design-tokens/json/tokens.json
-{
-  "base": {
-    "color": {
-      "accent": {
-        "teal-100": {
-          "value": "#00B8A9",
-          "type": "color",
-          "description": "Accent teal for callouts"
-        }
-      }
-    }
-  }
-}
-```
-
-**Step 2: Rebuild tokens**
-```bash
-yarn build-tokens
-```
-
-**Step 3: Use in components**
-```scss
-.callout {
-  border-left: 4px solid $color-accent-teal-100;
-}
-```
-
-**Step 4: (Optional) Add to DESIGN.md**
-Only if this is a significant addition worth documenting:
-```yaml
-colors:
-  accent-teal: "#00B8A9"
-```
-
-### Updating Typography
-
-**Step 1: Update tokens.json**
-```json
-{
-  "base": {
-    "font": {
-      "size": {
-        "20": {
-          "value": "1.25rem"
-        }
-      }
-    }
-  }
-}
-```
-
-**Step 2: Update DESIGN.md**
-```yaml
-typography:
-  heading-xl:
-    fontSize: 20px
     fontWeight: 600
 ```
 
-### Validating Design Decisions
+**Part 2: Design Rationale (Markdown - Bottom Section)**
+```markdown
+## Brand & Style
 
-```bash
-# Check for contrast issues, broken references, missing tokens
-npx @google/design.md lint packages/ui/DESIGN.md
-
-# Sample output:
-# {
-#   "findings": [
-#     {
-#       "severity": "warning",
-#       "path": "components.badge-warning",
-#       "message": "textColor (#957814) on backgroundColor (#fff7dc) has contrast ratio 3.94:1, below WCAG AA minimum of 4.5:1."
-#     }
-#   ],
-#   "summary": {
-#     "errors": 0,
-#     "warnings": 1
-#   }
-# }
+The Fedora Design System embodies the ethos of **Educational Empowerment**
+through **Professional Clarity**...
 ```
 
 ---
 
-## DESIGN.md Advanced Usage
+## Common Tasks for Designers
 
-### Exporting to Other Formats
+### Adding a New Color
 
-While we don't currently use these, DESIGN.md can export to various formats:
+1. **Open DESIGN.md**
+2. **Find the `colors:` section** at the top
+3. **Add your new color:**
+   ```yaml
+   colors:
+     accent-teal: "#00B8A9"
+   ```
+4. **Add an explanation in the prose section:**
+   ```markdown
+   ### Accent Colors
+   - **Accent Teal (#00B8A9):** Used for informational callouts and highlights
+   ```
+5. **Save and commit**
 
-**Tailwind CSS v4:**
+### Updating Typography
+
+1. **Open DESIGN.md**
+2. **Find the `typography:` section**
+3. **Update or add a typography scale:**
+   ```yaml
+   typography:
+     heading-xl:
+       fontFamily: Reckless-Light, Georgia, serif
+       fontSize: 40px
+       fontWeight: 300
+   ```
+4. **Save and commit**
+
+### Documenting a New Component Pattern
+
+1. **Open DESIGN.md**
+2. **Find the `components:` section**
+3. **Add your component:**
+   ```yaml
+   components:
+     alert-info:
+       backgroundColor: "{colors.info-lighter}"
+       textColor: "{colors.info-dark}"
+       padding: "{spacing.lg}"
+       rounded: "{rounded.md}"
+   ```
+4. **Add usage notes in the prose section:**
+   ```markdown
+   ### Alerts
+
+   Alerts communicate important information to users.
+
+   - **Info Alert:** Light blue background for informational messages
+   - **Warning Alert:** Light yellow background for cautionary messages
+   ```
+5. **Save and commit**
+
+---
+
+## Checking Your Design for Accessibility
+
+DESIGN.md includes a built-in validator that checks for accessibility issues like color contrast.
+
+**How to Validate (Ask a Developer for Help):**
+
 ```bash
-npx @google/design.md export --format css-tailwind DESIGN.md > theme.css
+npx @google/design.md lint DESIGN.md
 ```
 
-**Tailwind CSS v3:**
-```bash
-npx @google/design.md export --format json-tailwind DESIGN.md > tailwind.theme.json
+**What it checks:**
+- ✅ Color contrast meets WCAG AA standards (4.5:1 minimum)
+- ✅ All design token references are valid
+- ✅ No missing required fields
+
+**Example output:**
 ```
-
-**W3C Design Tokens (DTCG):**
-```bash
-npx @google/design.md export --format dtcg DESIGN.md > tokens.json
-```
-
-### Viewing the Specification
-
-```bash
-# See the full DESIGN.md format specification
-npx @google/design.md spec
-
-# See just the linting rules
-npx @google/design.md spec --rules-only
-```
-
-### Comparing Versions
-
-```bash
-# Compare two versions to see what changed
-npx @google/design.md diff DESIGN-old.md DESIGN-new.md
+✓ WCAG contrast check passed
+⚠ Warning: textColor on backgroundColor has 3.9:1 contrast (below 4.5:1 minimum)
 ```
 
 ---
 
-## FAQs
+## Working with Developers
 
-### Why do we have two systems instead of one?
+### What Designers Own: DESIGN.md
 
-**Short answer:** They serve different purposes and audiences.
+**DESIGN.md is the designer's file.** This is where you:
+- Document design decisions
+- Define colors, typography, spacing
+- Explain the "why" behind design choices
+- Set component patterns and guidelines
 
-**Long answer:**
-- Style Dictionary is a mature, production-tested build tool that generates SCSS variables
-- DESIGN.md is a documentation standard that AI agents can understand
-- Combining them would require custom tooling and risk breaking our existing build process
-- Keeping them separate is simpler and more maintainable
+### What Developers Own: tokens.json
 
-### Do I need to update both every time?
+Developers have a separate file called `tokens.json` that they use to build the actual UI components. **You don't need to edit this file.**
 
-**No.** Update each when it makes sense:
-- Update tokens.json for regular development work
-- Update DESIGN.md for design system reviews and documentation
+### How They Work Together
 
-### How often should I sync them?
+Think of it like this:
+- **DESIGN.md** = The design spec and documentation (what designers create)
+- **tokens.json** = The code implementation (what developers build)
 
-**Quarterly or before major releases.** Unless you're making significant design system changes, they don't need to be perfectly in sync.
+**Do they need to match perfectly?** No! They serve different purposes:
+- Update DESIGN.md when you want to document design thinking
+- Developers update tokens.json when they're building components
 
-### What if they get out of sync?
+**Sync them quarterly** or before major releases to keep them aligned.
 
-**It's okay!** They serve different purposes:
-- tokens.json is the source of truth for component implementation
-- DESIGN.md is the source of truth for design rationale and AI context
+---
 
-Run the quarterly sync checklist to bring them back together.
+## Quick Reference
 
-### Can I automate the sync?
+### Design Token Cheat Sheet
 
-**Yes, but we don't recommend it yet.**
+**Colors:**
+- Primary action: `#E7FF33` (Teachable Mustard)
+- Text: `#222222` (Obsidian)
+- Background: `#fbfbfb` (Primary Container)
+- Error: `#ca483d`
+- Success: `#38ba5f`
+- Warning: `#f8c821`
 
-Automation options:
-- Script to generate DESIGN.md from tokens.json
-- Script to extract tokens from DESIGN.md → tokens.json
-- CI check that warns when they drift
+**Typography:**
+- Display headings: Reckless-Light (32px, 300 weight)
+- Body headings: System UI (24px, 600 weight)
+- Body text: System UI (16px, 400 weight)
+- Small text: System UI (12px, 400 weight)
 
-We're keeping them manual for now because:
-- The Fedora design system is relatively stable
-- Manual updates force you to think about design decisions
-- Automation adds complexity without clear ROI yet
+**Spacing (8px grid):**
+- Micro: 4px, 8px, 12px
+- Component: 16px, 20px, 24px
+- Section: 32px, 40px, 48px
 
-If you find yourself syncing them weekly, then it's time to automate.
+**Corner Radius:**
+- Small: 4px (badges)
+- Medium: 8px (inputs)
+- Large: 12px (buttons, cards)
+- Full: 9999px (pills)
+
+### Button Specifications
+
+**Primary Button:**
+- Background: `#E7FF33` (Teachable Mustard)
+- Text: `#222222` (Obsidian)
+- Height: 40px
+- Padding: 12px vertical, 20px horizontal
+- Corner radius: 12px
+- Font: 14px, 600 weight
+
+**Secondary Button:**
+- Background: `#ffffff` (White)
+- Text: `#222222` (Obsidian)
+- Border: 1px solid `#e4e4e4`
+- Height: 40px
+- Corner radius: 12px
+
+---
+
+## Need Help?
+
+- **Design system questions:** Post in `#design-systems` Slack channel
+- **Can't find what you need in DESIGN.md?** Ask a design systems lead
+- **Found an accessibility issue?** Run the validator (ask a developer) or flag it in Slack
 
 ---
 
