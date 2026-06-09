@@ -83,10 +83,17 @@ by reference*?**
 | `CONTRIBUTING.md` | Convention — GitHub surfaces it only from root, `.github/`, or `docs/` | `.github/` |
 | `personas.md` | Reference — `CLAUDE.md` points to it; the `persona-panel` agent reads it | `docs/context/` |
 | PRDs, specs, vision, brand docs | Reference — humans cite them | the matching `docs/` subfolder |
+| Prototypes (e.g. `dashboard-prototype.html`) | Reference — you open them in a browser | `prototypes/` (top-level) |
 
 When adding a file, ask: *does a tool read it by a hardcoded path?* If yes, put it
-where the tool looks. If no, file it for humans in the right `docs/` subfolder and add
-a pointer to it (often a line in `CLAUDE.md`) so it's discoverable.
+where the tool looks. If no, file it for humans and add a pointer to it (often a line
+in `CLAUDE.md`) so it's discoverable.
+
+**Read vs. run.** Among reference files, mind the kind: `docs/` holds artifacts you
+*read* (specs, PRDs, vision, brand, decks — markdown or PDF, doesn't matter), while
+`prototypes/` holds artifacts you *run* (HTML you open and click). Both are peers at
+the top level; neither belongs at root. Don't bury a runnable prototype inside the
+documents tree.
 
 ## Branch naming
 
