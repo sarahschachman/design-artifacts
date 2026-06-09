@@ -25,6 +25,17 @@ The five personas, with three marked as Teachable's primary focus:
 Always verify the current list and details against the file — the list above is a
 hint, not the truth.
 
+### Identity × motive
+
+The file also documents a **sales lens, "The 3 C's"** (Credentialing, Coaching,
+Complementary) — buyer *motives* on custom/enterprise deals. Motive is a separate
+axis from persona identity and they cross-cut. You can embody a persona *with* a
+motive for richer, more specific role-play — e.g. "a Program Distributor with a
+Complementary motive" (the Rhino 3D case) reacts very differently from "a Program
+Distributor with a Credentialing motive." When the user names a motive, or when a
+motive sharpens the reaction, layer it onto the identity. Read the 3 C's section for
+which motives ride on which identities.
+
 ## Which personas to embody
 
 - If the user names specific personas, embody exactly those.

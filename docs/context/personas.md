@@ -61,6 +61,7 @@ primary focus areas moving forward.
   - Institutional: catalog builders — fitness academies, language schools, test prep companies (e.g. [Zero to Mastery](https://zerotomastery.io/))
 - **Audience makeup:** Primarily B2C, uses B2B.
 - **Where else are they?** Thinkific, LearnWorlds.
+- **Sales lens:** On custom deals, this identity often carries the **Credentialing** motive when the product is a sold certification. See [The 3 C's](#sales-lens-the-3-cs-custom--enterprise-deals).
 
 ---
 
@@ -83,6 +84,7 @@ primary focus areas moving forward.
   - Individual: solo coaches, consultants layering in courses
   - Institutional: small/local service businesses or agencies adding education as a companion (e.g. pilates studio, boutique consulting firm)
 - **Where else are they?** Thinkific Plus, Docebo, Degreed.
+- **Sales lens:** On custom deals, this identity is the home of the **Coaching** motive (education wraps a human-led service). See [The 3 C's](#sales-lens-the-3-cs-custom--enterprise-deals).
 
 ---
 
@@ -109,6 +111,7 @@ primary focus areas moving forward.
   - Flexibility: adaptable course formats, translation solutions, public API support
 - **Sub-personas:**
   - Institutional: training companies, corporate L&D, associations, nonprofits (default)
+- **Sales lens:** On custom deals, this identity supplies the *delivery mechanics* (bulk access, SSO, multi-school, reporting) that the **Credentialing** and **Complementary** motives most often ride on — including the Rhino 3D example. See [The 3 C's](#sales-lens-the-3-cs-custom--enterprise-deals).
 - **Share of business:** Core to operations, but not always tied to revenue. External
   distribution → courses are a primary product and revenue driver. Internal
   distribution → courses enable training, compliance, and knowledge sharing; value is
@@ -159,3 +162,47 @@ primary focus areas moving forward.
 - **Share of business:** Courses are typically 10–30% of revenue. Education is a
   monetization layer on top of sponsorships, ads, merch, or other streams.
 - **Where else are they?** Patreon, Mighty Networks, Kajabi, Circle.
+
+---
+
+## Sales lens: The 3 C's (custom / enterprise deals)
+
+**This is a different axis from the personas above.** The personas describe customer
+*identity* (who they are, their business model). The 3 C's describe buyer *motive*
+(why they buy education), a pattern Sales (Zach McCall) observed across **custom /
+enterprise deals** — reportedly, every custom deal closed so far falls into one of
+these three.
+
+Motive and identity are **orthogonal — they cross-cut, they don't nest.** A single
+account has one identity but can carry more than one motive, and the same motive
+shows up across different identities. Use this lens to sharpen *why* a deal is
+happening; use the personas to understand *who* you're serving.
+
+**Source:** Sales pipeline patterns (Zach McCall). Not from the Confluence personas page.
+
+| Motive | What it means | Rides on (identity) | Example |
+| --- | --- | --- | --- |
+| **Credentialing** | Education **is** the product — selling certificates, compliance, and proof of competency for professional requirements. Our most established, well-understood ICP. | Mainly **Program Distributor** (credential delivered to a defined population); shades into **Knowledge Business** when the credential is sold to outsiders. | Main Street Dermatology |
+| **Coaching** | Education supports a **human-led service** — online content wraps around live coaching, seminars, and 1:1 work to extend the relationship. | **Service Amplifier** (clean match). | Executive & professional coaches |
+| **Complementary** | Education accompanies a **core product that isn't education** — training drives adoption and retention of what the customer actually sells. Often **zero training revenue**. | Doesn't map to a single persona; usually rides on **Program Distributor** delivery mechanics. The most novel of the three. | Waxy; Robert McNeel & Associates (Rhino 3D) |
+
+### Example: Complementary in practice — Robert McNeel & Associates (Rhino 3D)
+
+Makers of Rhino 3D, the CAD platform for architects, designers, and engineers
+(500K+ users). Late-stage deal.
+
+- **Why it's Complementary:** Rhino (the CAD software) is the product; training is
+  *not* a product line, it's product enablement. Several thousand new users a month
+  face a complex tool, so training drives adoption and retention. Courses are free,
+  gated by Rhino Accounts (SSO), so completion data ties back to identity. The purest
+  Complementary case: **zero training revenue, 100% product enablement.**
+- **Deal shape (pure Program Distributor mechanics):** 6 regional schools under one
+  agreement (HQ + autonomous regions with their own content/language/branding), Rhino
+  Accounts SSO throughout (custom OIDC), enterprise tier with custom dev, CSM per
+  school.
+- **Archetypes aren't always pure:** McNeel's regional schools also have a
+  **Credentialing-adjacent** play — Latin American universities run *paid* Rhino
+  certificate programs through the Organizations feature. One account, two motives.
+
+This is the clearest proof that motive ≠ identity: **Complementary motive +
+Program-Distributor delivery + a Credentialing sub-play, all in one customer.**
