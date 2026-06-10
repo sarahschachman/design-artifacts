@@ -5,71 +5,99 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Design Artifacts · Teachable</title>
 <script src="gate.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --obsidian: #222222;
-    --grey: #6b6b6b;
-    --line: #e8e8e8;
-    --bg: #fbfbfb;
-    --mustard: #e7ff33;
+    --lemon: #e7ff33; --obsidian: #222222; --ink: #2a2a2a;
+    --grey: #6b6b6b; --grey-soft: #9a9a9a; --line: #e7e4dd;
+    --canvas: #faf9f5; --card: #ffffff; --card-soft: #f4f2ec;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --serif: 'Reckless-Light', 'Reckless', 'Fraunces', 'Tiempos Headline', Palatino, Georgia, serif;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg); color: var(--obsidian);
-    line-height: 1.5; -webkit-font-smoothing: antialiased;
-  }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 72px 24px 96px; }
-  header { margin-bottom: 40px; }
-  .eyebrow {
-    display: inline-block; background: var(--mustard); color: var(--obsidian);
-    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-    padding: 3px 9px; border-radius: 5px; margin-bottom: 16px;
-  }
-  h1 { font-size: 34px; font-weight: 700; letter-spacing: -0.5px; }
-  .sub { color: var(--grey); font-size: 15px; margin-top: 6px; }
-  h2 {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase;
-    color: var(--grey); margin: 40px 0 12px;
-  }
+  body { font-family: var(--sans); background: var(--canvas); color: var(--ink); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 80px 40px 120px; }
+
+  .chip { display: inline-block; background: var(--lemon); color: var(--obsidian); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; border-radius: 5px; margin-bottom: 18px; }
+  header h1 { font-family: var(--serif); font-weight: 400; font-size: 52px; line-height: 1.04; letter-spacing: -0.5px; }
+  header .lede { color: var(--grey); font-size: 16px; margin-top: 16px; max-width: 52ch; }
+
+  .eyebrow { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey-soft); margin: 52px 0 16px; }
+
+  /* Featured: design system */
+  .feature { display: flex; align-items: stretch; gap: 0; text-decoration: none; color: inherit; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; background: var(--card); transition: transform 0.15s, box-shadow 0.15s; margin-top: 8px; }
+  .feature:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,0.07); }
+  .feature-body { flex: 1; padding: 28px 30px; }
+  .feature-kicker { font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey-soft); }
+  .feature-title { font-family: var(--serif); font-weight: 400; font-size: 28px; line-height: 1.1; margin: 8px 0 8px; }
+  .feature-desc { color: var(--grey); font-size: 14px; max-width: 44ch; }
+  .feature-strip { width: 168px; flex-shrink: 0; display: flex; }
+  .feature-strip div { flex: 1; }
+
   .grid { display: grid; gap: 12px; }
-  a.card {
-    display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit;
-    background: #fff; border: 1px solid var(--line); border-radius: 12px;
-    padding: 16px 18px; transition: border-color 0.15s, transform 0.15s;
-  }
-  a.card:hover { border-color: var(--obsidian); transform: translateY(-1px); }
+  a.card { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; transition: transform 0.15s, box-shadow 0.15s; }
+  a.card:hover { transform: translateY(-1px); box-shadow: 0 6px 22px rgba(0,0,0,0.06); }
   .card-body { flex: 1; }
+  .card-titlerow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .card-title { font-size: 15px; font-weight: 600; }
-  .card-desc { font-size: 13px; color: var(--grey); margin-top: 2px; }
-  .card-arrow { color: var(--grey); font-size: 18px; }
-  .empty {
-    border: 1px dashed var(--line); border-radius: 12px; padding: 20px;
-    color: var(--grey); font-size: 13.5px; text-align: center;
+  .owner { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap; line-height: 1.35; letter-spacing: 0.01em; }
+  .card-desc { font-size: 13px; color: var(--grey); margin-top: 3px; }
+  .card-arrow { color: var(--grey-soft); font-size: 18px; }
+  .empty { border: 1px dashed var(--line); border-radius: 12px; padding: 22px; color: var(--grey); font-size: 13.5px; text-align: center; }
+  .empty code, footer code { font-family: var(--mono); font-size: 0.9em; background: var(--card-soft); padding: 1px 5px; border-radius: 4px; }
+  footer { margin-top: 60px; font-size: 12px; color: var(--grey-soft); border-top: 1px solid var(--line); padding-top: 20px; }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 48px 24px 80px; }
+    header h1 { font-size: 40px; }
+    .feature { flex-direction: column; }
+    .feature-strip { width: 100%; height: 14px; }
   }
-  footer { margin-top: 56px; font-size: 12px; color: var(--grey); }
 </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <span class="eyebrow">Teachable · Design</span>
+      <span class="chip">Teachable · Design</span>
       <h1>Design Artifacts</h1>
-      <p class="sub">Live prototypes and presentations. Internal — share links with care.</p>
+      <p class="lede">Live prototypes, presentations, and the design system that guides them. Internal — share links with care.</p>
     </header>
 
-    <h2>Prototypes</h2>
+    <div class="eyebrow">Design system</div>
+    <a class="feature" href="design-system/">
+      <div class="feature-body">
+        <div class="feature-kicker">Foundations · Components · Guidelines</div>
+        <div class="feature-title">Fedora Design System</div>
+        <div class="feature-desc">Colors, typography, components, and usage rules — rendered live from <code>DESIGN.md</code>, the source Claude reads when building prototypes.</div>
+      </div>
+      <div class="feature-strip">
+        <div style="background:#e7ff33"></div>
+        <div style="background:#222222"></div>
+        <div style="background:#ca483d"></div>
+        <div style="background:#38ba5f"></div>
+        <div style="background:#608fff"></div>
+      </div>
+    </a>
+
+    <div class="eyebrow">Prototypes</div>
     <div class="grid">
-      <a class="card" href="prototypes/dashboard-prototype.html">
+      <!-- Owner pill: set data-owner to the creator's name; color is auto-assigned.
+           Tip: `git log --follow --diff-filter=A -- <file>` shows the true creator. -->
+      <a class="card" href="prototypes/dashboard-prototype.html" data-owner="Shivani">
         <div class="card-body">
-          <div class="card-title">Creator Dashboard</div>
+          <div class="card-titlerow">
+            <div class="card-title">Creator Dashboard</div>
+          </div>
           <div class="card-desc">Home screen concept — stats, revenue, completion, live activity.</div>
         </div>
         <span class="card-arrow">→</span>
       </a>
     </div>
 
-    <h2>Presentations</h2>
+    <div class="eyebrow">Presentations</div>
     <div class="grid">
       <div class="empty">No presentations yet. Add an HTML deck to <code>site/presentations/</code> and link it here.</div>
     </div>
@@ -78,5 +106,30 @@
       Add new work under <code>site/</code> and link it above. There's a light password gate (<code>gate.js</code>) — it only deters casual visitors, so keep everything fake-data only.
     </footer>
   </div>
+
+<script>
+/* Owner pills — each card's data-owner sets the name; the pill color is
+   auto-assigned from the Teachable secondary/tertiary palette by hashing it. */
+(function(){
+  const PALETTE = [
+    { bg:'#711014', fg:'#ffffff' }, // Bordeaux
+    { bg:'#480601', fg:'#ffffff' }, // Cabernet
+    { bg:'#465F01', fg:'#ffffff' }, // Olive
+    { bg:'#B6F2E8', fg:'#173d37' }, // Turquoise
+    { bg:'#FFE3BE', fg:'#6b4415' }, // Peach
+    { bg:'#E5CCFF', fg:'#3c2a5e' }, // Violet
+  ];
+  function colorFor(name){ let h=0; const s=(name||'').toLowerCase(); for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return PALETTE[h % PALETTE.length]; }
+  function firstName(n){ const t=String(n).replace(/[_-]/g,' ').trim().split(/\s+/)[0]||String(n); return t.charAt(0).toUpperCase()+t.slice(1); }
+  function makePill(name){ const c=colorFor(name); const el=document.createElement('span'); el.className='owner'; el.style.background=c.bg; el.style.color=c.fg; el.textContent=name; el.title='Owner: '+name; return el; }
+  function run(){
+    document.querySelectorAll('.card[data-owner]').forEach(function(card){
+      const owner=card.getAttribute('data-owner'); if(!owner) return;
+      const row=card.querySelector('.card-titlerow'); if(row) row.appendChild(makePill(firstName(owner)));
+    });
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', run); else run();
+})();
+</script>
 </body>
 </html>

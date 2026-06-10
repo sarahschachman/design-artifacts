@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design System · Teachable</title>
+<script src="../gate.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --lemon: #e7ff33; --obsidian: #222222; --ink: #2a2a2a;
+    --grey: #6b6b6b; --grey-soft: #9a9a9a; --line: #e7e4dd;
+    --canvas: #faf9f5; --card: #ffffff; --card-soft: #f4f2ec; --code-bg: #f0eee7;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --serif: 'Reckless-Light', 'Reckless', 'Fraunces', 'Tiempos Headline', Palatino, Georgia, serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--sans); background: var(--canvas); color: var(--ink); line-height: 1.55; -webkit-font-smoothing: antialiased; display: flex; }
+
+  /* Sidebar */
+  .sidebar { width: 224px; flex-shrink: 0; border-right: 1px solid var(--line); height: 100vh; position: sticky; top: 0; padding: 30px 22px; display: flex; flex-direction: column; gap: 3px; background: var(--card); overflow-y: auto; }
+  .sidebar .backlink { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--grey); text-decoration: none; margin-bottom: 18px; }
+  .sidebar .backlink:hover { color: var(--ink); }
+  .sidebar .chip { display: inline-block; align-self: flex-start; background: var(--lemon); color: var(--obsidian); font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 5px; margin-bottom: 12px; }
+  .sidebar .brandname { font-family: var(--serif); font-size: 22px; font-weight: 400; line-height: 1.1; margin-bottom: 20px; }
+  .sidebar nav { display: flex; flex-direction: column; gap: 1px; }
+  .sidebar nav a { text-decoration: none; color: var(--grey); font-size: 13px; padding: 7px 10px; border-radius: 7px; transition: background 0.12s, color 0.12s; display: flex; gap: 8px; }
+  .sidebar nav a .n { color: var(--grey-soft); font-family: var(--mono); font-size: 11px; }
+  .sidebar nav a:hover { background: var(--card-soft); color: var(--ink); }
+  .sidebar nav a.active { background: var(--obsidian); color: #fff; font-weight: 500; }
+  .sidebar nav a.active .n { color: rgba(255,255,255,0.55); }
+  .sidebar .foot { margin-top: auto; font-size: 11px; color: var(--grey-soft); padding-top: 16px; }
+  .sidebar .foot a { color: var(--grey-soft); }
+
+  /* Main */
+  .main { flex: 1; min-width: 0; }
+  .page { max-width: 940px; margin: 0 auto; padding: 64px 48px 140px; }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 44px; align-items: center; padding-bottom: 56px; border-bottom: 1px solid var(--line); }
+  .hero h1 { font-family: var(--serif); font-weight: 400; font-size: 50px; line-height: 1.04; letter-spacing: -0.5px; }
+  .hero .lede { color: var(--grey); font-size: 16px; margin-top: 18px; max-width: 46ch; }
+  .hero .cta { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
+  .hero .swatchstrip { display: flex; height: 200px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
+  .hero .swatchstrip div { flex: 1; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 18px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--obsidian); text-decoration: none; }
+  .btn-primary { background: var(--lemon); color: var(--obsidian); }
+  .btn-secondary { background: var(--card); color: var(--obsidian); }
+
+  /* Section */
+  section { padding: 58px 0; border-bottom: 1px solid var(--line); scroll-margin-top: 20px; }
+  .eyebrow { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--grey-soft); margin-bottom: 14px; }
+  .eyebrow b { color: var(--obsidian); font-weight: 700; }
+  section > h2 { font-family: var(--serif); font-weight: 400; font-size: 40px; line-height: 1.06; letter-spacing: -0.4px; margin-bottom: 16px; }
+  .lede { color: var(--grey); font-size: 15px; max-width: 66ch; }
+  .lede p { margin: 0 0 11px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+  .lede code, .usage code { font-family: var(--mono); font-size: 0.87em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+  .lede ul { list-style: disc; margin: 10px 0 12px; padding-left: 20px; }
+  .lede li { margin: 5px 0; padding-left: 2px; }
+  .lede li::marker { color: var(--grey-soft); }
+  .grouptitle { font-family: var(--serif); font-size: 22px; margin: 36px 0 14px; }
+
+  /* Color cards */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(214px, 1fr)); gap: 16px; margin-top: 22px; }
+  .ccard { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--card); cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; position: relative; display: flex; flex-direction: column; }
+  .ccard:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(0,0,0,0.06); }
+  .ccard .chip { height: 92px; border-bottom: 1px solid var(--line); }
+  .ccard .meta { padding: 13px 15px 15px; flex: 1; }
+  .ccard .nm { font-size: 13.5px; font-weight: 600; }
+  .ccard .hx { font-family: var(--mono); font-size: 12px; color: var(--grey-soft); text-transform: uppercase; margin-top: 2px; }
+  .ccard .usage { font-size: 12px; color: var(--grey); margin-top: 10px; line-height: 1.45; }
+  .ccard .copied { position: absolute; top: 10px; right: 10px; background: var(--obsidian); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 4px; opacity: 0; transition: opacity 0.15s; }
+  .ccard.show .copied { opacity: 1; }
+
+  /* Typography */
+  .type-row { padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .type-row:last-child { border-bottom: none; }
+  .type-row .meta { font-family: var(--mono); font-size: 11.5px; color: var(--grey-soft); margin-top: 8px; }
+  .type-row .meta b { color: var(--grey); font-weight: 600; }
+
+  /* Component cards */
+  .comp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin-top: 22px; }
+  .comp-card { border: 1px solid var(--line); border-radius: 12px; padding: 22px; background: var(--card); }
+  .comp-card .nm { font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+  .comp-card .demo { display: flex; align-items: center; gap: 10px; min-height: 48px; flex-wrap: wrap; }
+  .comp-card .spec { font-family: var(--mono); font-size: 11.5px; color: var(--grey-soft); margin-top: 16px; }
+  .field { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+  .field label { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+  .field input { height: 40px; padding: 0 14px; font-size: 14px; font-family: var(--sans); border: 1px solid #c9c5bc; border-radius: 8px; background: #fff; outline: none; width: 100%; }
+
+  /* Spacing & radii */
+  .scale-row { display: flex; align-items: center; gap: 16px; padding: 7px 0; }
+  .scale-row .lbl { font-family: var(--mono); font-size: 11.5px; width: 150px; flex-shrink: 0; color: var(--ink); }
+  .scale-row .lbl span { color: var(--grey-soft); }
+  .scale-bar { height: 20px; background: var(--lemon); border: 1px solid var(--obsidian); border-radius: 3px; }
+  .radii { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 22px; }
+  .radii .r { text-align: center; }
+  .radii .rbox { width: 90px; height: 90px; background: var(--card-soft); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 12px; color: var(--grey); }
+  .radii .rlbl { font-family: var(--mono); font-size: 11px; color: var(--grey-soft); margin-top: 7px; }
+
+  /* Do / Don't */
+  .dd { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 22px; }
+  .dd .col h3 { font-family: var(--serif); font-size: 20px; margin-bottom: 12px; }
+  .dd .do h3 { color: #227039; }
+  .dd .dont h3 { color: #aa3228; }
+  .dd ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+  .dd li { font-size: 14px; padding-left: 22px; position: relative; color: var(--ink); }
+  .dd .do li::before { content: "✓"; position: absolute; left: 0; color: #227039; font-weight: 700; }
+  .dd .dont li::before { content: "✕"; position: absolute; left: 0; color: #aa3228; font-weight: 700; }
+
+  .errbox { border: 1px solid #ffcac5; background: #ffe2df; color: #7f2a23; border-radius: 12px; padding: 20px 22px; }
+  .errbox h3 { font-size: 16px; margin-bottom: 6px; }
+  .loading { color: var(--grey); font-size: 16px; padding: 60px 0; font-family: var(--serif); }
+
+  @media (max-width: 860px) {
+    body { flex-direction: column; }
+    .sidebar { position: static; width: 100%; height: auto; flex-direction: row; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .sidebar nav { flex-direction: row; flex-wrap: wrap; }
+    .sidebar .brandname, .sidebar .foot { display: none; }
+    .sidebar nav a .n { display: none; }
+    .page { padding: 40px 26px 90px; }
+    .hero { grid-template-columns: 1fr; gap: 26px; }
+    .hero h1 { font-size: 40px; }
+    .dd { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="backlink" href="../">← Design Artifacts</a>
+    <span class="chip">Teachable · Design</span>
+    <div class="brandname" id="ds-name">Design System</div>
+    <nav id="nav"></nav>
+    <div class="foot">Rendered from <a href="https://github.com/sarahschachman/design-artifacts/blob/main/DESIGN.md" target="_blank">DESIGN.md</a></div>
+  </aside>
+  <main class="main">
+    <div class="page">
+      <div id="content"><p class="loading">Loading DESIGN.md…</p></div>
+    </div>
+  </main>
+
+<script>
+const DESIGN_MD_URL = 'https://raw.githubusercontent.com/sarahschachman/design-artifacts/main/DESIGN.md';
+
+/* ---------- parsing ---------- */
+function unquote(v){ v=v.trim(); if((v[0]==='"'&&v[v.length-1]==='"')||(v[0]==="'"&&v[v.length-1]==="'")) return v.slice(1,-1); return v; }
+function parseFrontmatter(text){
+  const m = text.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if(!m) return { fm:{}, body:text };
+  const fmText = m[1], body = text.slice(m[0].length);
+  const root = {}; let top=null, sub=null;
+  for(const raw of fmText.split('\n')){
+    if(!raw.trim() || raw.trim()[0]==='#') continue;
+    const indent = raw.match(/^ */)[0].length;
+    const line = raw.trim(), ci = line.indexOf(':'); if(ci<0) continue;
+    const key = line.slice(0,ci).trim(), val = line.slice(ci+1).trim();
+    if(indent===0){ if(val===''){ top={}; root[key]=top; sub=null; } else { root[key]=unquote(val); top=null; sub=null; } }
+    else if(indent===2 && top){ if(val===''){ sub={}; top[key]=sub; } else { top[key]=unquote(val); sub=null; } }
+    else if(indent>=4 && sub){ sub[key]=unquote(val); }
+  }
+  return { fm:root, body };
+}
+function resolveVal(v, fm, depth){
+  if(typeof v!=='string') return v; if(depth>6) return v;
+  return v.replace(/\{([^}]+)\}/g, (_,path)=>{ const parts=path.split('.'); let node=fm; for(const p of parts){ node=node&&node[p]; } if(node==null||typeof node==='object') return '{'+path+'}'; return resolveVal(node, fm, (depth||0)+1); });
+}
+function refName(v){ if(typeof v!=='string') return null; const m=v.match(/^\{[^.]+\.(.+)\}$/); return m?m[1]:v; }
+
+/* ---------- markdown ---------- */
+function escapeHtml(s){ return s.replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function inlineMd(s){ return escapeHtml(s).replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/`([^`]+)`/g,'<code>$1</code>'); }
+function mdToHtml(md){
+  if(!md) return ''; const lines=md.split('\n'); let html='', inList=false;
+  const closeList=()=>{ if(inList){ html+='</ul>'; inList=false; } };
+  for(let ln of lines){
+    if(/^\s*$/.test(ln)){ closeList(); continue; }
+    if(/^####?\s+/.test(ln)){ closeList(); html+='<p><strong>'+inlineMd(ln.replace(/^####?\s+/,''))+'</strong></p>'; continue; }
+    if(/^>\s?/.test(ln)){ closeList(); html+='<p>'+inlineMd(ln.replace(/^>\s?/,''))+'</p>'; continue; }
+    if(/^[-*]\s+/.test(ln)){ if(!inList){ html+='<ul>'; inList=true; } html+='<li>'+inlineMd(ln.replace(/^[-*]\s+/,''))+'</li>'; continue; }
+    closeList(); html+='<p>'+inlineMd(ln)+'</p>';
+  }
+  closeList(); return html;
+}
+function parseProse(body){
+  const sections=[]; let cur=null, sub=null;
+  for(const ln of body.split('\n')){
+    let m;
+    if((m=ln.match(/^##\s+(.+)$/))){ cur={title:m[1].trim(), intro:'', subs:[]}; sub=null; sections.push(cur); }
+    else if((m=ln.match(/^###\s+(.+)$/)) && cur){ sub={title:m[1].trim(), text:''}; cur.subs.push(sub); }
+    else if(cur){ if(sub) sub.text+=ln+'\n'; else cur.intro+=ln+'\n'; }
+  }
+  const byTitle={}; sections.forEach(s=>{ s.intro=s.intro.trim(); s.subs.forEach(x=>x.text=x.text.trim()); byTitle[s.title.toLowerCase()]=s; });
+  return {
+    get(...keys){ for(const k of keys){ if(byTitle[k]) return byTitle[k]; } return null; },
+    sub(secKeys, re){ const s=this.get(...secKeys); return s ? s.subs.find(x=>re.test(x.title)) : null; },
+    fullText(secKeys){ const s=this.get(...secKeys); if(!s) return ''; return [s.intro].concat(s.subs.map(x=>'#### '+x.title+'\n'+x.text)).join('\n\n'); }
+  };
+}
+/* per-color usage: match a swatch hex to a prose bullet that mentions that hex */
+function parseColorUsage(body){
+  const map={};
+  for(const ln of body.split('\n')){
+    const mt=ln.match(/^\s*[-*]\s+(.*)$/); if(!mt) continue;
+    const hx=mt[1].match(/#([0-9a-fA-F]{6})\b/); if(!hx) continue;
+    let desc=mt[1].replace(/^\*\*[^*]*\*\*:?\s*/,'').replace(/\*\*Accessibility Note:\*\*[\s\S]*$/,'').trim();
+    desc=desc.replace(/\*\*/g,'');
+    map['#'+hx[1].toLowerCase()] = desc;
+  }
+  return map;
+}
+
+/* ---------- section scaffold ---------- */
+let SECN=0; const navItems=[];
+const content=()=>document.getElementById('content');
+function section(navLabel, eyebrow, headline, ledeHtml){
+  SECN++; const id=navLabel.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const s=document.createElement('section'); s.id=id;
+  const e=document.createElement('div'); e.className='eyebrow'; e.innerHTML='<b>'+String(SECN).padStart(2,'0')+'</b> — '+eyebrow; s.appendChild(e);
+  const h=document.createElement('h2'); h.textContent=headline; s.appendChild(h);
+  if(ledeHtml){ const l=document.createElement('div'); l.className='lede'; l.innerHTML=ledeHtml; s.appendChild(l); }
+  content().appendChild(s); navItems.push({id,label:navLabel,n:String(SECN).padStart(2,'0')}); return s;
+}
+
+/* ---------- renderers ---------- */
+function classifyColor(name){
+  const n=name.toLowerCase();
+  if(n==='primary'||n==='on-primary'||n.includes('brand')) return 'Brand';
+  if(/^(text|icon|line|link|container|surface|on-)/.test(n)) return 'Aliases & roles';
+  if(n==='white'||n==='black'||n.startsWith('grey')||n.startsWith('gray')||n.includes('obsidian')||n.includes('neutral')) return 'Neutral';
+  if(/^(red|yellow|green|blue|error|success|warning|info|danger)/.test(n)) return 'Semantic';
+  return 'Other';
+}
+function renderColors(fm, prose, usage){
+  if(!fm.colors) return;
+  const sec=prose.get('colors');
+  const s=section('Colors','Color palette','Colors', sec?mdToHtml(sec.intro):'');
+  const groups={}; for(const [name,val] of Object.entries(fm.colors)){ (groups[classifyColor(name)]=groups[classifyColor(name)]||[]).push([name,val]); }
+  for(const g of ['Brand','Neutral','Semantic','Aliases & roles','Other']){
+    if(!groups[g]) continue;
+    const gt=document.createElement('div'); gt.className='grouptitle'; gt.textContent=g; s.appendChild(gt);
+    const grid=document.createElement('div'); grid.className='cards';
+    for(const [name,val] of groups[g]){
+      const hex=resolveVal(val,fm,0); const u=usage[String(hex).toLowerCase()];
+      const c=document.createElement('div'); c.className='ccard'; c.title='Click to copy "'+name+'"';
+      c.innerHTML='<div class="chip" style="background:'+hex+'"></div><div class="meta"><div class="nm">'+name+'</div><div class="hx">'+hex+'</div>'+(u?'<div class="usage">'+escapeHtml(u)+'</div>':'')+'</div><div class="copied">copied</div>';
+      c.addEventListener('click',()=>{ navigator.clipboard&&navigator.clipboard.writeText(name); c.classList.add('show'); setTimeout(()=>c.classList.remove('show'),900); });
+      grid.appendChild(c);
+    }
+    s.appendChild(grid);
+  }
+}
+function renderType(fm, prose){
+  if(!fm.typography) return;
+  const sec=prose.get('typography');
+  const s=section('Typography','Typography','Typography', sec?mdToHtml(sec.intro):'');
+  for(const [name,t] of Object.entries(fm.typography)){
+    if(typeof t!=='object') continue;
+    const row=document.createElement('div'); row.className='type-row';
+    const sample=document.createElement('div'); sample.textContent='The quick brown fox jumps';
+    if(t.fontFamily) sample.style.fontFamily=t.fontFamily;
+    if(t.fontSize) sample.style.fontSize=t.fontSize;
+    if(t.fontWeight) sample.style.fontWeight=t.fontWeight;
+    if(t.lineHeight) sample.style.lineHeight=t.lineHeight;
+    if(t.letterSpacing) sample.style.letterSpacing=t.letterSpacing;
+    const meta=document.createElement('div'); meta.className='meta';
+    meta.innerHTML='<b>'+name+'</b> · '+[t.fontSize,t.fontWeight,(t.fontFamily||'').split(',')[0]].filter(Boolean).join(' · ');
+    row.appendChild(sample); row.appendChild(meta); s.appendChild(row);
+  }
+}
+function specLine(comp){
+  const parts=[];
+  if(comp.backgroundColor && comp.backgroundColor!=='transparent') parts.push(refName(comp.backgroundColor)+' bg');
+  if(comp.textColor) parts.push(refName(comp.textColor)+' text');
+  if(comp.borderColor) parts.push(refName(comp.borderColor)+' border');
+  if(comp.rounded) parts.push(refName(comp.rounded)+' radius');
+  if(comp.height) parts.push(comp.height);
+  return parts.join(' · ');
+}
+function styleEl(el, comp, fm){
+  const bg=resolveVal(comp.backgroundColor,fm,0); if(bg&&(bg[0]==='#'||/^(transparent|rgb|linear)/.test(bg))) el.style.background=bg;
+  const fg=resolveVal(comp.textColor,fm,0); if(fg) el.style.color=fg;
+  if(comp.rounded) el.style.borderRadius=resolveVal(comp.rounded,fm,0);
+  if(comp.padding) el.style.padding=resolveVal(comp.padding,fm,0);
+  if(comp.borderColor) el.style.border='1px solid '+resolveVal(comp.borderColor,fm,0);
+  if(comp.height) el.style.minHeight=comp.height;
+  if(comp.typography){ const k=String(comp.typography).replace(/[{}]/g,'').split('.')[1]; const t=fm.typography&&fm.typography[k]; if(t){ if(t.fontSize)el.style.fontSize=t.fontSize; if(t.fontWeight)el.style.fontWeight=t.fontWeight; if(t.fontFamily)el.style.fontFamily=t.fontFamily; } }
+}
+function exampleLabel(name){
+  if(/primary/.test(name)&&name.startsWith('button')) return 'Get started';
+  if(/secondary/.test(name)) return 'Learn more';
+  if(/text/.test(name)) return 'Learn more';
+  if(/danger|delete/.test(name)) return 'Delete';
+  if(name.startsWith('button')) return 'Button';
+  if(name.startsWith('badge')){ if(/positive|success/.test(name)) return 'Active'; if(/negative|error/.test(name)) return 'Failed'; if(/warning/.test(name)) return 'Pending'; if(/neutral/.test(name)) return 'Draft'; return 'New'; }
+  return 'Example';
+}
+function buildDemo(name, comp, fm){
+  const wrap=document.createElement('div'); wrap.className='demo';
+  if(name.startsWith('input')||/field/.test(name)){
+    const f=document.createElement('div'); f.className='field';
+    const lab=document.createElement('label'); lab.textContent='Email address';
+    const inp=document.createElement('input'); inp.placeholder='you@teachable.com'; styleEl(inp,comp,fm);
+    f.appendChild(lab); f.appendChild(inp); wrap.appendChild(f); return wrap;
+  }
+  const el=document.createElement('div'); el.style.display='inline-flex'; el.style.alignItems='center'; el.style.justifyContent='center';
+  if(name.startsWith('card')){ el.style.width='100%'; el.style.minHeight='64px'; el.style.padding='16px'; el.textContent='Card surface'; el.style.fontSize='13px'; if(!comp.borderColor) el.style.border='1px solid #eee'; }
+  else if(name.startsWith('badge')){ el.style.padding='4px 12px'; el.style.fontSize='12px'; el.style.fontWeight='600'; el.textContent=exampleLabel(name); }
+  else { el.style.padding='0 18px'; el.style.height='40px'; el.style.fontSize='14px'; el.style.fontWeight='600'; el.textContent=exampleLabel(name); }
+  styleEl(el,comp,fm); wrap.appendChild(el); return wrap;
+}
+function renderCompSection(navLabel, eyebrow, ledeHtml, entries, fm){
+  if(!entries.length) return;
+  const s=section(navLabel, eyebrow, navLabel, ledeHtml);
+  const grid=document.createElement('div'); grid.className='comp-grid';
+  for(const [name,comp] of entries){
+    const card=document.createElement('div'); card.className='comp-card';
+    const nm=document.createElement('div'); nm.className='nm'; nm.textContent=name;
+    const spec=document.createElement('div'); spec.className='spec'; spec.textContent=specLine(comp);
+    card.appendChild(nm); card.appendChild(buildDemo(name,comp,fm)); if(spec.textContent) card.appendChild(spec);
+    grid.appendChild(card);
+  }
+  s.appendChild(grid);
+}
+function renderComponents(fm, prose){
+  if(!fm.components) return;
+  const groups={ Buttons:[], Fields:[], Badges:[], Cards:[], Other:[] };
+  for(const [name,comp] of Object.entries(fm.components)){
+    if(typeof comp!=='object') continue;
+    if(name.startsWith('button')) groups.Buttons.push([name,comp]);
+    else if(name.startsWith('input')||/field|select|checkbox|radio|toggle|textarea/.test(name)) groups.Fields.push([name,comp]);
+    else if(name.startsWith('badge')||name.startsWith('chip')||name.startsWith('tag')) groups.Badges.push([name,comp]);
+    else if(name.startsWith('card')) groups.Cards.push([name,comp]);
+    else groups.Other.push([name,comp]);
+  }
+  const led=(re)=>{ const sub=prose.sub(['components'], re); return mdToHtml(sub?sub.text:(prose.get('components')?prose.get('components').intro:'')); };
+  renderCompSection('Buttons','Buttons', led(/button/i), groups.Buttons, fm);
+  renderCompSection('Fields','Form elements', led(/form|input|field/i), groups.Fields, fm);
+  renderCompSection('Badges','Badges', led(/badge|chip|tag/i), groups.Badges, fm);
+  renderCompSection('Cards','Cards & containers', led(/card|container/i), groups.Cards, fm);
+  renderCompSection('Other','Other components', '', groups.Other, fm);
+}
+function pxOf(v){ const m=String(v).match(/^(\d+(?:\.\d+)?)px$/); return m?parseFloat(m[1]):null; }
+function renderSpacing(fm, prose){
+  if(!fm.spacing) return;
+  const sec=prose.get('layout & spacing','layout');
+  const s=section('Spacing','Spacing scale','Spacing', sec?mdToHtml(sec.intro):'');
+  for(const [name,val] of Object.entries(fm.spacing)){
+    const px=pxOf(val); const row=document.createElement('div'); row.className='scale-row';
+    row.innerHTML='<div class="lbl">'+name+' <span>·  '+val+'</span></div><div class="scale-bar" style="width:'+(px!=null?Math.max(px,2):8)+'px"></div>';
+    s.appendChild(row);
+  }
+}
+function renderRadii(fm, prose){
+  if(!fm.rounded) return;
+  const sh=prose.get('shapes');
+  const s=section('Radius','Border radius','Radius', sh?mdToHtml(sh.intro):'');
+  const wrap=document.createElement('div'); wrap.className='radii';
+  for(const [name,val] of Object.entries(fm.rounded)){
+    const px=pxOf(val); const rad=px!=null?Math.min(px,44):44;
+    const d=document.createElement('div'); d.className='r';
+    d.innerHTML='<div class="rbox" style="border-radius:'+rad+'px">'+val+'</div><div class="rlbl">'+name+'</div>';
+    wrap.appendChild(d);
+  }
+  s.appendChild(wrap);
+}
+function renderGuidelines(prose){
+  const sec=prose.get("do's and don'ts","dos and don'ts","do's & don'ts");
+  if(!sec) return;
+  const s=section("Do's & Don'ts","Do’s & Don’ts","Do’s & Don’ts", '');
+  const dos=[], donts=[];
+  for(const ln of (sec.intro+'\n'+sec.subs.map(x=>x.text).join('\n')).split('\n')){
+    const m=ln.match(/^[-*]\s+(.*)$/); if(!m) continue; const item=m[1];
+    if(/^\*\*don'?t\*\*/i.test(item)) donts.push(item.replace(/^\*\*don'?t\*\*:?\s*/i,''));
+    else if(/^\*\*do\*\*/i.test(item)) dos.push(item.replace(/^\*\*do\*\*:?\s*/i,''));
+  }
+  const dd=document.createElement('div'); dd.className='dd';
+  const col=(cls,title,arr)=>'<div class="col '+cls+'"><h3>'+title+'</h3><ul>'+arr.map(x=>'<li>'+inlineMd(x)+'</li>').join('')+'</ul></div>';
+  dd.innerHTML=col('do','Do',dos)+col('dont',"Don’t",donts);
+  s.appendChild(dd);
+}
+function renderHero(fm){
+  const hero=document.createElement('div'); hero.className='hero';
+  const left=document.createElement('div');
+  left.innerHTML='<h1>'+escapeHtml(fm.name||'Design System')+'</h1><p class="lede">'+escapeHtml(fm.description||'')+'</p>'+
+    '<div class="cta"><a class="btn btn-primary">Get started</a><a class="btn btn-secondary">View components</a></div>';
+  const right=document.createElement('div');
+  const strip=document.createElement('div'); strip.className='swatchstrip';
+  const picks=['primary','on-primary','brand-primary','obsidian','error-primary','success-primary','info-primary'].map(k=>fm.colors&&fm.colors[k]).filter(Boolean).slice(0,6);
+  const fallback=fm.colors?Object.values(fm.colors).slice(0,6):[];
+  (picks.length?picks:fallback).forEach(v=>{ const d=document.createElement('div'); d.style.background=resolveVal(v,fm,0); strip.appendChild(d); });
+  right.appendChild(strip); hero.appendChild(left); hero.appendChild(right); content().appendChild(hero);
+}
+function renderBrand(prose){
+  const sec=prose.get('brand & style','overview'); if(!sec) return;
+  section('Brand & Style','Brand & Style','Brand & Style', mdToHtml(sec.intro));
+}
+function buildNav(){
+  const nav=document.getElementById('nav');
+  nav.innerHTML=navItems.map(i=>'<a href="#'+i.id+'"><span class="n">'+i.n+'</span> '+i.label+'</a>').join('');
+  const links=[...nav.querySelectorAll('a')];
+  const obs=new IntersectionObserver(es=>{ es.forEach(e=>{ if(e.isIntersecting){ links.forEach(l=>l.classList.toggle('active', l.getAttribute('href')==='#'+e.target.id)); } }); },{rootMargin:'-8% 0px -82% 0px'});
+  navItems.forEach(i=>{ const el=document.getElementById(i.id); if(el) obs.observe(el); });
+}
+
+function errorBox(title,msg){ return '<div class="errbox"><h3>'+escapeHtml(title)+'</h3><p>'+escapeHtml(msg)+'</p></div>'; }
+async function loadMd(){
+  // dev: a same-origin /DESIGN.md (served from repo root) wins so local edits show live.
+  // prod: site/ has no /DESIGN.md, so this 404s and we fall back to the canonical GitHub copy.
+  try{ const r=await fetch('/DESIGN.md',{cache:'no-cache'}); if(r.ok){ const t=await r.text(); if(/^---/.test(t)) return t; } }catch(e){}
+  const r=await fetch(DESIGN_MD_URL,{cache:'no-cache'}); if(!r.ok) throw new Error('HTTP '+r.status); return r.text();
+}
+async function main(){
+  let text;
+  try{ text=await loadMd(); }
+  catch(e){ content().innerHTML=errorBox("Couldn't load DESIGN.md", e.message+' — confirm the repo is public and the URL/branch are correct.'); return; }
+  let fm, body; try{ ({fm,body}=parseFrontmatter(text)); }catch(e){ content().innerHTML=errorBox("Couldn't parse DESIGN.md", e.message); return; }
+  document.getElementById('ds-name').textContent=fm.name||'Design System';
+  document.title=(fm.name||'Design System')+' · Teachable';
+  content().innerHTML=''; SECN=0; navItems.length=0;
+  const prose=parseProse(body); const usage=parseColorUsage(body);
+  renderHero(fm);
+  renderBrand(prose);
+  renderColors(fm, prose, usage);
+  renderType(fm, prose);
+  renderComponents(fm, prose);
+  renderSpacing(fm, prose);
+  renderRadii(fm, prose);
+  renderGuidelines(prose);
+  buildNav();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',main); else main();
+</script>
+</body>
+</html>
