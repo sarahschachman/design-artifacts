@@ -239,15 +239,15 @@ The Fedora Design System embodies the ethos of **Educational Empowerment** throu
 
 The design philosophy balances **institutional trust** with **creative expression**. The brand personality is confident, supportive, and human-centric—a platform that gets out of the way to let teachers teach and students learn.
 
-The chosen aesthetic is **Modern Professional** with moments of playful energy. The signature "Teachable Mustard" (#E7FF33) serves as an optimistic accent against a foundation of neutral greys, providing visual energy without overwhelming the educational content.
+The chosen aesthetic is **Modern Professional** with moments of playful energy. The signature "Teachable Lemon" (#E7FF33) serves as an optimistic accent against a foundation of neutral greys, providing visual energy without overwhelming the educational content.
 
 ## Colors
 
-The color strategy centers on a **monochromatic grey foundation** punctuated by the iconic **Teachable Mustard** as the primary brand color. This creates a professional canvas that allows course content to shine while maintaining strong brand recognition.
+The color strategy centers on a **monochromatic grey foundation** punctuated by the iconic **Teachable Lemon** as the primary brand color. This creates a professional canvas that allows course content to shine while maintaining strong brand recognition.
 
 ### Brand Colors
 
-- **Teachable Mustard (#E7FF33):** The signature brand color that drives all primary actions, highlights, and brand moments. This vibrant yellow-green evokes energy, optimism, and forward momentum—the feeling of unlocking knowledge and possibility. **Accessibility Note:** When using Teachable Mustard on white backgrounds, always add a black (#000000) border to improve contrast and definition. This ensures the bright yellow remains accessible and clearly defined. Avoid overusing this combination—reserve it for primary actions only.
+- **Teachable Lemon (#E7FF33):** The signature brand color that drives all primary actions, highlights, and brand moments. This vibrant yellow-green evokes energy, optimism, and forward momentum—the feeling of unlocking knowledge and possibility. **Accessibility Note:** When using Teachable Lemon on white backgrounds, always add a black (#000000) border to improve contrast and definition. This ensures the bright yellow remains accessible and clearly defined. Avoid overusing this combination—reserve it for primary actions only.
 - **Obsidian (#222222):** The primary text color across the UI. A near-black grey that provides excellent readability while feeling slightly warmer and less harsh than pure black.
 
 ### Neutral Greys
@@ -365,9 +365,9 @@ Corner radii should never exceed 20px in standard UI. Excessive rounding creates
 
 ### Buttons
 
-Buttons are the primary drivers of action in the interface. They use generous padding, clear typography, and the signature Teachable Mustard for primary actions.
+Buttons are the primary drivers of action in the interface. They use generous padding, clear typography, and the signature Teachable Lemon for primary actions.
 
-- **Primary Button:** Teachable Mustard background, obsidian text, 40px height
+- **Primary Button:** Teachable Lemon background, obsidian text, 40px height
 - **Secondary Button:** White background, obsidian text, subtle grey border
 - **Hover states:** Slight darkening of the background color (never introduce new colors on hover)
 - **Sizing:** All standard buttons maintain a consistent 40px height for easy touch targeting
@@ -404,12 +404,12 @@ All badges use 12px bold text with 4-12px horizontal padding, maintaining access
 
 ### Colors
 
-- **Do** use Teachable Mustard exclusively for primary actions—the single most important thing on each screen
+- **Do** use Teachable Lemon exclusively for primary actions—the single most important thing on each screen
 - **Do** rely on the neutral grey scale for most UI chrome and hierarchy
-- **Do** add a black (#000000) border when using Teachable Mustard on white backgrounds for accessibility (improves contrast and definition)
+- **Do** add a black (#000000) border when using Teachable Lemon on white backgrounds for accessibility (improves contrast and definition)
 - **Don't** create new brand colors or introduce accent colors beyond the defined palette
 - **Don't** use pure black (#000000) for text—always use Obsidian (#222222) or lighter
-- **Don't** overuse Teachable Mustard on white backgrounds—use sparingly to maintain accessibility and visual hierarchy
+- **Don't** overuse Teachable Lemon on white backgrounds—use sparingly to maintain accessibility and visual hierarchy
 
 ### Typography
 
