@@ -197,6 +197,15 @@
     background-color: var(--color-grey-6);         /* $button-upgrade-hover-background-color */
     border-color: var(--color-brand-primary-80);   /* $button-upgrade-hover-border-color */
   }
+  .button--upgrade:focus-visible {
+    background-color: var(--color-grey-6);         /* $button-upgrade-focus-background-color */
+    border-color: var(--color-brand-primary-80);   /* $button-upgrade-focus-border-color */
+  }
+  .button--upgrade[aria-expanded='true'],
+  .button--upgrade:active {
+    background-color: var(--color-grey-12);        /* $button-upgrade-active-background-color */
+    border-color: var(--color-brand-primary-120);  /* $button-upgrade-active-border-color */
+  }
   .nav-user {
     display: flex;
     align-items: center;
@@ -373,6 +382,12 @@
     background-color: var(--color-brand-primary-80);  /* $button-primary-hover-background-color */
     border-color: var(--color-grey-100);
   }
+  .button--primary:focus-visible {
+    background-color: var(--color-brand-primary-80);  /* $button-primary-focus-background-color */
+    border-color: var(--color-grey-100);
+    box-shadow: 0 0 0 5px rgba(34, 34, 34, 0.1);
+  }
+  .button--primary[aria-expanded='true'],
   .button--primary:active {
     background-color: var(--color-brand-primary-120); /* $button-primary-active-background-color */
     border-color: var(--color-grey-100);
@@ -388,6 +403,11 @@
     background-color: var(--color-grey-6);  /* $button-secondary-hover-background-color */
     border-color: var(--color-grey-100);
   }
+  .button--secondary:focus-visible {
+    background-color: var(--color-grey-6);  /* $button-secondary-focus-background-color */
+    border-color: var(--color-grey-100);
+  }
+  .button--secondary[aria-expanded='true'],
   .button--secondary:active {
     background-color: var(--color-grey-12); /* $button-secondary-active-background-color */
     border-color: var(--color-grey-100);
@@ -406,6 +426,8 @@
   .button--text:hover { color: var(--color-grey-70); }
 
   .button .icon { margin-right: 0.25rem; } /* $button-svg-left-margin-right */
+  /* .iconLeft */
+  .button--icon-left { padding-left: 0.75rem; } /* $button-svg-left-padding-left */
 
   /* ===== Chip: .chip ===== */
   .chips {
@@ -635,7 +657,7 @@
 
         <form class="hero-form" onsubmit="return false">
           <input class="input" type="text" placeholder="e.g. A beginner watercolor course for people who can&rsquo;t draw&hellip;" aria-label="Describe what you want to teach">
-          <button class="button button--normal button--primary" type="submit"><span class="icon" aria-hidden="true">&#10022;</span>Draft it</button>
+          <button class="button button--normal button--primary button--icon-left" type="submit"><span class="icon" aria-hidden="true">&#10022;</span>Draft it</button>
         </form>
 
         <div class="chips" role="group" aria-label="Suggestions">
