@@ -20,6 +20,7 @@ colors:
   grey-80: "#4e4e4e"
   grey-70: "#646464"
   grey-60: "#7a7a7a"
+  grey-50: "#919191"
   grey-40: "#a7a7a7"
   grey-30: "#bdbdbd"
   grey-20: "#d3d3d3"
@@ -149,13 +150,14 @@ typography:
 rounded:
   none: 0px
   sm: 4px
-  md: 8px
-  lg: 12px
+  md: 6px
+  lg: 8px
   xl: 16px
   full: 9999px
 
 spacing:
   none: 0px
+  xxs: 2px
   xs: 4px
   sm: 8px
   md: 12px
@@ -173,7 +175,7 @@ components:
     backgroundColor: "{colors.brand-primary}"
     textColor: "{colors.obsidian}"
     typography: "{typography.body-md-bold}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.md}"
     padding: "{spacing.md} {spacing.xl}"
     height: 40px
 
@@ -184,7 +186,7 @@ components:
     backgroundColor: "{colors.white}"
     textColor: "{colors.obsidian}"
     typography: "{typography.body-md-bold}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.md}"
     padding: "{spacing.md} {spacing.xl}"
     height: 40px
 
@@ -193,14 +195,14 @@ components:
 
   card-primary:
     backgroundColor: "{colors.white}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.sm}"
     padding: "{spacing.2xl}"
 
   input-field:
     backgroundColor: "{colors.white}"
     textColor: "{colors.obsidian}"
     typography: "{typography.body-lg}"
-    rounded: "{rounded.md}"
+    rounded: "{rounded.sm}"
     padding: "{spacing.md} {spacing.lg}"
     height: 40px
 
@@ -208,28 +210,28 @@ components:
     backgroundColor: "{colors.info-lighter}"
     textColor: "{colors.info-dark}"
     typography: "{typography.body-sm-bold}"
-    rounded: "{rounded.full}"
+    rounded: "{rounded.sm}"
     padding: "{spacing.xs} {spacing.md}"
 
   badge-success:
     backgroundColor: "{colors.success-lighter}"
     textColor: "{colors.success-dark}"
     typography: "{typography.body-sm-bold}"
-    rounded: "{rounded.full}"
+    rounded: "{rounded.sm}"
     padding: "{spacing.xs} {spacing.md}"
 
   badge-warning:
     backgroundColor: "{colors.warning-light}"
     textColor: "{colors.obsidian}"
     typography: "{typography.body-sm-bold}"
-    rounded: "{rounded.full}"
+    rounded: "{rounded.sm}"
     padding: "{spacing.xs} {spacing.md}"
 
   badge-error:
     backgroundColor: "{colors.error-lighter}"
     textColor: "{colors.error-dark}"
     typography: "{typography.body-sm-bold}"
-    rounded: "{rounded.full}"
+    rounded: "{rounded.sm}"
     padding: "{spacing.xs} {spacing.md}"
 ---
 
@@ -252,7 +254,7 @@ The color strategy centers on a **monochromatic grey foundation** punctuated by 
 
 ### Neutral Greys
 
-A comprehensive 11-step grey scale (grey-2 through grey-100) provides nuanced tonal layers for backgrounds, borders, disabled states, and secondary UI elements. This scale enables subtle visual hierarchy without relying on heavy shadows or decorative elements.
+A comprehensive 16-step neutral scale (white, black, and grey-2 through grey-100) provides nuanced tonal layers for backgrounds, borders, disabled states, and secondary UI elements. This scale enables subtle visual hierarchy without relying on heavy shadows or decorative elements.
 
 - **Light greys (2-20):** Used for backgrounds, containers, and subtle dividers
 - **Mid greys (30-60):** Used for borders, inactive elements, and helper text
@@ -306,7 +308,7 @@ The layout system is built on an **8px base grid** that governs all spacing, siz
 
 ### Spacing Scale
 
-All spacing values are multiples of 4 or 8:
+All spacing values derive from a 4px base unit, with a 2px half-step (`xxs`) for fine adjustments:
 - **Micro spacing (0-12px):** Internal component padding, tight groupings
 - **Component spacing (16-32px):** Between related elements, card padding
 - **Section spacing (40-72px):** Vertical separation between major sections
@@ -345,19 +347,19 @@ The shape language uses **modest corner radii** to create a modern, approachable
 
 ### Corner Radius Scale
 
-- **None (0px):** Never used in standard UI; reserved for specific geometric needs
-- **Small (4px):** Badges, chips, small interactive elements
-- **Medium (8px):** Input fields, subtle containers
-- **Large (12px):** Primary buttons, cards
-- **Extra Large (16px):** Larger cards, prominent containers
-- **Full (9999px):** Pill-shaped elements, circular avatars
+- **None (0px):** Reserved for specific geometric needs (e.g., selected tree rows)
+- **Small (4px):** The default — badges, inputs, cards, and most containers
+- **Medium (6px):** Buttons
+- **Large (8px):** Larger surfaces such as empty states
+- **Extra Large (16px):** Chips and prominent containers
+- **Full (9999px):** Circular icon buttons and avatars (badges are *not* pills)
 
 ### Consistency Rules
 
-- Primary action buttons use 12px radius
-- Input fields and form controls use 8px radius
-- Cards and containers use 12-16px radius based on size
-- Status badges and tags use full radius for pill shapes
+- Primary action buttons use 6px radius
+- Input fields and form controls use 4px radius
+- Cards and containers use 4px radius
+- Badges use 4px radius — lightly rounded rectangles, not pills (full/circular radius is reserved for icon buttons and avatars)
 
 Corner radii should never exceed 20px in standard UI. Excessive rounding creates a consumer-grade, toy-like appearance that conflicts with the professional positioning.
 
@@ -376,14 +378,14 @@ Buttons are the primary drivers of action in the interface. They use generous pa
 
 Form elements prioritize clarity and ease of use. Input fields have generous internal padding (12px vertical, 16px horizontal) and use the body-lg typography size (16px) to prevent zoom issues on mobile devices.
 
-- **Text inputs:** 40px height, 8px corner radius, grey-12 border
+- **Text inputs:** 40px height, 4px corner radius, grey-12 border
 - **Labels:** 14px regular weight, grey-80 color, positioned above inputs
 - **Helper text:** 12px regular weight, grey-70 color, 4px spacing below input
 - **Error states:** Red-120 text, red-10 background tint on input
 
 ### Cards & Containers
 
-Cards provide visual grouping and hierarchy. They use white backgrounds on the primary container color, with 24px internal padding and 12px corner radius.
+Cards provide visual grouping and hierarchy. They use white backgrounds on the primary container color, with 24px internal padding and 4px corner radius.
 
 - **Standard Card:** White background, 1px grey-12 border, 24px padding
 - **Interactive Card:** Add subtle hover state (grey-6 background)
@@ -391,7 +393,7 @@ Cards provide visual grouping and hierarchy. They use white backgrounds on the p
 
 ### Badges & Labels
 
-Badges communicate status, categories, and metadata. They use semantic colors with tinted backgrounds and are always pill-shaped (full radius).
+Badges communicate status, categories, and metadata. They use semantic colors with tinted backgrounds and are lightly rounded rectangles (4px radius), not pills.
 
 - **Info Badge:** Info-lighter background, info-dark text
 - **Success Badge:** Success-lighter background, success-dark text
