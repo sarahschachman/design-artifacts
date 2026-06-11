@@ -62,13 +62,16 @@
   }
 
   /* ===== App shell: _constants.scss ===== */
+  /* Nav stays flush left; only the content column is capped ($max-content-width) */
   .app {
     display: flex;
     min-height: 100vh;
-    max-width: 1480px;          /* $max-content-width */
-    margin: 0 auto;
   }
-  .main { flex: 1; min-width: 0; }
+  .main {
+    flex: 1;
+    min-width: 0;
+    max-width: 1480px;          /* $max-content-width */
+  }
 
   .page {
     max-width: 1040px;
@@ -88,6 +91,12 @@
     display: flex;
     flex-direction: column;
     z-index: 2;                 /* $zindex-nav */
+  }
+
+  /* MaterialIcons.module.scss FOUT guard: hide icon text until the symbols
+     font is loaded (the real apps set this attribute via FontFaceObserver) */
+  html:not([data-gmsfontstatus='loaded']) .material-symbols-outlined {
+    visibility: hidden;
   }
 
   /* MaterialIcons component defaults: Outlined, wght 400, GRAD 0 */
@@ -728,5 +737,12 @@
   </main>
     </div>
   </div>
+
+  <script>
+    // Mirrors the FontFaceObserver pattern from mono-frontend admin/public/html
+    document.fonts.load("20px 'Material Symbols Outlined'").then(function () {
+      document.documentElement.setAttribute('data-gmsfontstatus', 'loaded');
+    });
+  </script>
 </body>
 </html>
