@@ -42,6 +42,7 @@
   /* Hero */
   .hero { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 44px; align-items: center; padding-bottom: 56px; border-bottom: 1px solid var(--line); }
   .hero h1 { font-family: var(--serif); font-weight: 400; font-size: 50px; line-height: 1.04; letter-spacing: -0.5px; }
+  .hero .wordmark { height: 44px; width: auto; max-width: 300px; display: block; margin-bottom: 2px; }
   .hero .lede { color: var(--grey); font-size: 16px; margin-top: 18px; max-width: 46ch; }
   .hero .cta { display: flex; gap: 10px; margin-top: 24px; flex-wrap: wrap; }
   .hero .swatchstrip { display: flex; height: 200px; border-radius: 14px; overflow: hidden; border: 1px solid var(--line); }
@@ -63,6 +64,18 @@
   .lede li { margin: 5px 0; padding-left: 2px; }
   .lede li::marker { color: var(--grey-soft); }
   .grouptitle { font-family: var(--serif); font-size: 22px; margin: 36px 0 14px; }
+
+  /* Color hierarchy (70/20/10) */
+  .hierarchy { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin: 6px 0 30px; padding-top: 6px; border-top: 1px solid var(--line); }
+  .hier-col { padding-top: 18px; }
+  .hier-title { font-family: var(--serif); font-weight: 400; font-size: 19px; margin-bottom: 8px; }
+  .hier-body { font-size: 13px; color: var(--grey); line-height: 1.5; }
+  .hier-body p { margin: 0 0 8px; }
+  .hier-body strong { color: var(--ink); font-weight: 600; }
+  .hier-body em { color: var(--grey-soft); }
+  .hier-body ul { margin: 6px 0 0; padding-left: 17px; }
+  .hier-body li { margin: 3px 0; }
+  @media (max-width: 760px) { .hierarchy { grid-template-columns: 1fr; gap: 8px; } }
 
   /* Color cards */
   .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(214px, 1fr)); gap: 16px; margin-top: 22px; }
@@ -101,6 +114,37 @@
   .radii .r { text-align: center; }
   .radii .rbox { width: 90px; height: 90px; background: var(--card-soft); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 12px; color: var(--grey); }
   .radii .rlbl { font-family: var(--mono); font-size: 11px; color: var(--grey-soft); margin-top: 7px; }
+
+  /* Brand palette ramps */
+  .brand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(244px, 1fr)); gap: 16px; margin-top: 14px; }
+  .brandcard { border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: var(--card); }
+  .brand-head { display: flex; align-items: center; gap: 12px; }
+  .brand-chip { width: 44px; height: 44px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.08); cursor: pointer; flex-shrink: 0; }
+  .brand-head .nm { font-size: 13.5px; font-weight: 600; }
+  .brand-head .hx { font-family: var(--mono); font-size: 12px; color: var(--grey-soft); text-transform: uppercase; }
+  .ramp-strip { display: flex; height: 26px; margin-top: 12px; border-radius: 6px; overflow: hidden; border: 1px solid var(--line); }
+  .ramp-seg { flex: 1; cursor: pointer; transition: transform 0.1s; }
+  .ramp-seg:hover { transform: scaleY(1.18); }
+  .ramp-seg.flash, .brand-chip.flash { outline: 2px solid var(--obsidian); outline-offset: 1px; }
+
+  /* Gradients */
+  .grad-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 16px; }
+  .grad-card { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--card); cursor: pointer; position: relative; transition: transform 0.12s, box-shadow 0.12s; }
+  .grad-card:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(0,0,0,0.06); }
+  .grad-sw { height: 88px; }
+  .grad-meta { padding: 11px 13px 13px; }
+  .grad-meta .nm { font-size: 13px; font-weight: 600; }
+  .grad-meta .hx { font-family: var(--mono); font-size: 10.5px; color: var(--grey-soft); margin-top: 3px; word-break: break-all; }
+  .grad-card .copied { position: absolute; top: 10px; right: 10px; background: var(--obsidian); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 4px; opacity: 0; transition: opacity 0.15s; }
+  .grad-card.show .copied { opacity: 1; }
+
+  /* Logo */
+  .logo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 16px; }
+  .logo-card { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--card); }
+  .logo-stage { display: flex; align-items: center; justify-content: center; padding: 36px 28px; min-height: 120px; }
+  .logo-img { width: 70%; max-width: 200px; height: auto; display: block; }
+  .logo-stage.mark .logo-img { width: auto; height: 56px; max-width: none; }
+  .logo-cap { font-family: var(--mono); font-size: 11.5px; color: var(--grey-soft); padding: 10px 14px; border-top: 1px solid var(--line); }
 
   /* Do / Don't */
   .dd { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 22px; }
@@ -234,11 +278,24 @@ function classifyColor(name){
   if(/^(red|yellow|green|blue|error|success|warning|info|danger)/.test(n)) return 'Semantic';
   return 'Other';
 }
+function colorHierarchy(text){
+  const block=document.createElement('div');
+  const parts=text.split(/^####\s+/m);
+  if(parts[0] && parts[0].trim()){ const intro=document.createElement('div'); intro.className='sect-intro'; intro.innerHTML=mdToHtml(parts[0].trim()); block.appendChild(intro); }
+  const grid=document.createElement('div'); grid.className='hierarchy';
+  for(const t of parts.slice(1)){
+    const nl=t.indexOf('\n'); const title=(nl<0?t:t.slice(0,nl)).trim(); const bodyMd=(nl<0?'':t.slice(nl+1)).trim();
+    const col=document.createElement('div'); col.className='hier-col';
+    col.innerHTML='<div class="hier-title">'+inlineMd(title)+'</div><div class="hier-body">'+mdToHtml(bodyMd)+'</div>';
+    grid.appendChild(col);
+  }
+  block.appendChild(grid); return block;
+}
 function renderColors(fm, prose, usage){
   if(!fm.colors) return;
   const sec=prose.get('colors');
   const s=section('Colors','Color palette','Colors', sec?mdToHtml(sec.intro):'');
-  const groups={}; for(const [name,val] of Object.entries(fm.colors)){ (groups[classifyColor(name)]=groups[classifyColor(name)]||[]).push([name,val]); }
+  const groups={}; for(const [name,val] of Object.entries(fm.colors)){ if(isBrandColor(name)) continue; (groups[classifyColor(name)]=groups[classifyColor(name)]||[]).push([name,val]); }
   for(const g of ['Brand','Neutral','Semantic','Aliases & roles','Other']){
     if(!groups[g]) continue;
     const gt=document.createElement('div'); gt.className='grouptitle'; gt.textContent=g; s.appendChild(gt);
@@ -249,6 +306,75 @@ function renderColors(fm, prose, usage){
       c.innerHTML='<div class="chip" style="background:'+hex+'"></div><div class="meta"><div class="nm">'+name+'</div><div class="hx">'+hex+'</div>'+(u?'<div class="usage">'+escapeHtml(u)+'</div>':'')+'</div><div class="copied">copied</div>';
       c.addEventListener('click',()=>{ navigator.clipboard&&navigator.clipboard.writeText(name); c.classList.add('show'); setTimeout(()=>c.classList.remove('show'),900); });
       grid.appendChild(c);
+    }
+    s.appendChild(grid);
+  }
+}
+/* ---------- brand palette + gradients + logo ---------- */
+const BRAND_BASES = ['lemon','light-lemon','navy','charcoal','warm-gray','cool-beige','bordeaux','cabernet','olive','turquoise','peach','violet'];
+const RAMP_FAMILIES = ['lemon','navy','warm-gray','bordeaux','olive','turquoise','peach','violet'];
+function isBrandColor(name){
+  if(BRAND_BASES.includes(name)) return true;
+  const m = name.match(/^([a-z-]+)-(100|200|300|400|500|600|700|800)$/);
+  return !!(m && RAMP_FAMILIES.includes(m[1]));
+}
+function copyOn(el, text){ el.addEventListener('click',()=>{ navigator.clipboard&&navigator.clipboard.writeText(text); el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),600); }); }
+function rampStrip(fam, fm){
+  const steps=['100','200','300','400','500','600','700','800'].map(s=>fam+'-'+s).filter(n=>fm.colors[n]);
+  if(!steps.length) return null;
+  const strip=document.createElement('div'); strip.className='ramp-strip';
+  for(const n of steps){ const hex=resolveVal(fm.colors[n],fm,0); const seg=document.createElement('div'); seg.className='ramp-seg'; seg.style.background=hex; seg.title=n+' · '+hex; copyOn(seg,n); strip.appendChild(seg); }
+  return strip;
+}
+function brandCard(base, fm){
+  const hex=resolveVal(fm.colors[base],fm,0);
+  const card=document.createElement('div'); card.className='brandcard';
+  const head=document.createElement('div'); head.className='brand-head';
+  const chip=document.createElement('div'); chip.className='brand-chip'; chip.style.background=hex; chip.title='Click to copy "'+base+'"'; copyOn(chip,base);
+  const meta=document.createElement('div'); meta.innerHTML='<div class="nm">'+base+'</div><div class="hx">'+hex+'</div>';
+  head.appendChild(chip); head.appendChild(meta); card.appendChild(head);
+  const strip=rampStrip(base, fm); if(strip) card.appendChild(strip);
+  return card;
+}
+function renderBrandPalette(fm, prose){
+  if(!fm.colors || !BRAND_BASES.some(b=>fm.colors[b])) return;
+  const sub=prose.sub(['colors'], /brand palette/i);
+  const s=section('Brand palette','Brand palette','Brand palette', sub?mdToHtml(sub.text):'');
+  const hier=prose.sub(['colors'], /hierarchy/i); if(hier) s.appendChild(colorHierarchy(hier.text));
+  const families={ Primary:['lemon','light-lemon','navy'], Neutral:['charcoal','warm-gray','cool-beige'], Secondary:['bordeaux','cabernet','olive'], Tertiary:['turquoise','peach','violet'] };
+  for(const g of ['Primary','Neutral','Secondary','Tertiary']){
+    const present=families[g].filter(b=>fm.colors[b]); if(!present.length) continue;
+    const gt=document.createElement('div'); gt.className='grouptitle'; gt.textContent=g; s.appendChild(gt);
+    const grid=document.createElement('div'); grid.className='brand-grid';
+    for(const b of present) grid.appendChild(brandCard(b, fm));
+    s.appendChild(grid);
+  }
+}
+function renderGradients(fm, prose){
+  if(!fm.gradients || typeof fm.gradients!=='object') return;
+  const sec=prose.get('gradients');
+  const s=section('Gradients','Gradients','Gradients', sec?mdToHtml(sec.intro):'');
+  const grid=document.createElement('div'); grid.className='grad-grid';
+  for(const [name,css] of Object.entries(fm.gradients)){
+    if(typeof css!=='string') continue;
+    const card=document.createElement('div'); card.className='grad-card'; card.title='Click to copy CSS';
+    card.innerHTML='<div class="grad-sw" style="background:'+css+'"></div><div class="grad-meta"><div class="nm">'+name+'</div><div class="hx">'+escapeHtml(css)+'</div></div><div class="copied">copied</div>';
+    card.addEventListener('click',()=>{ navigator.clipboard&&navigator.clipboard.writeText(css); card.classList.add('show'); setTimeout(()=>card.classList.remove('show'),900); });
+    grid.appendChild(card);
+  }
+  s.appendChild(grid);
+}
+function renderLogo(fm, prose){
+  const sec=prose.get('logo'); if(!sec) return;
+  const s=section('Logo','Logo','Logo', mdToHtml(sec.intro));
+  const surfaces=[ {color:'black',label:'Black · on light',bg:'#ffffff'}, {color:'white',label:'White · on Navy',bg:'#1C4774'}, {color:'lemon',label:'Lemon · on Obsidian',bg:'#222222'} ];
+  for(const grp of [{title:'Wordmark',kind:'wordmark'},{title:'Mark',kind:'mark'}]){
+    const gt=document.createElement('div'); gt.className='grouptitle'; gt.textContent=grp.title; s.appendChild(gt);
+    const grid=document.createElement('div'); grid.className='logo-grid';
+    for(const su of surfaces){
+      const card=document.createElement('div'); card.className='logo-card';
+      card.innerHTML='<div class="logo-stage '+grp.kind+'" style="background:'+su.bg+'"><img class="logo-img" src="assets/teachable-'+grp.kind+'-'+su.color+'.svg" alt="Teachable '+grp.title.toLowerCase()+', '+su.color+'"></div><div class="logo-cap">'+su.label+'</div>';
+      grid.appendChild(card);
     }
     s.appendChild(grid);
   }
@@ -385,13 +511,14 @@ function renderGuidelines(prose){
 function renderHero(fm){
   const hero=document.createElement('div'); hero.className='hero';
   const left=document.createElement('div');
-  left.innerHTML='<h1>'+escapeHtml(fm.name||'Design System')+'</h1><p class="lede">'+escapeHtml(fm.description||'')+'</p>'+
-    '<div class="cta"><a class="btn btn-primary">Get started</a><a class="btn btn-secondary">View components</a></div>';
+  left.innerHTML='<img class="wordmark" src="assets/teachable-wordmark-black.svg" alt="Teachable">'+
+    '<p class="lede">'+escapeHtml(fm.description||'')+'</p>'+
+    '<div class="cta"><a class="btn btn-primary" href="https://github.com/sarahschachman/design-artifacts/blob/main/DESIGN.md" target="_blank">View DESIGN.md</a><a class="btn btn-secondary" href="../">Back to artifacts</a></div>';
   const right=document.createElement('div');
   const strip=document.createElement('div'); strip.className='swatchstrip';
-  const picks=['primary','on-primary','brand-primary','obsidian','error-primary','success-primary','info-primary'].map(k=>fm.colors&&fm.colors[k]).filter(Boolean).slice(0,6);
-  const fallback=fm.colors?Object.values(fm.colors).slice(0,6):[];
-  (picks.length?picks:fallback).forEach(v=>{ const d=document.createElement('div'); d.style.background=resolveVal(v,fm,0); strip.appendChild(d); });
+  // weighted by the 70/20/10 hierarchy: lemon widest, secondary medium, tertiary thinnest
+  const weighted=[['lemon',8],['bordeaux',2],['cabernet',2],['olive',2],['turquoise',1],['peach',1],['violet',1]];
+  weighted.forEach(([k,w])=>{ const v=fm.colors&&fm.colors[k]; if(!v) return; const d=document.createElement('div'); d.style.flex=String(w); d.style.background=resolveVal(v,fm,0); strip.appendChild(d); });
   right.appendChild(strip); hero.appendChild(left); hero.appendChild(right); content().appendChild(hero);
 }
 function renderBrand(prose){
@@ -424,7 +551,10 @@ async function main(){
   const prose=parseProse(body); const usage=parseColorUsage(body);
   renderHero(fm);
   renderBrand(prose);
+  renderLogo(fm, prose);
   renderColors(fm, prose, usage);
+  renderBrandPalette(fm, prose);
+  renderGradients(fm, prose);
   renderType(fm, prose);
   renderComponents(fm, prose);
   renderSpacing(fm, prose);

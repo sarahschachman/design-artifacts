@@ -1,6 +1,6 @@
 ---
 version: alpha
-name: Fedora Design System
+name: Teachable Design System
 description: A comprehensive design system for Teachable's learning platform, built on principles of clarity, professionalism, and user empowerment.
 colors:
   # Primary Colors (required)
@@ -57,6 +57,89 @@ colors:
   container-primary: "#fbfbfb"
   container-brand: "#faffd6"
   container-legacy: "#ffffff"
+
+  # ── Brand palette (Teachable Brand Kit) ──
+  # Primary
+  lemon: "#E6FF32"
+  light-lemon: "#F8FFC6"
+  navy: "#1C4774"
+  # Neutral
+  charcoal: "#4E4E4E"
+  warm-gray: "#D1CECB"
+  cool-beige: "#F6F2EE"
+  # Secondary
+  bordeaux: "#711014"
+  cabernet: "#480601"
+  olive: "#465F01"
+  # Tertiary
+  turquoise: "#B6F2E8"
+  peach: "#FFE3BE"
+  violet: "#E5CCFF"
+  # Tints & shades (100 lightest → 800 darkest)
+  lemon-100: "#FAFFD6"
+  lemon-200: "#F5FFAD"
+  lemon-300: "#F0FF84"
+  lemon-400: "#EBFF5B"
+  lemon-500: "#B8CC28"
+  lemon-600: "#8A991E"
+  lemon-700: "#5C6614"
+  lemon-800: "#2E330A"
+  navy-100: "#D2DAE3"
+  navy-200: "#A4B5C7"
+  navy-300: "#7791AC"
+  navy-400: "#496C90"
+  navy-500: "#16395D"
+  navy-600: "#112B46"
+  navy-700: "#0B1C2E"
+  navy-800: "#060E17"
+  warm-gray-100: "#F6F5F5"
+  warm-gray-200: "#EDEBEA"
+  warm-gray-300: "#E3E2E0"
+  warm-gray-400: "#DAD8D5"
+  warm-gray-500: "#A7A5A2"
+  warm-gray-600: "#7D7C7A"
+  warm-gray-700: "#545251"
+  warm-gray-800: "#2A2929"
+  bordeaux-100: "#E3CFD0"
+  bordeaux-200: "#C69FA1"
+  bordeaux-300: "#AA7072"
+  bordeaux-400: "#8D4043"
+  bordeaux-500: "#5A0D10"
+  bordeaux-600: "#440A0C"
+  bordeaux-700: "#2D0608"
+  bordeaux-800: "#170304"
+  olive-100: "#DADFCC"
+  olive-200: "#B5BF99"
+  olive-300: "#909F67"
+  olive-400: "#6B7F34"
+  olive-500: "#384C01"
+  olive-600: "#2A3901"
+  olive-700: "#1C2600"
+  olive-800: "#0E1300"
+  turquoise-100: "#F0FCFA"
+  turquoise-200: "#E2FAF6"
+  turquoise-300: "#D3F7F1"
+  turquoise-400: "#C5F5ED"
+  turquoise-500: "#92C2BA"
+  turquoise-600: "#6D918B"
+  turquoise-700: "#49615D"
+  turquoise-800: "#24302E"
+  peach-100: "#FFF9F2"
+  peach-200: "#FFF4E5"
+  peach-300: "#FFEED8"
+  peach-400: "#FFE9CB"
+  peach-500: "#CCB698"
+  peach-600: "#998872"
+  peach-700: "#665B4C"
+  peach-800: "#332D26"
+  violet-100: "#FAF5FF"
+  violet-200: "#F5EBFF"
+  violet-300: "#EFE0FF"
+  violet-400: "#EAD6FF"
+  violet-500: "#B7A3CC"
+  violet-600: "#897A99"
+  violet-700: "#5C5266"
+  violet-800: "#2E2933"
 
 typography:
   # Display Typography
@@ -170,6 +253,19 @@ spacing:
   6xl: 60px
   7xl: 72px
 
+gradients:
+  lemon-to-light-lemon: "linear-gradient(154deg, #E6FF32, #F8FFC6)"
+  turquoise-to-light-lemon: "linear-gradient(154deg, #B6F2E8, #F8FFC6)"
+  peach-to-violet: "linear-gradient(154deg, #FFE3BE, #E5CCFF)"
+  bordeaux-to-cabernet: "linear-gradient(154deg, #711014, #480601)"
+  olive-to-dark-olive: "linear-gradient(158deg, #465F01, #1C2600)"
+  navy-to-light-navy: "linear-gradient(154deg, #1C4774, #7791AC)"
+  light-lemon-to-cool-beige: "linear-gradient(154deg, #F8FFC6, #F6F2EE)"
+  light-lemon-to-warm-gray: "linear-gradient(154deg, #F8FFC6, #D1CECB)"
+  warm-gray-to-cool-beige: "linear-gradient(153deg, #D1CECB, #F6F2EE)"
+  charcoal-to-warm-gray: "linear-gradient(180deg, #4E4E4E, #D1CECB)"
+  black-to-charcoal: "linear-gradient(154deg, #000000, #4E4E4E)"
+
 components:
   button-primary:
     backgroundColor: "{colors.brand-primary}"
@@ -237,7 +333,7 @@ components:
 
 ## Brand & Style
 
-The Fedora Design System embodies the ethos of **Educational Empowerment** through **Professional Clarity**. It serves the dual audience of course creators building their teaching businesses and students engaging with learning content.
+The Teachable Design System embodies the ethos of **Educational Empowerment** through **Professional Clarity**. It serves the dual audience of course creators building their teaching businesses and students engaging with learning content.
 
 The design philosophy balances **institutional trust** with **creative expression**. The brand personality is confident, supportive, and human-centric—a platform that gets out of the way to let teachers teach and students learn.
 
@@ -246,6 +342,21 @@ The chosen aesthetic is **Modern Professional** with moments of playful energy. 
 ## Colors
 
 The color strategy centers on a **monochromatic grey foundation** punctuated by the iconic **Teachable Lemon** as the primary brand color. This creates a professional canvas that allows course content to shine while maintaining strong brand recognition.
+
+### Color hierarchy
+
+Color usage follows a **70 / 20 / 10** balance — Primary & Neutral dominate, Secondary supports, and Tertiary accents.
+
+#### Primary + Neutral — 70%
+These **are** the Teachable brand — leaned on for all major marketing and brand communications because they create the strongest visual recognition. **Teachable Lemon** appears in every single standalone communication.
+Use for: key web & product imagery, backgrounds & UI, campaigns, sales decks, event touch-points, data visualization, and swag.
+
+#### Secondary — 20%
+Secondary colors **support** the palette and should appear regularly. They provide visual pacing while Primary and Neutral remain visually dominant.
+Use for: graphic elements & data visualization, social media, and event sub-branding.
+
+#### Tertiary — 10%
+Tertiary colors add **flexibility and energy** — the expressive end of the brand, e.g. at events, used alongside other colors for cohesion. Use for: graphic elements & data visualization, social media, event sub-branding, and seasonal or specialty assets. *Too many pastels can read as juvenile — use with care, in combination with the Primary, Neutral, and Secondary palettes.*
 
 ### Brand Colors
 
@@ -268,6 +379,14 @@ Error, success, warning, and info colors follow a consistent scale pattern (10, 
 - **Success Green:** Used for confirmations, completed states, and positive feedback
 - **Warning Yellow:** Used for cautionary messages and important notices that require attention
 - **Info Blue:** Used for informational messages, tips, and neutral notifications
+
+### Brand Palette
+
+Beyond the functional product tokens above, the **Teachable Brand Kit** defines the fuller brand identity — used for marketing, illustration, and expressive surfaces. It is organized into **Primary** (Lemon, Light Lemon, Navy), **Neutral** (Charcoal, Warm Gray, Cool Beige), **Secondary** (Bordeaux, Cabernet, Olive), and **Tertiary** (Turquoise, Peach, Violet) families, each with an 8-step tint & shade ramp (`<family>-100` lightest → `<family>-800` darkest).
+
+- **Lemon (#E6FF32)** is the canonical brand value. Note the product UI token (`brand-primary` / `primary`, #E7FF33) is a hair off from it — treat **#E6FF32** as the source of truth for brand work.
+- **Secondary & Tertiary** colors bring warmth and range to editorial and data contexts — use them as accents, not as primary UI chrome.
+- Reserve the deep shades (**600–800**) for text and contrast; use the light tints (**100–300**) for backgrounds and fills.
 
 ## Typography
 
@@ -326,7 +445,7 @@ The system employs a **mobile-first, fluid layout** approach. Components are des
 
 ## Elevation & Depth
 
-Depth in the Fedora Design System is achieved through **subtle tonal layers** rather than dramatic shadows. The design language is intentionally flat, allowing educational content to remain the focus.
+Depth in the Teachable Design System is achieved through **subtle tonal layers** rather than dramatic shadows. The design language is intentionally flat, allowing educational content to remain the focus.
 
 ### Elevation Levels
 
@@ -441,3 +560,17 @@ All badges use 12px bold text with 4-12px horizontal padding, maintaining access
 - **Do** maintain WCAG AA contrast ratios (4.5:1 minimum for body text)
 - **Don't** introduce decorative elements, illustrations, or ornamentation without purpose
 - **Don't** use animations longer than 250ms—keep interactions snappy and professional
+
+## Gradients
+
+The brand uses soft, two-stop **linear gradients** for expressive surfaces — hero backgrounds, feature cards, and brand moments. They run on a consistent diagonal between two adjacent brand colors. Keep gradients to large surfaces, and never set body text on the busiest part of one.
+
+## Logo
+
+The Teachable identity comes in two lockups: the full **wordmark** and the **mark** — the standalone "t" symbol, used in compact spaces like avatars, app icons, and favicons. Both ship in three colorways — **Black**, **White**, and **Lemon** — chosen for contrast against the surface behind them.
+
+- **Black** on light or cream surfaces (the default lockup).
+- **White** on dark surfaces — Navy, Charcoal, or photography.
+- **Lemon** on dark surfaces when a brand-forward accent is wanted — never on white (insufficient contrast).
+- **Clear space:** keep padding around the wordmark at least the height of the lowercase "t" on every side. Don't crowd it.
+- **Don't** recolor, stretch, rotate, add effects, or place the wordmark on a low-contrast background.
