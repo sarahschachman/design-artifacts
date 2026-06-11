@@ -267,68 +267,239 @@ gradients:
   black-to-charcoal: "linear-gradient(154deg, #000000, #4E4E4E)"
 
 components:
+  anchor:
+    textColor: "#000000"
   button-primary:
-    backgroundColor: "{colors.brand-primary}"
-    textColor: "{colors.obsidian}"
-    typography: "{typography.body-md-bold}"
+    backgroundColor: "#E7FF33"
+    textColor: "#222222"
+    borderColor: "#222222"
     rounded: "{rounded.md}"
-    padding: "{spacing.md} {spacing.xl}"
     height: 40px
-
-  button-primary-hover:
-    backgroundColor: "{colors.brand-primary-dark}"
-
   button-secondary:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.obsidian}"
-    typography: "{typography.body-md-bold}"
+    backgroundColor: "#ffffff"
+    textColor: "#222222"
+    borderColor: "#222222"
     rounded: "{rounded.md}"
-    padding: "{spacing.md} {spacing.xl}"
     height: 40px
-
-  button-secondary-hover:
-    backgroundColor: "{colors.grey-6}"
-
-  card-primary:
-    backgroundColor: "{colors.white}"
-    rounded: "{rounded.sm}"
-    padding: "{spacing.2xl}"
-
-  input-field:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.obsidian}"
-    typography: "{typography.body-lg}"
-    rounded: "{rounded.sm}"
-    padding: "{spacing.md} {spacing.lg}"
+  button-trial:
+    backgroundColor: "linear-gradient(225deg, #000 0%, #199A76 100%)"
+    textColor: "#ffffff"
+    borderColor: "#E7FF33"
+    rounded: "{rounded.md}"
     height: 40px
-
-  badge-info:
-    backgroundColor: "{colors.info-lighter}"
-    textColor: "{colors.info-dark}"
-    typography: "{typography.body-sm-bold}"
+  button-upgrade:
+    backgroundColor: "#ffffff"
+    textColor: "#222222"
+    borderColor: "#E7FF33"
+    rounded: "{rounded.md}"
+    height: 40px
+  button-danger-outline:
+    backgroundColor: "#ffffff"
+    textColor: "#aa3228"
+    borderColor: "#aa3228"
+    rounded: "{rounded.md}"
+    height: 40px
+  button-text:
+    textColor: "#222222"
+    rounded: "{rounded.md}"
+    height: 40px
+  breadcrumbs:
+    textColor: "#7a7a7a"
+  cap-limit-bar:
+    textColor: "#646464"
+  color-picker-input:
+    backgroundColor: "#f8f8f8"
+    height: 64px
+  date-picker-input:
+    backgroundColor: "#ffffff"
+    borderColor: "#222222"
+    rounded: 5px
+    height: 40px
+  divider:
+    borderColor: "#e4e4e4"
+    height: 1px
+  field-error:
+    textColor: "#ca483d"
+  input:
+    backgroundColor: "#ffffff"
+    textColor: "#383838"
+    borderColor: "#7a7a7a"
     rounded: "{rounded.sm}"
-    padding: "{spacing.xs} {spacing.md}"
-
-  badge-success:
-    backgroundColor: "{colors.success-lighter}"
-    textColor: "{colors.success-dark}"
-    typography: "{typography.body-sm-bold}"
+    height: 40px
+  input-success:
+    backgroundColor: "#ffffff"
+    textColor: "#E7FF33"
+    borderColor: "#E7FF33"
     rounded: "{rounded.sm}"
-    padding: "{spacing.xs} {spacing.md}"
-
+    height: 40px
+  list:
+    backgroundColor: "#ffffff"
+    borderColor: "#d3d3d3"
+    rounded: "{rounded.sm}"
+  notification:
+    textColor: "#4e4e4e"
+    rounded: "{rounded.sm}"
+  notification-info:
+    backgroundColor: "#eff4ff"
+    textColor: "#4e4e4e"
+    borderColor: "#608fff"
+    rounded: "{rounded.sm}"
+  notification-alert:
+    backgroundColor: "#fff7dc"
+    textColor: "#4e4e4e"
+    borderColor: "#f8c821"
+    rounded: "{rounded.sm}"
+  notification-success:
+    backgroundColor: "#ebf8ef"
+    textColor: "#4e4e4e"
+    borderColor: "#38ba5f"
+    rounded: "{rounded.sm}"
+  notification-upsell:
+    backgroundColor: "#f2f2f2"
+    textColor: "#4e4e4e"
+    rounded: "{rounded.sm}"
+  notification-trial:
+    backgroundColor: "linear-gradient(225deg, #000 0%, #199A76 100%)"
+    textColor: "#ffffff"
+    borderColor: "#E7FF33"
+    rounded: "{rounded.sm}"
+  notification-primary:
+    backgroundColor: "#FAFFD6"
+    textColor: "#222222"
+    borderColor: "#E7FF33"
+    rounded: "{rounded.sm}"
+  input-number:
+    borderColor: "#646464"
+  modal:
+    backgroundColor: "#ffffff"
+    rounded: "{rounded.sm}"
+  tabs:
+    textColor: "#222222"
+    rounded: "4px 4px 0 0"
+  upload-pane:
+    backgroundColor: "#f8f8f8"
+    borderColor: "#e4e4e4"
+    rounded: "{rounded.sm}"
+  upload-pane-upload-button:
+    backgroundColor: "#f8f8f8"
+    borderColor: "#222222"
+    rounded: "{rounded.sm}"
+  badge-neutral:
+    backgroundColor: "#e4e4e4"
+    textColor: "#222222"
+    rounded: "{rounded.sm}"
+  badge-positive:
+    backgroundColor: "#bfd2ff"
+    textColor: "#222222"
+    rounded: "{rounded.sm}"
+  badge-negative:
+    backgroundColor: "#ffcac5"
+    textColor: "#222222"
+    rounded: "{rounded.sm}"
   badge-warning:
-    backgroundColor: "{colors.warning-light}"
-    textColor: "{colors.obsidian}"
-    typography: "{typography.body-sm-bold}"
+    backgroundColor: "#fef4d3"
+    textColor: "#222222"
     rounded: "{rounded.sm}"
-    padding: "{spacing.xs} {spacing.md}"
-
-  badge-error:
-    backgroundColor: "{colors.error-lighter}"
-    textColor: "{colors.error-dark}"
-    typography: "{typography.body-sm-bold}"
+  banner:
+    backgroundColor: "#ffffff"
+    height: 50px
+  banner-default:
+    backgroundColor: "#eff4ff"
+    borderColor: "#dfe9ff"
+    height: 50px
+  banner-warning:
+    backgroundColor: "#ffe2df"
+    borderColor: "#ffcac5"
+    height: 50px
+  card:
+    borderColor: "#e4e4e4"
     rounded: "{rounded.sm}"
-    padding: "{spacing.xs} {spacing.md}"
+  card-white:
+    backgroundColor: "#ffffff"
+    borderColor: "#e4e4e4"
+    rounded: "{rounded.sm}"
+  card-grey:
+    backgroundColor: "#fbfbfb"
+    borderColor: "#e4e4e4"
+    rounded: "{rounded.sm}"
+  checkbox:
+    textColor: "#222222"
+    borderColor: "#222222"
+    rounded: 2px
+    height: 18px
+  chip:
+    backgroundColor: "#ffffff"
+    textColor: "#222222"
+    borderColor: "#e4e4e4"
+    rounded: "{rounded.xl}"
+  container:
+    backgroundColor: "#ffffff"
+    borderColor: "#e4e4e4"
+    rounded: "{rounded.sm}"
+  label:
+    textColor: "#646464"
+  tag:
+    textColor: "#222222"
+    rounded: 10px
+  tag-destructive:
+    backgroundColor: "#f46b5f"
+    textColor: "#222222"
+    rounded: 10px
+  tag-informative:
+    backgroundColor: "#80a5ff"
+    textColor: "#222222"
+    rounded: 10px
+  tag-success:
+    backgroundColor: "#60c87f"
+    textColor: "#222222"
+    rounded: 10px
+  tag-warning:
+    backgroundColor: "#f9d34d"
+    textColor: "#222222"
+    rounded: 10px
+  empty-state:
+    backgroundColor: "#f8f8f8"
+    textColor: "#222222"
+    borderColor: "#e4e4e4"
+    rounded: "{rounded.lg}"
+  pagination:
+    textColor: "#646464"
+  search-input:
+    borderColor: "#d3d3d3"
+    rounded: "{rounded.sm}"
+  switch:
+    backgroundColor: "#bdbdbd"
+    rounded: 20px
+    height: 30px
+  toast:
+    backgroundColor: "#222222"
+    textColor: "#ffffff"
+    rounded: "{rounded.sm}"
+  toast-success:
+    backgroundColor: "#222222"
+    textColor: "#ffffff"
+    rounded: "{rounded.sm}"
+  range-slider-label:
+    backgroundColor: "#222222"
+    textColor: "#ffffff"
+    rounded: "{rounded.sm}"
+    height: 32px
+  tooltip-primary:
+    backgroundColor: "#222222"
+    textColor: "#ffffff"
+    rounded: "{rounded.sm}"
+  tooltip-secondary:
+    textColor: "#222222"
+    rounded: "{rounded.sm}"
+  table:
+    backgroundColor: "#f8f8f8"
+    borderColor: "#e4e4e4"
+  page-header:
+    backgroundColor: "#ffffff"
+  action-list:
+    borderColor: "#d3d3d3"
+  loader:
+    backgroundColor: "#E7FF33"
 ---
 
 ## Brand & Style

@@ -426,17 +426,172 @@ function exampleLabel(name){
 }
 function buildDemo(name, comp, fm){
   const wrap=document.createElement('div'); wrap.className='demo';
-  if(name.startsWith('input')||/field/.test(name)){
-    const f=document.createElement('div'); f.className='field';
-    const lab=document.createElement('label'); lab.textContent='Email address';
-    const inp=document.createElement('input'); inp.placeholder='you@teachable.com'; styleEl(inp,comp,fm);
-    f.appendChild(lab); f.appendChild(inp); wrap.appendChild(f); return wrap;
+  const R=k=>{ const v=resolveVal(comp[k],fm,0); return (v&&v.indexOf('{')<0)?v:null; };
+  const bg=R('backgroundColor'), fg=R('textColor'), bc=R('borderColor'), h=R('height');
+  let rad=R('rounded'); if(rad&&!/px|%/.test(rad)) rad=null;
+  const checked=/checked/.test(name);
+
+  // checkbox: a real box (+ checkmark when checked) and a label
+  if(name.startsWith('checkbox')){
+    const row=document.createElement('label'); row.style.cssText='display:inline-flex;align-items:center;gap:9px;font-size:13px;color:#333';
+    const box=document.createElement('span'); box.style.cssText='width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;border:1.5px solid '+(bc||'#222')+';border-radius:'+(rad||'4px')+';flex-shrink:0';
+    if(checked){ box.style.background=fg||'#222'; box.style.borderColor=fg||'#222'; box.innerHTML='<svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6.2l2.6 2.6L10 3" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
+    row.appendChild(box); row.appendChild(document.createTextNode(checked?'Checked':'Remember me')); wrap.appendChild(row); return wrap;
   }
-  const el=document.createElement('div'); el.style.display='inline-flex'; el.style.alignItems='center'; el.style.justifyContent='center';
-  if(name.startsWith('card')){ el.style.width='100%'; el.style.minHeight='64px'; el.style.padding='16px'; el.textContent='Card surface'; el.style.fontSize='13px'; if(!comp.borderColor) el.style.border='1px solid #eee'; }
-  else if(name.startsWith('badge')){ el.style.padding='4px 12px'; el.style.fontSize='12px'; el.style.fontWeight='600'; el.textContent=exampleLabel(name); }
-  else { el.style.padding='0 18px'; el.style.height='40px'; el.style.fontSize='14px'; el.style.fontWeight='600'; el.textContent=exampleLabel(name); }
-  styleEl(el,comp,fm); wrap.appendChild(el); return wrap;
+  // switch: a toggle track + thumb
+  if(name.startsWith('switch')){
+    const track=document.createElement('span'); track.style.cssText='display:inline-flex;align-items:center;width:46px;height:26px;border-radius:999px;padding:3px;background:'+(checked?(fg||bg||'#222'):(bg||'#bdbdbd'))+';justify-content:'+(checked?'flex-end':'flex-start');
+    const thumb=document.createElement('span'); thumb.style.cssText='width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.3)';
+    track.appendChild(thumb); wrap.appendChild(track); return wrap;
+  }
+  // radio: a circle (+ dot when checked)
+  if(name.startsWith('radio')){
+    const circ=document.createElement('span'); circ.style.cssText='width:18px;height:18px;border-radius:50%;border:1.5px solid '+(bc||fg||'#222')+';display:inline-flex;align-items:center;justify-content:center';
+    if(checked){ const d=document.createElement('span'); d.style.cssText='width:9px;height:9px;border-radius:50%;background:'+(fg||'#222'); circ.appendChild(d); }
+    wrap.appendChild(circ); return wrap;
+  }
+  // tag / chip: rounded pill-ish
+  if(name.startsWith('tag')||name.startsWith('chip')){
+    const el=document.createElement('span'); el.style.cssText='display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 11px;border-radius:'+(rad||'10px');
+    if(bg)el.style.background=bg; el.style.color=fg||'#222'; if(bc&&!bg)el.style.border='1px solid '+bc;
+    el.appendChild(document.createTextNode(name.startsWith('chip')?'Filter':'Label'));
+    if(name.startsWith('chip')){ const x=document.createElement('span'); x.textContent='×'; x.style.opacity='.55'; el.appendChild(x); }
+    wrap.appendChild(el); return wrap;
+  }
+  // tooltip: a bubble with a downward arrow tail (matches @uni)
+  if(name.startsWith('tooltip')){
+    const fgLight = fg && /^#?[ef]/i.test(fg.replace('#',''));   // light text → dark bubble
+    const dark = bg ? true : !!fgLight;
+    const bgc = dark?(bg||'#222'):'#fff'; const tc = dark?(fg||'#fff'):(fg||'#222'); const bd = bc||'#e0ddd6';
+    const box=document.createElement('div'); box.style.cssText='position:relative;display:inline-block;max-width:210px';
+    const t=document.createElement('div'); t.textContent='Your logo appears in the top left of every page.'; t.style.cssText='font-size:12px;line-height:1.4;padding:8px 11px;border-radius:'+(rad||'6px')+';background:'+bgc+';color:'+tc+(dark?'':';border:1px solid '+bd+';box-shadow:0 2px 8px rgba(0,0,0,.08)');
+    const arrow=document.createElement('div'); arrow.style.cssText='position:absolute;left:18px;bottom:-5px;width:10px;height:10px;background:'+bgc+';transform:rotate(45deg)'+(dark?'':';border-right:1px solid '+bd+';border-bottom:1px solid '+bd);
+    box.appendChild(t); box.appendChild(arrow); wrap.appendChild(box); return wrap;
+  }
+  // toast: dark bar
+  if(name.startsWith('toast')){
+    const t=document.createElement('div'); t.textContent='Saved successfully'; t.style.cssText='font-size:13px;padding:11px 14px;min-width:180px;border-radius:'+(rad||'8px')+';background:'+(bg||'#222')+';color:'+(fg||'#fff'); wrap.appendChild(t); return wrap;
+  }
+  // banner / notification: callout bar with a status dot
+  if(name.startsWith('banner')||name.startsWith('notification')){
+    const c=document.createElement('div'); c.style.cssText='display:flex;align-items:center;gap:10px;width:100%;font-size:13px;padding:11px 13px;border-radius:'+(rad||'8px');
+    if(bg)c.style.background=bg; c.style.color=fg||'#333'; if(bc)c.style.border='1px solid '+bc;
+    const dot=document.createElement('span'); dot.style.cssText='width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'+(bc||fg||'#222');
+    const tx=document.createElement('span'); tx.textContent='Heads up — something worth knowing.';
+    c.appendChild(dot); c.appendChild(tx); wrap.appendChild(c); return wrap;
+  }
+  // modal: a card with header + body
+  if(name.startsWith('modal')){
+    const m=document.createElement('div'); m.style.cssText='width:100%;border-radius:'+(rad||'8px')+';background:'+(bg||'#fff')+';border:1px solid #e7e4dd;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.12)';
+    m.innerHTML='<div style="padding:11px 14px;font-weight:600;font-size:13px;border-bottom:1px solid #eee">Modal title</div><div style="padding:11px 14px;font-size:12px;color:#777">Body content…</div>';
+    wrap.appendChild(m); return wrap;
+  }
+  // divider: a line
+  if(name.startsWith('divider')){ const d=document.createElement('div'); d.style.cssText='width:100%;height:1px;background:'+(bc||'#e4e4e4'); wrap.appendChild(d); return wrap; }
+  // anchor / link
+  if(name.startsWith('anchor')){ const a=document.createElement('a'); a.textContent='Link text'; a.href='#'; a.style.cssText='color:'+(fg||'#222')+';text-decoration:underline'; wrap.appendChild(a); return wrap; }
+  // label
+  if(name.startsWith('label')){ const l=document.createElement('span'); l.textContent='Field label'; l.style.cssText='font-size:13px;font-weight:600;color:'+(fg||'#333'); wrap.appendChild(l); return wrap; }
+  // color picker: a swatch + hex
+  if(name.startsWith('color-picker')){
+    const row=document.createElement('div'); row.style.cssText='display:inline-flex;align-items:center;border:1px solid '+(bc||'#d3d3d3')+';border-radius:8px;overflow:hidden;background:'+(bg||'#f8f8f8');
+    row.innerHTML='<span style="width:42px;height:42px;background:#E6FF32;display:block"></span><span style="font-family:var(--mono);font-size:13px;padding:0 14px;color:#333">#E6FF32</span>';
+    wrap.appendChild(row); return wrap;
+  }
+  // range slider: track + filled range + thumb
+  if(name.startsWith('range-slider')){
+    const s=document.createElement('div'); s.style.cssText='position:relative;width:200px;height:20px;display:flex;align-items:center';
+    s.innerHTML='<div style="position:absolute;left:0;right:0;height:4px;border-radius:4px;background:#e4e4e4"></div>'+
+      '<div style="position:absolute;left:0;width:45%;height:4px;border-radius:4px;background:#000"></div>'+
+      '<div style="position:absolute;left:45%;width:18px;height:18px;border-radius:50%;background:#E6FF32;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transform:translateX(-50%)"></div>';
+    wrap.appendChild(s); return wrap;
+  }
+  // tabs: a tab row with one active
+  if(name.startsWith('tabs')){
+    const row=document.createElement('div'); row.style.cssText='display:inline-flex;gap:2px;border-bottom:2px solid #e4e4e4';
+    ['Overview','Details','Settings'].forEach((t,i)=>{ row.innerHTML+='<span style="font-size:13px;padding:7px 13px;'+(i===0?'color:#222;border-bottom:2px solid #222;margin-bottom:-2px;font-weight:600':'color:#777')+'">'+t+'</span>'; });
+    wrap.appendChild(row); return wrap;
+  }
+  // loader: lemon bars
+  if(name.startsWith('loader')){
+    const l=document.createElement('div'); l.style.cssText='display:inline-flex;align-items:center;gap:4px;height:18px';
+    [10,16,12,16,10].forEach(hgt=>{ l.innerHTML+='<span style="width:3px;height:'+hgt+'px;border-radius:2px;background:'+(bg||'#E6FF32')+'"></span>'; });
+    wrap.appendChild(l); return wrap;
+  }
+  // cap-limit-bar: a usage meter
+  if(name.startsWith('cap-limit-bar')){
+    const c=document.createElement('div'); c.style.cssText='width:100%;font-size:12px;color:'+(fg||'#646464');
+    c.innerHTML='<div style="display:flex;justify-content:space-between;margin-bottom:6px"><span>240 / 300 students</span><a href="#" style="color:#222;font-weight:600;text-decoration:none">Upgrade</a></div><div style="height:6px;border-radius:4px;background:#e4e4e4;overflow:hidden"><div style="width:80%;height:100%;background:#E6FF32"></div></div>';
+    wrap.appendChild(c); return wrap;
+  }
+  // table: header + rows
+  if(name.startsWith('table')){
+    const tb=document.createElement('div'); tb.style.cssText='width:100%;border:1px solid '+(bc||'#e4e4e4')+';border-radius:6px;overflow:hidden;font-size:12px;background:'+(bg||'#f8f8f8');
+    tb.innerHTML='<div style="display:flex;font-weight:600;color:#222;border-bottom:1px solid #e4e4e4;padding:8px 12px"><span style="flex:2">Name</span><span style="flex:1">Status</span></div>'+
+      '<div style="display:flex;padding:8px 12px;border-bottom:1px solid #f0f0f0"><span style="flex:2;color:#222">Maya Chen</span><span style="flex:1;color:#777">Active</span></div>'+
+      '<div style="display:flex;padding:8px 12px"><span style="flex:2;color:#222">Devon Park</span><span style="flex:1;color:#777">Pending</span></div>';
+    wrap.appendChild(tb); return wrap;
+  }
+  // list / action-list: rows
+  if(/^(list|action-list)/.test(name)){
+    const l=document.createElement('div'); l.style.cssText='width:100%;border:1px solid '+(bc||'#d3d3d3')+';border-radius:'+(rad||'4px')+';overflow:hidden;background:'+(bg||'#fff')+';font-size:13px';
+    ['Dashboard','Students','Settings'].forEach((t,i)=>{ l.innerHTML+='<div style="padding:9px 13px;color:#222'+(i<2?';border-bottom:1px solid #f0f0f0':'')+'">'+t+'</div>'; });
+    wrap.appendChild(l); return wrap;
+  }
+  // page header
+  if(name.startsWith('page-header')){
+    const h=document.createElement('div'); h.style.cssText='width:100%';
+    h.innerHTML='<a href="#" style="font-size:12px;color:#777;text-decoration:none">‹ Back</a><div style="font-family:var(--serif);font-size:22px;margin-top:4px">Page title</div><div style="font-size:13px;color:#777">A short description of the page.</div>';
+    wrap.appendChild(h); return wrap;
+  }
+  // upload pane: dashed dropzone
+  if(name==='upload-pane'){
+    const u=document.createElement('div'); u.style.cssText='width:100%;border:1.5px dashed '+(bc||'#c9c5bc')+';border-radius:'+(rad||'8px')+';background:'+(bg||'#f8f8f8')+';padding:22px;text-align:center;font-size:13px;color:#777';
+    u.innerHTML='Drop files here<br><span style="font-size:12px">or click to browse</span>';
+    wrap.appendChild(u); return wrap;
+  }
+  // breadcrumbs
+  if(name.startsWith('breadcrumbs')){
+    const b=document.createElement('div'); b.style.cssText='font-size:13px;color:'+(fg||'#7a7a7a');
+    b.innerHTML='<a href="#" style="color:#222;text-decoration:none">Home</a> › <a href="#" style="color:#222;text-decoration:none">Courses</a> › <span>Current</span>';
+    wrap.appendChild(b); return wrap;
+  }
+  // pagination
+  if(name.startsWith('pagination')){
+    const p=document.createElement('div'); p.style.cssText='display:inline-flex;align-items:center;gap:8px;font-size:13px;color:'+(fg||'#646464');
+    p.innerHTML='<span>‹</span><span style="font-weight:700;color:#222">1</span><span>2</span><span>3</span><span>›</span>';
+    wrap.appendChild(p); return wrap;
+  }
+  // field error message
+  if(name.startsWith('field-error')){
+    const e=document.createElement('div'); e.textContent='This field is required.'; e.style.cssText='font-size:12.5px;color:'+(fg||'#ca483d'); wrap.appendChild(e); return wrap;
+  }
+  // inputs (text field) — with the right affordance icon for search / date
+  if(/^(input|search-input|date-picker|input-number)/.test(name)){
+    const isSearch=name.startsWith('search'), isDate=name.startsWith('date'), isNum=name.startsWith('input-number');
+    const f=document.createElement('div'); f.className='field';
+    const lab=document.createElement('label'); lab.textContent= isSearch?'Search': isDate?'Date': isNum?'Quantity':'Email address';
+    const box=document.createElement('div'); box.style.cssText='position:relative;width:100%';
+    const inp=document.createElement('input'); inp.placeholder= isSearch?'Search…': isDate?'Jun 12, 2026': isNum?'1':'you@teachable.com';
+    if(bg)inp.style.background=bg; if(fg)inp.style.color=fg; if(bc)inp.style.border='1px solid '+bc; if(rad)inp.style.borderRadius=rad;
+    if(isSearch||isDate) inp.style.paddingRight='34px';
+    box.appendChild(inp);
+    if(isSearch||isDate){ const ic=document.createElement('span'); ic.style.cssText='position:absolute;right:11px;top:50%;transform:translateY(-50%);display:flex;pointer-events:none';
+      ic.innerHTML= isSearch?'<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#999" stroke-width="1.6"/><path d="M11 11l3.2 3.2" stroke="#999" stroke-width="1.6" stroke-linecap="round"/></svg>':'<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2" y="3.2" width="12" height="11" rx="2" stroke="#999" stroke-width="1.4"/><path d="M2 6.4h12M5.3 2v2.4M10.7 2v2.4" stroke="#999" stroke-width="1.4" stroke-linecap="round"/></svg>';
+      box.appendChild(ic); }
+    f.appendChild(lab); f.appendChild(box); wrap.appendChild(f); return wrap;
+  }
+  // surfaces: card / container / etc.
+  if(/^(card|container|section|info-card|empty-state)/.test(name)){
+    const el=document.createElement('div'); el.textContent='Surface'; el.style.cssText='width:100%;min-height:56px;display:flex;align-items:center;justify-content:center;font-size:13px;color:'+(fg||'#999')+';border-radius:'+(rad||'8px')+';border:1px solid '+(bc||'#eee'); if(bg)el.style.background=bg;
+    wrap.appendChild(el); return wrap;
+  }
+  // badge
+  if(name.startsWith('badge')){ const el=document.createElement('span'); el.style.cssText='display:inline-flex;align-items:center;padding:4px 11px;font-size:12px;font-weight:600;border-radius:'+(rad||'4px'); if(bg)el.style.background=bg; el.style.color=fg||'#222'; el.textContent=exampleLabel(name); wrap.appendChild(el); return wrap; }
+  // button + fallback
+  const el=document.createElement('div'); el.style.cssText='display:inline-flex;align-items:center;justify-content:center;padding:0 18px;height:'+(h||'40px')+';font-size:14px;font-weight:600;border-radius:'+(rad||'6px');
+  if(bg)el.style.background=bg; el.style.color=fg||'#222'; if(bc)el.style.border='1px solid '+bc; el.textContent=exampleLabel(name);
+  wrap.appendChild(el); return wrap;
 }
 function renderCompSection(navLabel, eyebrow, ledeHtml, entries, fm){
   if(!entries.length) return;
@@ -451,23 +606,23 @@ function renderCompSection(navLabel, eyebrow, ledeHtml, entries, fm){
   }
   s.appendChild(grid);
 }
+function compGroupOf(name){
+  if(name.startsWith('button')) return 'Buttons';
+  if(/^(input|checkbox|radio|switch|search-input|select|date-picker|color-picker|range-slider|input-number|toggle|field-error|label)/.test(name)) return 'Forms & inputs';
+  if(/^(badge|chip|tag)/.test(name)) return 'Badges & tags';
+  if(/^(banner|notification|toast|nudge|tooltip|modal|empty-state)/.test(name)) return 'Feedback & overlays';
+  if(/^(tabs|breadcrumbs|pagination|action-list|tree-view|dropdown|anchor)/.test(name)) return 'Navigation';
+  if(/^(card|container|section|info-card|divider|page-header|content-header|list|table|collapsible|loader|upload-pane|cap-limit-bar)/.test(name)) return 'Surfaces & layout';
+  return 'Other';
+}
 function renderComponents(fm, prose){
   if(!fm.components) return;
-  const groups={ Buttons:[], Fields:[], Badges:[], Cards:[], Other:[] };
-  for(const [name,comp] of Object.entries(fm.components)){
-    if(typeof comp!=='object') continue;
-    if(name.startsWith('button')) groups.Buttons.push([name,comp]);
-    else if(name.startsWith('input')||/field|select|checkbox|radio|toggle|textarea/.test(name)) groups.Fields.push([name,comp]);
-    else if(name.startsWith('badge')||name.startsWith('chip')||name.startsWith('tag')) groups.Badges.push([name,comp]);
-    else if(name.startsWith('card')) groups.Cards.push([name,comp]);
-    else groups.Other.push([name,comp]);
-  }
-  const led=(re)=>{ const sub=prose.sub(['components'], re); return mdToHtml(sub?sub.text:(prose.get('components')?prose.get('components').intro:'')); };
-  renderCompSection('Buttons','Buttons', led(/button/i), groups.Buttons, fm);
-  renderCompSection('Fields','Form elements', led(/form|input|field/i), groups.Fields, fm);
-  renderCompSection('Badges','Badges', led(/badge|chip|tag/i), groups.Badges, fm);
-  renderCompSection('Cards','Cards & containers', led(/card|container/i), groups.Cards, fm);
-  renderCompSection('Other','Other components', '', groups.Other, fm);
+  const order=['Buttons','Forms & inputs','Badges & tags','Feedback & overlays','Navigation','Surfaces & layout','Other'];
+  const groups={}; order.forEach(g=>groups[g]=[]);
+  for(const [name,comp] of Object.entries(fm.components)){ if(typeof comp!=='object') continue; groups[compGroupOf(name)].push([name,comp]); }
+  const led=(re)=>{ const sub=re&&prose.sub(['components'], re); return mdToHtml(sub?sub.text:''); };
+  const ledRe={ 'Buttons':/button/i, 'Forms & inputs':/form|input|field/i, 'Badges & tags':/badge|chip|tag/i, 'Feedback & overlays':null, 'Navigation':null, 'Surfaces & layout':/card|container/i, 'Other':null };
+  for(const g of order){ if(!groups[g].length) continue; renderCompSection(g, g, led(ledRe[g]), groups[g], fm); }
 }
 function pxOf(v){ const m=String(v).match(/^(\d+(?:\.\d+)?)px$/); return m?parseFloat(m[1]):null; }
 function renderSpacing(fm, prose){
@@ -512,8 +667,8 @@ function renderHero(fm){
   const hero=document.createElement('div'); hero.className='hero';
   const left=document.createElement('div');
   left.innerHTML='<img class="wordmark" src="assets/teachable-wordmark-black.svg" alt="Teachable">'+
-    '<p class="lede">'+escapeHtml(fm.description||'')+'</p>'+
-    '<div class="cta"><a class="btn btn-primary" href="https://github.com/sarahschachman/design-artifacts/blob/main/DESIGN.md" target="_blank">View DESIGN.md</a><a class="btn btn-secondary" href="../">Back to artifacts</a></div>';
+    '<p class="lede">A live preview of <code>DESIGN.md</code> — the plain-text file AI agents read to generate on-brand Teachable prototypes. It captures design <strong>tokens and guidelines</strong>, not a full component library (Storybook is the source for the real components).</p>'+
+    '<div class="cta"><a class="btn btn-primary" href="https://github.com/sarahschachman/design-artifacts/blob/main/DESIGN.md" target="_blank">View DESIGN.md</a><a class="btn btn-secondary" href="https://uni.zeachable.cloud/ui/index.html?path=/story/overview-about--page" target="_blank">View Storybook</a></div>';
   const right=document.createElement('div');
   const strip=document.createElement('div'); strip.className='swatchstrip';
   // weighted by the 70/20/10 hierarchy: lemon widest, secondary medium, tertiary thinnest
@@ -545,8 +700,8 @@ async function main(){
   try{ text=await loadMd(); }
   catch(e){ content().innerHTML=errorBox("Couldn't load DESIGN.md", e.message+' — confirm the repo is public and the URL/branch are correct.'); return; }
   let fm, body; try{ ({fm,body}=parseFrontmatter(text)); }catch(e){ content().innerHTML=errorBox("Couldn't parse DESIGN.md", e.message); return; }
-  document.getElementById('ds-name').textContent=fm.name||'Design System';
-  document.title=(fm.name||'Design System')+' · Teachable';
+  document.getElementById('ds-name').textContent='Teachable DESIGN.md';
+  document.title='Teachable DESIGN.md · Teachable';
   content().innerHTML=''; SECN=0; navItems.length=0;
   const prose=parseProse(body); const usage=parseColorUsage(body);
   renderHero(fm);
