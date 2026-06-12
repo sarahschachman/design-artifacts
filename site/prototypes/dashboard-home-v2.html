@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Get You Selling (v2)</title>
+<!--
+  Creator dashboard rebuilt from a reference mock, using only real components
+  from mono-frontend/packages/ui. Component usage follows each component's
+  .stories.mdx metadata/usage tables:
+
+    Button        buttonStyle: primary | secondary (recommended set per usage mdx);
+                  normal size = uni-pv-8 uni-ph-32, small = 30px; states from _button.scss
+    Card          variant: default (grey bg) | legacy (white bg); uni-p-24 built-in;
+                  shadow: none (default)
+    Chip          white bg, 1rem radius, max-width 176px, content ellipsis at 130px
+    Tag           size: small → tagStyle warning (default per Tag.tsx); bodySmallSemiBold
+    InputText     BaseInputText tokens from _input.scss (composed around a textarea)
+    RadioButton   18px circle, 2px border, 10px indicator dot (_radio.scss)
+    ProgressBar   linear track grey-12 / 8px + barColor prop + bodyTextExtraSmallBold label
+    Illustration  variant="create" → assets.teachablecdn.com/illustrations/design-system/01_create.png
+    ContentHeader Reckless-Light 1.5rem/400 headline (_content-header.scss)
+    MaterialIcons Material Symbols Outlined, wght 400
+    PageTitle     heading2 + .reckless (type.module.css)
+
+  Colors/sizes/spacing from design-tokens/scss/_base.scss; nav dimensions from
+  shared-styles/_constants.scss ($nav-width 236px, $header-height 57px,
+  $header-padding 24px, $main-content-padding 32px, $zindex-nav 2).
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<style>
+  :root {
+    /* design-tokens/scss/_base.scss */
+    --color-brand-primary-20: #faffd6;
+    --color-brand-primary-80: #edff65;
+    --color-brand-primary-100: #e7ff33;
+    --color-brand-primary-120: #dbf230;
+    --color-container-primary: #fbfbfb;
+    --color-grey-2: #fbfbfb;
+    --color-grey-6: #f2f2f2;
+    --color-grey-9: #ebebeb;
+    --color-grey-12: #e4e4e4;
+    --color-grey-20: #d3d3d3;
+    --color-grey-30: #bdbdbd;
+    --color-grey-40: #a7a7a7;
+    --color-grey-60: #7a7a7a;
+    --color-grey-70: #646464;
+    --color-grey-80: #4e4e4e;
+    --color-grey-90: #383838;
+    --color-grey-100: #222222;
+    --color-white: #ffffff;
+    --color-blue-120: #4d72cc;
+    --color-yellow-80: #f9d34d;
+    --color-text-helper: #646464;
+    --color-text-primary: #222222;
+    --font-family-display: 'Reckless-Light', 'Palatino', Garamond, Georgia, serif;
+    --font-family-system: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+      'Helvetica Neue', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-family-system);
+    background-color: var(--color-container-primary);
+    color: var(--color-text-primary);
+    line-height: 150%;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    display: flex;
+    min-height: 100vh;
+    max-width: 1480px;          /* $max-content-width */
+    margin: 0 auto;
+  }
+  .main { flex: 1; min-width: 0; }
+
+  /* MaterialIcons defaults: Outlined, wght 400, GRAD 0 */
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    display: flex;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    direction: ltr;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    flex-shrink: 0;
+  }
+
+  /* ===== Nav — dark labeled admin nav ($nav-width, obsidian) ===== */
+  .nav {
+    width: 236px;               /* $nav-width */
+    flex-shrink: 0;
+    background-color: var(--color-grey-100);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;                 /* $zindex-nav */
+  }
+  .nav-school {
+    padding: 1.25rem 1.5rem;    /* $space-20 $space-24 */
+    border-bottom: 1px solid var(--color-grey-90);
+    flex-shrink: 0;
+  }
+  .nav-school-name {
+    color: var(--color-white);
+    font-size: 1.125rem;        /* $font-size-18 */
+    font-weight: 600;
+    line-height: 125%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+  .nav-items {
+    flex: 1;
+    padding: 1rem 0.75rem;      /* $space-16 $space-12 */
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;              /* $space-2 */
+    overflow-y: auto;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;               /* $space-12 */
+    padding: 0.5rem 0.75rem;    /* $space-8 $space-12 */
+    border-radius: 0.375rem;
+    font-family: var(--font-family-system);
+    font-size: 0.875rem;        /* $font-size-14 */
+    font-weight: 400;
+    line-height: 150%;
+    color: var(--color-grey-20);
+    text-decoration: none;
+  }
+  .nav-item .material-symbols-outlined { color: var(--color-grey-40); }
+  .nav-item:hover { color: var(--color-white); }
+  .nav-item:hover .material-symbols-outlined { color: var(--color-white); }
+  .nav-item--active {
+    color: var(--color-white);
+    font-weight: 600;
+    background-color: var(--color-grey-90);
+  }
+  .nav-item--active .material-symbols-outlined {
+    color: var(--color-white);
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+  /* tc.tableHeader */
+  .nav-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    margin-top: 1rem;           /* $space-16 */
+    font-size: 0.75rem;         /* $font-size-12 */
+    font-weight: 600;
+    line-height: 100%;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;      /* $letter-spacing-half */
+    color: var(--color-grey-60);
+  }
+  .nav-section .material-symbols-outlined {
+    font-size: 16px; width: 16px; height: 16px;
+    color: var(--color-grey-60);
+    cursor: pointer;
+  }
+  .nav-section .material-symbols-outlined:hover { color: var(--color-white); }
+  .nav-bottom {
+    padding: 0.75rem;           /* $space-12 */
+    border-top: 1px solid var(--color-grey-90);
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    flex-shrink: 0;
+  }
+  /* Tag component: size="small" → tagStyle "warning" (Tag.tsx default) */
+  .tag {
+    display: inline-block;
+    border-radius: 0.625rem;    /* $tag-border-radius */
+    color: var(--color-grey-100);            /* $tag-color */
+    font-size: 0.79rem;         /* tc.bodySmallSemiBold */
+    font-weight: 600;
+    line-height: 1.185rem;
+  }
+  .tag--small { padding: 0 0.5rem; }         /* $tag-small-padding-* */
+  .tag--warning { background-color: var(--color-yellow-80); } /* $tag-warning-background-color */
+  .nav-item .tag { margin-left: auto; }
+  .nav-user {
+    border-top: 1px solid var(--color-grey-90);
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+  }
+  .nav-user-name {
+    flex: 1;
+    padding: 1rem 1.5rem;       /* $space-16 $space-24 */
+    color: var(--color-white);
+    font-size: 1rem;
+    line-height: 150%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-user-menu {
+    width: 48px;
+    border: none;
+    border-left: 1px solid var(--color-grey-90);
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-grey-40);
+    cursor: pointer;
+  }
+  .nav-user-menu:hover { color: var(--color-white); }
+
+  /* ===== Top bar — ContentHeader headline + IconButton ===== */
+  .topbar {
+    height: 57px;               /* $header-height */
+    padding: 0 24px;            /* $header-padding */
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--color-grey-12); /* $color-line-primary */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 5;                 /* $zindex-contentHeaders */
+  }
+  /* ContentHeader .headline: Reckless-Light 1.5rem/400 */
+  .topbar-headline {
+    font-family: var(--font-family-display);
+    font-weight: 400;           /* $content-header-headline-font-weight */
+    font-size: 1.5rem;          /* $content-header-headline-font-size */
+    line-height: 1.5rem;        /* $content-header-headline-line-height */
+  }
+  /* IconButton: transparent bg, 50% radius, grey-60 icon, hover grey-12 bg (_button.scss $button-icon-*) */
+  .icon-button {
+    min-width: 40px;            /* $button-icon-min-width */
+    max-width: 40px;
+    height: 40px;
+    border: none;               /* border shown on focus only */
+    border-radius: 50%;         /* $button-icon-border-radius */
+    background-color: transparent; /* $button-icon-background-color */
+    color: var(--color-grey-60);   /* $button-icon-color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .icon-button:hover {
+    background-color: var(--color-grey-12); /* $button-icon-hover-background-color */
+    color: var(--color-grey-100);           /* $button-icon-hover-color */
+  }
+  .icon-button .material-symbols-outlined { font-size: 24px; width: 24px; height: 24px; }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;              /* $main-content-padding */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;                  /* $space-32 */
+  }
+
+  /* ===== Card component: .card .card-bg-default|legacy + uni-p-24 ===== */
+  .card {
+    border-radius: 0.25rem;     /* $card-border-radius */
+    border: 1px solid var(--color-grey-12); /* $card-border-color */
+    padding: 1.5rem;            /* uni-p-24 (Card.tsx built-in) */
+  }
+  .card--legacy { background-color: var(--color-white); }   /* $card-white-background-color */
+  .card--default { background-color: var(--color-grey-2); } /* $card-grey-background-color */
+
+  /* ===== Hero — obsidian brand moment ===== */
+  .hero {
+    background-color: var(--color-grey-100);
+    border-color: var(--color-grey-100);
+    color: var(--color-white);
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2rem;                  /* $space-32 */
+    align-items: center;
+    padding: 2rem;              /* uni-p-32 override per Card usage mdx */
+  }
+  /* headingDisplay1: 32px / 125% / 300 / Reckless */
+  .hero h1 {
+    font-family: var(--font-family-display);
+    font-size: 2rem;
+    line-height: 125%;
+    font-weight: 300;
+  }
+  .hero h1 em { font-style: italic; }
+  .hero-sub {
+    font-size: 0.875rem;        /* tc.bodyTextSmall */
+    color: var(--color-grey-30);
+    margin-top: 0.5rem;         /* $space-8 */
+  }
+
+  /* ProgressBar component: track grey-12 / space-8 radius+height, barColor prop, label */
+  .progressbar {
+    display: flex;
+    align-items: center;
+    margin-top: 1.5rem;         /* $space-24 */
+    max-width: 320px;
+  }
+  .progressbar .track {
+    border-radius: 0.5rem;      /* var(--space-8) */
+    height: 0.5rem;
+    background-color: var(--color-grey-12);
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+  }
+  .progressbar .range {
+    border-radius: 0.5rem;
+    height: 100%;
+    background-color: var(--color-brand-primary-100); /* barColor prop */
+  }
+  .progressbar .label {
+    font-size: 0.75rem;         /* bodyTextExtraSmallBold */
+    font-weight: 600;
+    line-height: 150%;
+    padding-left: 0.5rem;       /* uni-pl-8 */
+    min-width: 2rem;            /* $space-32 */
+    color: var(--color-white);
+  }
+
+  /* Step list — RadioButton indicator geometry from _radio.scss */
+  .steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;               /* $space-12 */
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;               /* $space-12 */
+    font-size: 0.875rem;
+    color: var(--color-grey-40);
+  }
+  .radio {
+    width: 1.125rem;            /* $radio-width */
+    height: 1.125rem;           /* $radio-height */
+    border: 2px solid var(--color-grey-40); /* $radio-indicator-border-color (dark-surface adaptation) */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .radio::after {
+    content: '';
+    width: 0.625rem;            /* $radio-indicator-width */
+    height: 0.625rem;
+    border-radius: 50%;
+    transform: scale3d(0, 0, 1);
+    transition: transform 0.1s ease-out;
+    background-color: var(--color-brand-primary-100);
+  }
+  .step--active { color: var(--color-brand-primary-100); font-weight: 600; }
+  .step--active .radio { border-color: var(--color-brand-primary-100); }
+  .step--active .radio::after { transform: scale3d(1, 1, 1); }
+  .step-mins {
+    font-size: 0.75rem;         /* $font-size-12 */
+    font-weight: 400;
+    color: var(--color-grey-60);
+  }
+
+  /* ===== AI card — Brand Card (container-brand per DESIGN.md) ===== */
+  .ai-card {
+    background-color: var(--color-brand-primary-20); /* $color-container-brand */
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 2rem;                  /* $space-32 */
+    align-items: center;
+    padding: 2rem;
+  }
+  .ai-card h2 {
+    font-family: var(--font-family-display);
+    font-size: 2rem;            /* headingDisplay1 */
+    line-height: 125%;
+    font-weight: 300;
+  }
+  .ai-card p {
+    font-size: 0.875rem;
+    color: var(--color-text-helper);
+    margin-top: 0.5rem;         /* $space-8 */
+    max-width: 60ch;
+  }
+  /* Prompt field — InputText tokens (_input.scss) composed around a textarea */
+  .prompt {
+    margin-top: 1rem;           /* $space-16 */
+    background-color: #ffffff;  /* $input-background-color */
+    border: 0.0625rem solid var(--color-grey-60); /* $input-border-width/color */
+    border-radius: 0.25rem;     /* $input-border-radius */
+    transition: border-color 0.2s ease;           /* $input-border-transition */
+    display: flex;
+    flex-direction: column;
+    max-width: 640px;           /* $input-max-width */
+  }
+  .prompt:hover { border-color: var(--color-grey-90); }      /* $input-hover-border-color */
+  .prompt:focus-within {
+    border-color: var(--color-blue-120);                     /* $input-focus-border-color */
+    box-shadow: 0 0 0 4px var(--color-grey-9);               /* $input-focus-box-shadow */
+  }
+  .prompt textarea {
+    border: none;
+    outline: none;
+    resize: none;
+    background: transparent;
+    padding: 0.5rem 1rem;       /* $input-padding-vertical/horizontal */
+    font-family: var(--font-family-system);
+    font-size: 0.875rem;        /* $input-font-size */
+    font-weight: 400;           /* $input-font-weight */
+    color: var(--color-grey-90);/* $input-color */
+    caret-color: #222222;       /* $input-caret-color */
+    min-height: 56px;
+  }
+  .prompt textarea::placeholder { color: var(--color-grey-60); } /* $input-placeholder-color */
+  .prompt-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 0.5rem 0.5rem;   /* $space-8 */
+  }
+
+  /* ===== Button component ===== */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    touch-action: manipulation;
+    background-image: none;
+    border-width: 1px;
+    border-style: solid;
+    transition: opacity 0.3s, color 0.3s, background-color 0.3s, border-color 0.3s;
+    user-select: none;
+    cursor: pointer;
+    font-family: var(--font-family-system);
+    font-weight: 600;           /* $button-font-weight */
+    font-size: 1rem;            /* $button-font-size */
+    line-height: 105%;          /* $button-line-height */
+  }
+  .button:focus-visible:not(:active) {
+    outline: none;
+    box-shadow: 0 0 0 5px #2222221a; /* $button-focus-box-shadow */
+  }
+  /* .normalButton + uni-pv-8 uni-ph-32 (Button.tsx) */
+  .button--normal {
+    height: 40px;               /* $button-height */
+    padding: 0.5rem 2rem;       /* uni-pv-8 uni-ph-32 */
+    border-radius: 6px;
+    min-width: 120px;
+    max-width: 570px;
+  }
+  /* .smallButton */
+  .button--small {
+    height: 30px;               /* $button-small-height */
+    padding: 0.25rem 1rem;      /* $button-small-padding-* */
+    border-radius: 0.375rem;
+    font-size: 0.875rem;        /* $button-small-font-size */
+  }
+  /* .iconLeft */
+  .button--icon-left { padding-left: 0.75rem; } /* $button-svg-left-padding-left */
+  .button .icon { margin-right: 0.25rem; }      /* $button-svg-left-margin-right */
+  .button--primary {
+    background-color: var(--color-brand-primary-100);
+    border: 1px solid var(--color-grey-100);
+    color: var(--color-grey-100);
+  }
+  .button--primary:hover {
+    background-color: var(--color-brand-primary-80);
+    border-color: var(--color-grey-100);
+  }
+  .button--primary:focus-visible {
+    background-color: var(--color-brand-primary-80);
+    border-color: var(--color-grey-100);
+    box-shadow: 0 0 0 5px rgba(34, 34, 34, 0.1);
+  }
+  .button--primary[aria-expanded='true'],
+  .button--primary:active {
+    background-color: var(--color-brand-primary-120);
+    border-color: var(--color-grey-100);
+    box-shadow: unset;
+  }
+  .button--secondary {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-grey-100);
+    color: var(--color-grey-100);
+  }
+  .button--secondary:hover {
+    background-color: var(--color-grey-6);
+    border-color: var(--color-grey-100);
+  }
+  .button--secondary:focus-visible {
+    background-color: var(--color-grey-6);
+    border-color: var(--color-grey-100);
+  }
+  .button--secondary[aria-expanded='true'],
+  .button--secondary:active {
+    background-color: var(--color-grey-12);
+    border-color: var(--color-grey-100);
+  }
+
+  /* ===== Chip component ===== */
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;                /* $space-8 */
+    margin-top: 1rem;           /* $space-16 */
+  }
+  .chip {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    background-color: #ffffff;            /* $chip-background-color */
+    border-radius: 1rem;                  /* $chip-border-radius */
+    border: 1px solid var(--color-grey-12); /* $chip-border-color */
+    color: var(--color-grey-100);         /* $chip-color */
+    line-height: 1.3rem;                  /* Chip.module.scss */
+    padding: 0.25rem 1rem;                /* $chip-padding-* */
+    white-space: nowrap;
+    outline: none;
+    max-width: 176px;                     /* $chip-max-width */
+    font-family: var(--font-family-system);
+    font-size: 0.79rem;
+  }
+  .chip .content {
+    max-width: 130px;                     /* Chip.module.scss .content */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  }
+  .chip:hover, .chip:focus { background-color: var(--color-grey-6); }
+  .chip[data-isselected='true'] {
+    background-color: var(--color-grey-12);
+    border-color: var(--color-grey-12);
+  }
+
+  /* Illustration component: size medium = 160px height */
+  .illustration { height: 160px; justify-self: center; }
+
+  /* ===== Section cards ===== */
+  /* headingDisplay2: 24px / 125% / 300 / Reckless */
+  .section-title {
+    font-family: var(--font-family-display);
+    font-size: 1.5rem;
+    line-height: 125%;
+    font-weight: 300;
+  }
+  .section-sub {
+    font-size: 0.875rem;
+    color: var(--color-text-helper);
+    margin-top: 0.25rem;        /* $space-4 */
+  }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;                /* $space-24 */
+    margin-top: 1.5rem;
+  }
+  .product-card { display: flex; gap: 1rem; }
+  .product-icon {
+    width: 40px;                /* $size-40 */
+    height: 40px;
+    border-radius: 0.25rem;
+    background-color: var(--color-grey-6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-grey-100); /* $color-icon-primary */
+  }
+  .product-body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .product-body .button { margin-top: auto; }
+  .product-title {
+    font-size: 1rem;            /* tc.bodyTextBold */
+    font-weight: 600;
+    line-height: 150%;
+  }
+  .product-desc {
+    font-size: 0.875rem;        /* tc.bodyTextSmall */
+    color: var(--color-text-helper);
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;        /* $space-16 */
+  }
+
+  .ways-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  /* Interactive Card: default (grey) variant + grey-6 hover per DESIGN.md */
+  .way-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+  }
+  .way-card:hover { background-color: var(--color-grey-6); }
+  .way-icon {
+    width: 32px;                /* $size-32 */
+    height: 32px;
+    border-radius: 0.25rem;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-grey-12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-grey-100);
+  }
+  .way-body { flex: 1; min-width: 0; }
+  .way-card .material-symbols-outlined.chevron { color: var(--color-grey-60); }
+
+  @media (max-width: 1080px) {
+    .hero, .ai-card { grid-template-columns: 1fr; }
+    .illustration { display: none; }
+  }
+  @media (max-width: 960px) {
+    .nav { display: none; }
+    .product-grid, .ways-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Dark labeled admin nav -->
+    <nav class="nav" aria-label="Admin navigation">
+      <div class="nav-school">
+        <span class="nav-school-name">The Magic School</span>
+      </div>
+
+      <div class="nav-items">
+        <a class="nav-item nav-item--active" href="#" aria-current="page">
+          <span class="material-symbols-outlined" aria-hidden="true">home</span>Home
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">monitoring</span>Analytics
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">group</span>Users
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">devices</span>Site
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">paid</span>Sales
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">mail</span>Emails
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">settings</span>Settings
+        </a>
+
+        <div class="nav-section">
+          Products
+          <span class="material-symbols-outlined" role="button" aria-label="Add product">add</span>
+        </div>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">video_library</span>Courses
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">file_save</span>Digital Downloads
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">event</span>Coaching
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>Bundles
+        </a>
+      </div>
+
+      <div class="nav-bottom">
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">bolt</span>Plan
+          <!-- Tag component: size="small" (defaults to warning per Tag.tsx) -->
+          <span class="tag tag--small tag--warning">UPGRADE</span>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">groups</span>Community
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>Resources
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">help</span>Help
+        </a>
+      </div>
+
+      <div class="nav-user">
+        <span class="nav-user-name">Chip Chocolate</span>
+        <button class="nav-user-menu" type="button" aria-label="Account menu">
+          <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="main">
+
+      <!-- Top bar: ContentHeader headline + IconButton -->
+      <header class="topbar">
+        <h1 class="topbar-headline">Dashboard</h1>
+        <button class="icon-button" type="button" aria-label="Announcements">
+          <span class="material-symbols-outlined" aria-hidden="true">campaign</span>
+        </button>
+      </header>
+
+      <main class="page">
+
+        <!-- Hero: obsidian Card with ProgressBar + RadioButton step list -->
+        <section class="card hero" aria-labelledby="hero-title">
+          <div>
+            <h1 id="hero-title">Hey Sam, let&rsquo;s get you <em>selling</em>!</h1>
+            <p class="hero-sub">You&rsquo;re 4 steps away from your first sale. Start by creating your course.</p>
+            <!-- ProgressBar: value=1 maxValue=4 barColor=brand-primary-100 -->
+            <div class="progressbar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="4" aria-label="Setup progress">
+              <div class="track"><div class="range" style="width: 25%;"></div></div>
+              <p class="label" aria-hidden="true">25%</p>
+            </div>
+          </div>
+          <ol class="steps">
+            <li class="step step--active">
+              <span class="radio" aria-hidden="true"></span>
+              Create course&nbsp;<span class="step-mins">~5mins</span>
+            </li>
+            <li class="step">
+              <span class="radio" aria-hidden="true"></span>
+              Set up payments&nbsp;<span class="step-mins">~5mins</span>
+            </li>
+            <li class="step">
+              <span class="radio" aria-hidden="true"></span>
+              Customize your school&nbsp;<span class="step-mins">~5mins</span>
+            </li>
+            <li class="step">
+              <span class="radio" aria-hidden="true"></span>
+              Launch &amp; start selling&nbsp;<span class="step-mins">~5mins</span>
+            </li>
+          </ol>
+        </section>
+
+        <!-- AI card: Brand Card + InputText tokens + Button + Chips + Illustration -->
+        <section class="card ai-card" aria-labelledby="ai-title">
+          <div>
+            <h2 id="ai-title">What do you want to teach?</h2>
+            <p>Tell me in a sentence and I will draft your course outline, sales page copy, and lesson structure. You can tweak anything &mdash; nothing publishes until you say so.</p>
+
+            <form class="prompt" onsubmit="return false">
+              <textarea rows="2" placeholder="e.g. A beginner watercolor course for people who can&rsquo;t draw&hellip;" aria-label="Describe what you want to teach"></textarea>
+              <div class="prompt-actions">
+                <button class="button button--normal button--primary button--icon-left" type="submit"><span class="icon" aria-hidden="true">&#10022;</span>Generate course</button>
+              </div>
+            </form>
+
+            <div class="chips" role="group" aria-label="Suggestions">
+              <button class="chip" type="button"><span class="content">Digital Marketing 101</span></button>
+              <button class="chip" type="button"><span class="content">Fitness Bootcamp</span></button>
+              <button class="chip" type="button"><span class="content">Healthy Meal Prep</span></button>
+              <button class="chip" type="button"><span class="content">Spanish for Beginners</span></button>
+            </div>
+          </div>
+
+          <!-- Illustration component: variant="create" size="medium" -->
+          <img class="illustration" src="https://assets.teachablecdn.com/illustrations/design-system/01_create.png" alt="">
+        </section>
+
+        <!-- More product types: legacy Card containing legacy Cards -->
+        <section class="card card--legacy" aria-labelledby="products-title">
+          <h2 class="section-title" id="products-title">More product types</h2>
+          <div class="product-grid">
+
+            <div class="card card--legacy product-card">
+              <span class="product-icon"><span class="material-symbols-outlined" aria-hidden="true">file_save</span></span>
+              <div class="product-body">
+                <h3 class="product-title">Digital downloads</h3>
+                <p class="product-desc">Build your modules and lessons manually. Full control from the first step.</p>
+                <button class="button button--small button--secondary" type="button">Get Started</button>
+              </div>
+            </div>
+
+            <div class="card card--legacy product-card">
+              <span class="product-icon"><span class="material-symbols-outlined" aria-hidden="true">event</span></span>
+              <div class="product-body">
+                <h3 class="product-title">1:1 Coaching</h3>
+                <p class="product-desc">Create and manage coaching experiences to develop one-on-one relationships with your students.</p>
+                <button class="button button--small button--secondary" type="button">Get Started</button>
+              </div>
+            </div>
+
+            <div class="card card--legacy product-card">
+              <span class="product-icon"><span class="material-symbols-outlined" aria-hidden="true">stacks</span></span>
+              <div class="product-body">
+                <h3 class="product-title">Collections</h3>
+                <p class="product-desc">Build a structured sequence for guiding users through courses in a specific order or one single offer that unlocks multiple product types, accessed separately.</p>
+                <button class="button button--small button--secondary" type="button">Get Started</button>
+              </div>
+            </div>
+
+            <div class="card card--legacy product-card">
+              <span class="product-icon"><span class="material-symbols-outlined" aria-hidden="true">card_membership</span></span>
+              <div class="product-body">
+                <h3 class="product-title">Memberships</h3>
+                <p class="product-desc">Build tiers to provide access to products and perks in your school on a subscription basis. Create multiple tiers to offer different levels of access.</p>
+                <button class="button button--small button--secondary" type="button">Get Started</button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- Other ways to start: legacy Card containing interactive default Cards -->
+        <section class="card card--legacy" aria-labelledby="ways-title">
+          <h2 class="section-title" id="ways-title">Other ways to start</h2>
+          <p class="section-sub">Already have content or prefer to build manually?</p>
+          <div class="ways-grid">
+
+            <a class="card card--default way-card" href="#">
+              <span class="way-icon"><span class="material-symbols-outlined" aria-hidden="true">edit</span></span>
+              <div class="way-body">
+                <h3 class="product-title">Start from scratch</h3>
+                <p class="product-desc">Build your modules and lessons manually. Full control from the first step.</p>
+              </div>
+              <span class="material-symbols-outlined chevron" aria-hidden="true">chevron_right</span>
+            </a>
+
+            <a class="card card--default way-card" href="#">
+              <span class="way-icon"><span class="material-symbols-outlined" aria-hidden="true">upload</span></span>
+              <div class="way-body">
+                <h3 class="product-title">Import existing materials</h3>
+                <p class="product-desc">Already have content? Bring in a slide deck, PDF, Google Drive folder, or video files &mdash; we&rsquo;ll structure it into a course for you.</p>
+              </div>
+              <span class="material-symbols-outlined chevron" aria-hidden="true">chevron_right</span>
+            </a>
+
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+</body>
+</html>
