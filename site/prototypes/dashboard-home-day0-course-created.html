@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Day 0, Course Created</title>
+<!--
+  Day-0 state of the creator dashboard: the user has just generated their first
+  course draft. Goals: ACTIVATION (finish payments → branding → launch during
+  the 0-7 day trial) and CONVERSION (trial countdown + upgrade touchpoints).
+
+  Built exclusively from mono-frontend/packages/ui components, following each
+  component's .stories.mdx metadata/usage tables:
+
+    Button        recommended variants primary | secondary (usage mdx); plus the
+                  real `upgrade` variant tokens from _button.scss ($button-upgrade-*);
+                  normal = uni-pv-8 uni-ph-32, small = 30px
+    Card          variant: default (grey) | legacy (white); built-in uni-p-24;
+                  brand container (DESIGN.md) for the trial plan card
+    Badge         neutral variant — uppercase, 0.25rem radius (used for DRAFT)
+    Tag           size small → warning (Tag.tsx default) for UPGRADE pill
+    Thumbnail     0.25rem radius, grey-9 bg, object-fit cover; failed-to-load
+                  state = grey-100 surface (used as the auto-generated cover)
+    RadioButton   18px circle, 2px border, 10px dot (_radio.scss) for step states
+    ProgressBar   linear track grey-12 / 8px + barColor + bodyTextExtraSmallBold label
+    ContentHeader Reckless-Light 1.5rem/400 headline (top bar)
+    MaterialIcons Material Symbols Outlined, wght 400
+    InputText     not needed in this state (prompt is replaced by course preview)
+
+  Colors/sizes/spacing from design-tokens/scss/_base.scss; nav dimensions from
+  shared-styles/_constants.scss.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<style>
+  :root {
+    /* design-tokens/scss/_base.scss */
+    --color-brand-primary-20: #faffd6;
+    --color-brand-primary-80: #edff65;
+    --color-brand-primary-100: #e7ff33;
+    --color-brand-primary-120: #dbf230;
+    --color-brand-primary-160: #545d13;
+    --color-container-primary: #fbfbfb;
+    --color-grey-2: #fbfbfb;
+    --color-grey-6: #f2f2f2;
+    --color-grey-9: #ebebeb;
+    --color-grey-12: #e4e4e4;
+    --color-grey-20: #d3d3d3;
+    --color-grey-30: #bdbdbd;
+    --color-grey-40: #a7a7a7;
+    --color-grey-60: #7a7a7a;
+    --color-grey-70: #646464;
+    --color-grey-80: #4e4e4e;
+    --color-grey-90: #383838;
+    --color-grey-100: #222222;
+    --color-white: #ffffff;
+    --color-blue-120: #4d72cc;
+    --color-yellow-80: #f9d34d;
+    --color-text-helper: #646464;
+    --color-text-primary: #222222;
+    --font-family-display: 'Reckless-Light', 'Palatino', Garamond, Georgia, serif;
+    --font-family-system: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+      'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+      'Helvetica Neue', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-family-system);
+    background-color: var(--color-container-primary);
+    color: var(--color-text-primary);
+    line-height: 150%;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .app {
+    display: flex;
+    min-height: 100vh;
+    max-width: 1480px;          /* $max-content-width */
+    margin: 0 auto;
+  }
+  .main { flex: 1; min-width: 0; }
+
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    display: flex;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    direction: ltr;
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    flex-shrink: 0;
+  }
+
+  /* ===== Nav — dark labeled admin nav ($nav-width, obsidian) ===== */
+  .nav {
+    width: 236px;               /* $nav-width */
+    flex-shrink: 0;
+    background-color: var(--color-grey-100);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;                 /* $zindex-nav */
+  }
+  .nav-school {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--color-grey-90);
+    flex-shrink: 0;
+  }
+  .nav-school-name {
+    color: var(--color-white);
+    font-size: 1.125rem;
+    font-weight: 600;
+    line-height: 125%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+  .nav-items {
+    flex: 1;
+    padding: 1rem 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    overflow-y: auto;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-family: var(--font-family-system);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 150%;
+    color: var(--color-grey-20);
+    text-decoration: none;
+  }
+  .nav-item .material-symbols-outlined { color: var(--color-grey-40); }
+  .nav-item:hover { color: var(--color-white); }
+  .nav-item:hover .material-symbols-outlined { color: var(--color-white); }
+  .nav-item--active {
+    color: var(--color-white);
+    font-weight: 600;
+    background-color: var(--color-grey-90);
+  }
+  .nav-item--active .material-symbols-outlined {
+    color: var(--color-white);
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  }
+  .nav-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.75rem;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 100%;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-grey-60);
+  }
+  .nav-section .material-symbols-outlined {
+    font-size: 16px; width: 16px; height: 16px;
+    color: var(--color-grey-60);
+    cursor: pointer;
+  }
+  .nav-section .material-symbols-outlined:hover { color: var(--color-white); }
+  .nav-bottom {
+    padding: 0.75rem;
+    border-top: 1px solid var(--color-grey-90);
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    flex-shrink: 0;
+  }
+  /* Tag component: size="small" → warning (Tag.tsx default) */
+  .tag {
+    display: inline-block;
+    border-radius: 0.625rem;    /* $tag-border-radius */
+    color: var(--color-grey-100);
+    font-size: 0.79rem;         /* tc.bodySmallSemiBold */
+    font-weight: 600;
+    line-height: 1.185rem;
+  }
+  .tag--small { padding: 0 0.5rem; }
+  .tag--warning { background-color: var(--color-yellow-80); }
+  .nav-item .tag { margin-left: auto; }
+  .nav-user {
+    border-top: 1px solid var(--color-grey-90);
+    display: flex;
+    align-items: stretch;
+    flex-shrink: 0;
+  }
+  .nav-user-name {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    color: var(--color-white);
+    font-size: 1rem;
+    line-height: 150%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-user-menu {
+    width: 48px;
+    border: none;
+    border-left: 1px solid var(--color-grey-90);
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-grey-40);
+    cursor: pointer;
+  }
+  .nav-user-menu:hover { color: var(--color-white); }
+
+  /* ===== Top bar — ContentHeader headline + trial meta + upgrade Button ===== */
+  .topbar {
+    height: 57px;               /* $header-height */
+    padding: 0 24px;            /* $header-padding */
+    background-color: var(--color-white);
+    border-bottom: 1px solid var(--color-grey-12);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 5;                 /* $zindex-contentHeaders */
+  }
+  .topbar-headline {
+    font-family: var(--font-family-display);
+    font-weight: 400;           /* $content-header-headline-font-weight */
+    font-size: 1.5rem;          /* $content-header-headline-font-size */
+    line-height: 1.5rem;
+  }
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;                  /* $space-16 */
+  }
+  .trial-meta {
+    font-size: 0.875rem;        /* tc.bodyTextSmall */
+    color: var(--color-text-helper);
+  }
+  .trial-meta strong { font-weight: 600; color: var(--color-text-primary); }
+  .icon-button {
+    min-width: 40px;
+    max-width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;         /* $button-icon-border-radius */
+    background-color: transparent;
+    color: var(--color-grey-60);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .icon-button:hover {
+    background-color: var(--color-grey-12);
+    color: var(--color-grey-100);
+  }
+  .icon-button .material-symbols-outlined { font-size: 24px; width: 24px; height: 24px; }
+
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;              /* $main-content-padding */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;                  /* $space-32 */
+  }
+
+  /* ===== Card component ===== */
+  .card {
+    border-radius: 0.25rem;     /* $card-border-radius */
+    border: 1px solid var(--color-grey-12);
+    padding: 1.5rem;            /* uni-p-24 (Card.tsx built-in) */
+  }
+  .card--legacy { background-color: var(--color-white); }
+  .card--default { background-color: var(--color-grey-2); }
+  .card--brand { background-color: var(--color-brand-primary-20); border-color: var(--color-grey-12); } /* $color-container-brand */
+
+  /* ===== Hero — obsidian Card, post-creation state ===== */
+  .hero {
+    background-color: var(--color-grey-100);
+    border-color: var(--color-grey-100);
+    color: var(--color-white);
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem;
+  }
+  .hero h1 {
+    font-family: var(--font-family-display);
+    font-size: 2rem;            /* headingDisplay1 */
+    line-height: 125%;
+    font-weight: 300;
+  }
+  .hero h1 em { font-style: italic; color: var(--color-brand-primary-100); }
+  .hero-sub {
+    font-size: 0.875rem;
+    color: var(--color-grey-30);
+    margin-top: 0.5rem;
+  }
+  .progressbar {
+    display: flex;
+    align-items: center;
+    margin-top: 1.5rem;
+    max-width: 320px;
+  }
+  .progressbar .track {
+    border-radius: 0.5rem;      /* var(--space-8) */
+    height: 0.5rem;
+    background-color: var(--color-grey-12);
+    width: 100%;
+    overflow-x: hidden;
+    position: relative;
+  }
+  .progressbar .range {
+    border-radius: 0.5rem;
+    height: 100%;
+    background-color: var(--color-brand-primary-100); /* barColor prop */
+  }
+  .progressbar .label {
+    font-size: 0.75rem;         /* bodyTextExtraSmallBold */
+    font-weight: 600;
+    line-height: 150%;
+    padding-left: 0.5rem;       /* uni-pl-8 */
+    min-width: 2rem;
+    color: var(--color-white);
+  }
+
+  /* Step list — RadioButton geometry (_radio.scss), three states */
+  .steps {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-grey-40);
+  }
+  .radio {
+    width: 1.125rem;            /* $radio-width */
+    height: 1.125rem;
+    border: 2px solid var(--color-grey-40);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .radio::after {
+    content: '';
+    width: 0.625rem;            /* $radio-indicator-width */
+    height: 0.625rem;
+    border-radius: 50%;
+    transform: scale3d(0, 0, 1);
+    transition: transform 0.1s ease-out;
+    background-color: var(--color-brand-primary-100);
+  }
+  /* done = checked radio + struck label */
+  .step--done { color: var(--color-grey-60); text-decoration: line-through; }
+  .step--done .radio { border-color: var(--color-brand-primary-100); }
+  .step--done .radio::after { transform: scale3d(1, 1, 1); }
+  /* active = current focus */
+  .step--active { color: var(--color-brand-primary-100); font-weight: 600; }
+  .step--active .radio { border-color: var(--color-brand-primary-100); }
+  .step-mins {
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--color-grey-60);
+    text-decoration: none;
+  }
+
+  /* ===== Course preview card ===== */
+  .course-card {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem;                /* $space-24 */
+  }
+  /* Thumbnail component: 0.25rem radius, grey-9 bg, cover; failed-to-load = grey-100 */
+  .thumbnail {
+    border-radius: 0.25rem;
+    background-color: var(--color-grey-100); /* .failed-to-load surface as auto-cover */
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 1rem;
+  }
+  .thumbnail span {
+    font-family: var(--font-family-display);
+    font-weight: 300;
+    font-size: 1.5rem;          /* headingDisplay2 */
+    line-height: 125%;
+    color: var(--color-brand-primary-100);
+  }
+  .course-body { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+  /* Badge component: neutral — uppercase, 0.25rem radius */
+  .badge {
+    display: inline-block;
+    border-radius: 0.25rem;     /* $badge-border-radius */
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 150%;
+    letter-spacing: 0.5px;
+    padding: 0.125rem 0.5rem;
+  }
+  .badge--neutral { background-color: var(--color-grey-12); color: var(--color-grey-100); } /* $badge-neutral-* */
+  .course-title {
+    font-size: 1.125rem;        /* tc.heading5 */
+    font-weight: 600;
+    line-height: 1.688rem;
+    margin-top: 0.5rem;         /* $space-8 */
+  }
+  .course-meta {
+    font-size: 0.875rem;
+    color: var(--color-text-helper);
+    margin-top: 0.25rem;        /* $space-4 */
+  }
+  .course-drafted {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;        /* $space-4 $space-24 */
+    margin-top: 0.75rem;        /* $space-12 */
+  }
+  .course-drafted li {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--color-text-helper);
+  }
+  .course-drafted .material-symbols-outlined {
+    font-size: 16px; width: 16px; height: 16px;
+    color: var(--color-brand-primary-160); /* $color-text-brand */
+  }
+  .course-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;                /* $space-8 */
+    margin-top: auto;
+    padding-top: 1rem;          /* $space-16 */
+  }
+
+  /* ===== Button component ===== */
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    touch-action: manipulation;
+    background-image: none;
+    border-width: 1px;
+    border-style: solid;
+    transition: opacity 0.3s, color 0.3s, background-color 0.3s, border-color 0.3s;
+    user-select: none;
+    cursor: pointer;
+    font-family: var(--font-family-system);
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 105%;
+  }
+  .button:focus-visible:not(:active) {
+    outline: none;
+    box-shadow: 0 0 0 5px #2222221a;
+  }
+  .button--normal {
+    height: 40px;
+    padding: 0.5rem 2rem;       /* uni-pv-8 uni-ph-32 */
+    border-radius: 6px;
+    min-width: 120px;
+    max-width: 570px;
+  }
+  .button--small {
+    height: 30px;
+    padding: 0.25rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+  }
+  .button--primary {
+    background-color: var(--color-brand-primary-100);
+    border: 1px solid var(--color-grey-100);
+    color: var(--color-grey-100);
+  }
+  .button--primary:hover {
+    background-color: var(--color-brand-primary-80);
+    border-color: var(--color-grey-100);
+  }
+  .button--primary:focus-visible {
+    background-color: var(--color-brand-primary-80);
+    border-color: var(--color-grey-100);
+    box-shadow: 0 0 0 5px rgba(34, 34, 34, 0.1);
+  }
+  .button--primary[aria-expanded='true'],
+  .button--primary:active {
+    background-color: var(--color-brand-primary-120);
+    border-color: var(--color-grey-100);
+    box-shadow: unset;
+  }
+  .button--secondary {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-grey-100);
+    color: var(--color-grey-100);
+  }
+  .button--secondary:hover {
+    background-color: var(--color-grey-6);
+    border-color: var(--color-grey-100);
+  }
+  .button--secondary:focus-visible {
+    background-color: var(--color-grey-6);
+    border-color: var(--color-grey-100);
+  }
+  .button--secondary[aria-expanded='true'],
+  .button--secondary:active {
+    background-color: var(--color-grey-12);
+    border-color: var(--color-grey-100);
+  }
+  /* upgrade variant — _button.scss $button-upgrade-* */
+  .button--upgrade {
+    background-color: var(--color-white);
+    border: 2px solid var(--color-brand-primary-100);
+    color: var(--color-grey-100);
+  }
+  .button--upgrade:hover {
+    background-color: var(--color-grey-6);
+    border-color: var(--color-brand-primary-80);
+  }
+  .button--upgrade:focus-visible {
+    background-color: var(--color-grey-6);
+    border-color: var(--color-brand-primary-80);
+  }
+  .button--upgrade[aria-expanded='true'],
+  .button--upgrade:active {
+    background-color: var(--color-grey-12);
+    border-color: var(--color-brand-primary-120);
+  }
+  /* textButton */
+  .button--text {
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-grey-100);
+    padding: 0;
+  }
+  .button--text:hover { color: var(--color-grey-70); }
+
+  /* ===== Next steps ===== */
+  .section-title {
+    font-family: var(--font-family-display);
+    font-size: 1.5rem;          /* headingDisplay2 */
+    line-height: 125%;
+    font-weight: 300;
+  }
+  .section-sub {
+    font-size: 0.875rem;
+    color: var(--color-text-helper);
+    margin-top: 0.25rem;
+  }
+  .next-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;               /* $space-12 */
+    margin-top: 1.5rem;         /* $space-24 */
+  }
+  .next-step {
+    display: flex;
+    align-items: center;
+    gap: 1rem;                  /* $space-16 */
+    padding: 1rem 1.5rem;       /* $space-16 $space-24 */
+  }
+  .next-step .radio { border-color: var(--color-grey-30); }
+  .next-step--active .radio { border-color: var(--color-grey-100); }
+  .next-step-body { flex: 1; min-width: 0; }
+  .next-step-title {
+    font-size: 1rem;            /* tc.bodyTextBold */
+    font-weight: 600;
+    line-height: 150%;
+  }
+  .next-step-title .step-mins { margin-left: 0.5rem; }
+  .next-step-desc {
+    font-size: 0.875rem;
+    color: var(--color-text-helper);
+  }
+
+  /* ===== Trial plan card (conversion) ===== */
+  .trial-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem;
+  }
+  .trial-days {
+    list-style: none;
+    display: flex;
+    gap: 0.375rem;              /* $space-4-ish within scale */
+    margin-top: 1rem;           /* $space-16 */
+  }
+  .trial-days li {
+    width: 1.75rem;             /* $size-28 */
+    height: 0.5rem;             /* $space-8 — ProgressBar track height */
+    border-radius: 0.5rem;
+    background-color: var(--color-grey-12); /* ProgressBar track */
+  }
+  .trial-days li.used { background-color: var(--color-brand-primary-100); }
+  .trial-days-label {
+    font-size: 0.75rem;
+    color: var(--color-text-helper);
+    margin-top: 0.5rem;
+  }
+  .trial-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  /* ===== Keep momentum rows ===== */
+  .ways-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .way-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: background-color 0.2s ease;
+  }
+  .way-card:hover { background-color: var(--color-grey-6); }
+  .way-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 0.25rem;
+    background-color: var(--color-white);
+    border: 1px solid var(--color-grey-12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--color-grey-100);
+  }
+  .way-body { flex: 1; min-width: 0; }
+  .way-title { font-size: 1rem; font-weight: 600; line-height: 150%; }
+  .way-desc { font-size: 0.875rem; color: var(--color-text-helper); }
+  .way-card .material-symbols-outlined.chevron { color: var(--color-grey-60); }
+
+  @media (max-width: 1080px) {
+    .hero, .course-card, .trial-card { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 960px) {
+    .nav { display: none; }
+    .ways-grid { grid-template-columns: 1fr; }
+    .topbar .trial-meta { display: none; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- Dark labeled admin nav -->
+    <nav class="nav" aria-label="Admin navigation">
+      <div class="nav-school">
+        <span class="nav-school-name">The Magic School</span>
+      </div>
+
+      <div class="nav-items">
+        <a class="nav-item nav-item--active" href="#" aria-current="page">
+          <span class="material-symbols-outlined" aria-hidden="true">home</span>Home
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">monitoring</span>Analytics
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">group</span>Users
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">devices</span>Site
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">paid</span>Sales
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">mail</span>Emails
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">settings</span>Settings
+        </a>
+
+        <div class="nav-section">
+          Products
+          <span class="material-symbols-outlined" role="button" aria-label="Add product">add</span>
+        </div>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">video_library</span>Courses
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">file_save</span>Digital Downloads
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">event</span>Coaching
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">inventory_2</span>Bundles
+        </a>
+      </div>
+
+      <div class="nav-bottom">
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">bolt</span>Plan
+          <span class="tag tag--small tag--warning">UPGRADE</span>
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">groups</span>Community
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">menu_book</span>Resources
+        </a>
+        <a class="nav-item" href="#">
+          <span class="material-symbols-outlined" aria-hidden="true">help</span>Help
+        </a>
+      </div>
+
+      <div class="nav-user">
+        <span class="nav-user-name">Chip Chocolate</span>
+        <button class="nav-user-menu" type="button" aria-label="Account menu">
+          <span class="material-symbols-outlined" aria-hidden="true">more_vert</span>
+        </button>
+      </div>
+    </nav>
+
+    <div class="main">
+
+      <!-- Top bar: headline + trial countdown + upgrade Button variant -->
+      <header class="topbar">
+        <h1 class="topbar-headline">Dashboard</h1>
+        <div class="topbar-actions">
+          <span class="trial-meta"><strong>Free trial &middot; Day 0</strong> &mdash; 7 days left</span>
+          <button class="button button--small button--upgrade" type="button">Upgrade</button>
+          <button class="icon-button" type="button" aria-label="Announcements">
+            <span class="material-symbols-outlined" aria-hidden="true">campaign</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="page">
+
+        <!-- Hero: step 1 done, payments is now the active step -->
+        <section class="card hero" aria-labelledby="hero-title">
+          <div>
+            <h1 id="hero-title">Nice work, Sam &mdash; your course is <em>drafted</em>!</h1>
+            <p class="hero-sub">3 steps to your first sale. Most creators who finish setup in week one make their first sale during trial.</p>
+            <!-- ProgressBar: value=1 maxValue=4 barColor=brand-primary-100 -->
+            <div class="progressbar" role="progressbar" aria-valuenow="1" aria-valuemin="0" aria-valuemax="4" aria-label="Setup progress">
+              <div class="track"><div class="range" style="width: 25%;"></div></div>
+              <p class="label" aria-hidden="true">25%</p>
+            </div>
+          </div>
+          <ol class="steps">
+            <li class="step step--done">
+              <span class="radio" aria-hidden="true"></span>
+              Create course&nbsp;<span class="step-mins">done</span>
+            </li>
+            <li class="step step--active">
+              <span class="radio" aria-hidden="true"></span>
+              Set up payments&nbsp;<span class="step-mins">~5mins</span>
+            </li>
+            <li class="step">
+              <span class="radio" aria-hidden="true"></span>
+              Customize your school&nbsp;<span class="step-mins">~5mins</span>
+            </li>
+            <li class="step">
+              <span class="radio" aria-hidden="true"></span>
+              Launch &amp; start selling&nbsp;<span class="step-mins">~5mins</span>
+            </li>
+          </ol>
+        </section>
+
+        <!-- Course preview: legacy Card + Thumbnail + Badge + Buttons -->
+        <section class="card card--legacy course-card" aria-labelledby="course-title">
+          <!-- Thumbnail component (failed-to-load surface used as auto-generated cover) -->
+          <div class="thumbnail" aria-hidden="true">
+            <span>Digital Marketing 101</span>
+          </div>
+          <div class="course-body">
+            <span class="badge badge--neutral">Draft</span>
+            <h2 class="course-title" id="course-title">Digital Marketing 101</h2>
+            <p class="course-meta">6 modules &middot; 18 lessons &middot; Created today</p>
+            <ul class="course-drafted">
+              <li><span class="material-symbols-outlined" aria-hidden="true">check</span>Course outline</li>
+              <li><span class="material-symbols-outlined" aria-hidden="true">check</span>Sales page copy</li>
+              <li><span class="material-symbols-outlined" aria-hidden="true">check</span>Lesson structure</li>
+            </ul>
+            <div class="course-actions">
+              <button class="button button--normal button--primary" type="button">Continue editing</button>
+              <button class="button button--normal button--secondary" type="button">Preview sales page</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Next steps: activation checklist with time estimates -->
+        <section class="card card--legacy" aria-labelledby="next-title">
+          <h2 class="section-title" id="next-title">Your next steps</h2>
+          <p class="section-sub">Finish these to start selling during your trial.</p>
+
+          <div class="next-steps">
+            <div class="card card--default next-step next-step--active">
+              <span class="radio" aria-hidden="true"></span>
+              <div class="next-step-body">
+                <h3 class="next-step-title">Set up payments <span class="step-mins">~5 mins</span></h3>
+                <p class="next-step-desc">Connect teachable:pay to accept credit cards, Apple Pay, and Google Pay.</p>
+              </div>
+              <button class="button button--small button--secondary" type="button">Start</button>
+            </div>
+
+            <div class="card card--default next-step">
+              <span class="radio" aria-hidden="true"></span>
+              <div class="next-step-body">
+                <h3 class="next-step-title">Customize your school <span class="step-mins">~5 mins</span></h3>
+                <p class="next-step-desc">Add your logo and brand colors so your school looks like you.</p>
+              </div>
+              <button class="button button--small button--secondary" type="button">Start</button>
+            </div>
+
+            <div class="card card--default next-step">
+              <span class="radio" aria-hidden="true"></span>
+              <div class="next-step-body">
+                <h3 class="next-step-title">Launch &amp; start selling <span class="step-mins">~5 mins</span></h3>
+                <p class="next-step-desc">Set your price, publish your course, and share your sales page link.</p>
+              </div>
+              <button class="button button--small button--secondary" type="button">Start</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Trial plan card: Brand Card (container-brand) + upgrade Button -->
+        <section class="card card--brand trial-card" aria-labelledby="trial-title">
+          <div>
+            <h2 class="section-title" id="trial-title">Day 0 of your 7-day free trial</h2>
+            <p class="section-sub">You have full access to every Pro feature &mdash; AI course drafts, sales pages, and teachable:pay. Pick a plan any time to keep selling after your trial ends.</p>
+            <ul class="trial-days" aria-hidden="true">
+              <li class="used"></li><li></li><li></li><li></li><li></li><li></li><li></li>
+            </ul>
+            <p class="trial-days-label">7 days left &middot; ends June 19</p>
+          </div>
+          <div class="trial-cta">
+            <button class="button button--normal button--upgrade" type="button">Choose your plan</button>
+            <button class="button button--text" type="button">Compare plans</button>
+          </div>
+        </section>
+
+        <!-- Keep momentum -->
+        <section class="card card--legacy" aria-labelledby="momentum-title">
+          <h2 class="section-title" id="momentum-title">Keep the momentum</h2>
+          <div class="ways-grid">
+
+            <a class="card card--default way-card" href="#">
+              <span class="way-icon"><span class="material-symbols-outlined" aria-hidden="true">play_circle</span></span>
+              <div class="way-body">
+                <h3 class="way-title">Watch the 5-minute quickstart</h3>
+                <p class="way-desc">See how creators go from draft to first sale in one sitting.</p>
+              </div>
+              <span class="material-symbols-outlined chevron" aria-hidden="true">chevron_right</span>
+            </a>
+
+            <a class="card card--default way-card" href="#">
+              <span class="way-icon"><span class="material-symbols-outlined" aria-hidden="true">groups</span></span>
+              <div class="way-body">
+                <h3 class="way-title">Join the creator community</h3>
+                <p class="way-desc">Get launch feedback from creators who&rsquo;ve been where you are.</p>
+              </div>
+              <span class="material-symbols-outlined chevron" aria-hidden="true">chevron_right</span>
+            </a>
+
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+</body>
+</html>
