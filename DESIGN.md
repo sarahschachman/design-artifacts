@@ -144,19 +144,19 @@ colors:
 typography:
   # Display Typography
   display-lg:
-    fontFamily: Reckless-Light, Palatino, Garamond, Georgia, serif
+    fontFamily: Reckless-Light, Reckless, Fraunces, Palatino, Garamond, Georgia, serif
     fontSize: 48px
     fontWeight: 300
     lineHeight: 1.25
 
   display-md:
-    fontFamily: Reckless-Light, Palatino, Garamond, Georgia, serif
+    fontFamily: Reckless-Light, Reckless, Fraunces, Palatino, Garamond, Georgia, serif
     fontSize: 32px
     fontWeight: 300
     lineHeight: 1.25
 
   display-sm:
-    fontFamily: Reckless-Light, Palatino, Garamond, Georgia, serif
+    fontFamily: Reckless-Light, Reckless, Fraunces, Palatino, Garamond, Georgia, serif
     fontSize: 24px
     fontWeight: 300
     lineHeight: 1.25
@@ -572,6 +572,12 @@ The typography system employs a **dual-font strategy** that separates display mo
 - **Display Small (24px):** Card titles, prominent labels
 
 **Important:** Reckless-Light should never be used below 18px or for body text. Its delicate strokes become illegible at small sizes.
+
+**Web rendering & fallback:** Reckless is a licensed typeface with no free webfont, so it renders only where it's installed locally (most designers have it). The display stack therefore falls back to **Fraunces** — a free, editorial serif that's the closest match. Prototypes should use the full stack below and load **Fraunces** as a webfont (e.g. Google Fonts), so anyone *without* Reckless installed still sees an on-brand serif rather than Georgia:
+
+```
+Reckless-Light, Reckless, Fraunces, Palatino, Garamond, Georgia, serif
+```
 
 ### System Typography
 

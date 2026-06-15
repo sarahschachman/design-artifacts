@@ -16,7 +16,7 @@ const T = {
   lemonWash: '#f7ffd6',
   green: '#465F01',
   greenWash: '#eef4d9',
-  serif: "'Fraunces', 'Tiempos Headline', Palatino, Georgia, serif",
+  serif: "'Reckless-Light', 'Reckless', 'Fraunces', Palatino, Garamond, Georgia, serif",
   sans: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
   radSm: 4,
   radMd: 6,

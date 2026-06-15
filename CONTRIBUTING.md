@@ -34,6 +34,20 @@ Copy an existing `<a class="card">` in the Prototypes grid and set:
   the project's own README for build steps
   (e.g. `explorations/quiz-builder/README.md`).
 
+### Fonts
+
+Prototypes default to the brand display serif **Reckless** and fall back to
+**Fraunces** for anyone who doesn't have Reckless installed locally (most
+designers do). Use `DESIGN.md`'s display stack verbatim for headings:
+
+```
+'Reckless-Light', 'Reckless', 'Fraunces', Palatino, Garamond, Georgia, serif
+```
+
+Reckless is licensed and has no free webfont, so **load Fraunces as a webfont**
+(e.g. Google Fonts) — that's the guaranteed fallback. Don't load Reckless; it
+renders from each viewer's local install. See `DESIGN.md` → Typography.
+
 ### Ground rules
 
 - Everything in `site/` is **fake-data only**. `gate.js` (password `teachable`)
