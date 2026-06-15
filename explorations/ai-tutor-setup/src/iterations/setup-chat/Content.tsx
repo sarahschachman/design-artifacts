@@ -1,4 +1,5 @@
 import type { TutorState } from './definition'
+import { AdminShell } from '../../AdminShell'
 
 const T = {
   lemon: '#E6FF32', obsidian: '#222222', ink: '#2a2a2a', grey80: '#4e4e4e', grey: '#6b6b6b',
@@ -63,13 +64,11 @@ export function Content({ state }: { state: TutorState }) {
   const status = published ? '● Live' : scenario === 'training' ? 'Training…' : 'Draft'
 
   return (
-    <div style={{ fontFamily: T.sans, background: T.canvas, color: T.ink, height: 760, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      {/* Admin top bar */}
+    <AdminShell active="apps" subHeader="Apps" subItems={[{ label: 'AI Tutor', active: true }, { label: 'Browse apps' }]}>
+    <div style={{ fontFamily: T.sans, background: T.canvas, color: T.ink, height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      {/* Page header */}
       <header style={{ height: 58, flexShrink: 0, background: T.card, borderBottom: `1px solid ${T.line}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 22px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ width: 13, height: 13, borderRadius: 4, background: T.lemon, border: `1px solid ${T.obsidian}` }} />
-          <span style={{ fontSize: 12.5, color: T.greySoft }}>Apps</span>
-          <span style={{ color: T.greySoft }}>›</span>
           <span style={{ fontFamily: T.serif, fontSize: 19, fontWeight: 500, letterSpacing: '-0.2px' }}>AI Tutor</span>
           <span style={{ fontSize: 11, fontWeight: 600, padding: '3px 9px', borderRadius: 999, background: published ? T.greenWash : T.cardSoft, color: published ? T.green : T.grey80, border: `1px solid ${published ? '#d3e0a8' : T.line}` }}>{status}</span>
         </div>
@@ -149,6 +148,7 @@ export function Content({ state }: { state: TutorState }) {
         </section>
       </div>
     </div>
+    </AdminShell>
   )
 }
 
