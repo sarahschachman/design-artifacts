@@ -745,3 +745,10 @@ The Teachable identity comes in two lockups: the full **wordmark** and the **mar
 - **Lemon** on dark surfaces when a brand-forward accent is wanted — never on white (insufficient contrast).
 - **Clear space:** keep padding around the wordmark at least the height of the lowercase "t" on every side. Don't crowd it.
 - **Don't** recolor, stretch, rotate, add effects, or place the wordmark on a low-contrast background.
+
+## Maintaining this file
+
+`DESIGN.md` is the source of truth for the design system. Two practical notes:
+
+- **Validate changes before committing:** `npx @google/design.md lint DESIGN.md` checks WCAG AA contrast (4.5:1 minimum for body text), that every token reference resolves, and that required fields are present.
+- **Relationship to the product code:** the live UI is built from `tokens.json` in the product repo (mono-frontend, `packages/ui/…`), not from this file. They serve different purposes — `DESIGN.md` is the design spec, `tokens.json` is the implementation — and don't need to match exactly; reconcile them periodically (e.g. before major releases). This is also why the brand value and the product token differ slightly: **#E6FF32** (canonical brand Lemon) vs **#E7FF33** (the product `brand-primary` token).
