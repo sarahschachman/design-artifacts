@@ -4,22 +4,23 @@
 
 **CRITICAL: When creating ANY UI components, screens, or visual elements, you MUST reference `DESIGN.md` first.**
 
-The Teachable Design System specification lives in `DESIGN.md` (root of this repository). This file contains:
-- Design tokens (colors, typography, spacing, rounding)
-- Component definitions and patterns
-- Design philosophy and rationale
-- Brand guidelines and usage rules
+`DESIGN.md` (repo root) is the **single source of truth** for the design system —
+its name, design tokens (colors, typography, spacing, rounding), component
+patterns, brand guidelines, and the rationale behind them.
+
+Read those facts *from* `DESIGN.md` — don't restate brand values (color hexes,
+the system's name, etc.) here or anywhere else. Duplicating them just creates
+copies that drift out of date.
 
 **Before generating any UI code:**
-1. Read `DESIGN.md` to understand the design system
-2. Use the exact color values, typography scales, and spacing tokens defined there
-3. Follow the component patterns and design guidelines
-4. Maintain consistency with the Teachable brand (Teachable Lemon #E6FF32, Obsidian text, etc.)
+1. Read `DESIGN.md` and use its exact color values, typography scales, spacing
+   tokens, and component patterns.
+2. Follow its brand guidelines and usage rules.
 
 **Never:**
-- Invent new colors, font sizes, or spacing values
-- Create components that contradict the design system
-- Use arbitrary values when design tokens exist
+- Invent colors, font sizes, or spacing values, or use arbitrary values when a
+  token exists in `DESIGN.md`.
+- Create components that contradict `DESIGN.md`.
 
 ## Prototypes
 
