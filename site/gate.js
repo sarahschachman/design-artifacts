@@ -35,13 +35,20 @@
   }
 
   function mount() {
+    // Load Fraunces so the serif heading looks right even on pages that don't
+    // already load it. Reckless (if installed locally) still takes precedence.
+    var font = document.createElement("link");
+    font.rel = "stylesheet";
+    font.href = "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&display=swap";
+    document.head.appendChild(font);
+
     var css = document.createElement("style");
     css.textContent = [
       '#da-gate{position:fixed;inset:0;z-index:2147483647;visibility:visible;display:flex;align-items:center;justify-content:center;background:#fbfbfb;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}',
       '#da-gate *{visibility:visible;box-sizing:border-box}',
       '.da-gate__card{width:320px;max-width:90vw;text-align:center;color:#222}',
       '.da-gate__chip{display:inline-block;background:#e7ff33;color:#222;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:5px;margin-bottom:16px}',
-      '#da-gate h1{font-size:24px;font-weight:700;margin:0 0 4px}',
+      '#da-gate h1{font-family:"Reckless-Light","Reckless","Fraunces",Palatino,Garamond,Georgia,serif;font-size:30px;font-weight:400;letter-spacing:-.3px;margin:0 0 6px}',
       '#da-gate p{font-size:13.5px;color:#6b6b6b;margin:0 0 18px}',
       '#da-gate form{display:flex;gap:8px}',
       '#da-gate input{flex:1;padding:10px 12px;font-size:14px;border:1px solid #e4e4e4;border-radius:8px;outline:none}',
