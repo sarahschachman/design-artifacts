@@ -21,6 +21,32 @@ The Fedora Design System specification lives in `DESIGN.md` (root of this reposi
 - Create components that contradict the design system
 - Use arbitrary values when design tokens exist
 
+## Prototypes
+
+Prototypes live under `site/prototypes/` and are linked from the **Prototypes**
+section of `site/index.html`.
+
+**Always add the index card in the same branch/PR that adds the prototype.**
+Vercel's preview comment can only link to the deploy root (`site/`, the project's
+Root Directory), so the index is the only way a prototype is reachable from the PR
+preview *before* merge. A prototype with no index card is effectively invisible in
+review — the preview link just lands on an index that doesn't mention it.
+
+Each card (copy an existing `<a class="card">` in the Prototypes grid):
+- `href` → the prototype path under `prototypes/` (e.g. `prototypes/quiz-builder`)
+- `data-owner="<creator first name>"` → pill color is auto-assigned
+- a one-line description of what it is
+
+Conventions:
+- **Static HTML prototype:** a self-contained `.html` (or folder) in
+  `site/prototypes/`, with `gate.js` referenced in the `<head>`.
+- **Built app** (e.g. a Vite design notebook): keep the source *outside* `site/`
+  (e.g. `explorations/<name>/`) and commit a **static build** into
+  `site/prototypes/<name>/`; see that project's README for the build + gate steps.
+  The static copy does not auto-update — rebuild it when the design changes.
+- Everything in `site/` is fake-data only. `gate.js` (password `teachable`) is a
+  deterrent, not real security.
+
 ## User Personas
 
 User personas live in `docs/context/personas.md`. Read that file before any
