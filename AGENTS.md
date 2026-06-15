@@ -23,6 +23,8 @@ The Fedora Design System specification lives in `DESIGN.md` (root of this reposi
 
 ## Prototypes
 
+Full contributor guide: **`CONTRIBUTING.md`**. Key points for agents:
+
 Prototypes live under `site/prototypes/` and are linked from the **Prototypes**
 section of `site/index.html`.
 
