@@ -1,12 +1,12 @@
-# Fedora Design System Guide
+# Teachable Design System Guide
 
-**A simple guide for designers working with the Fedora Design System.**
+**A simple guide for designers working with the Teachable Design System.**
 
 ---
 
 ## What You Need to Know
 
-The Fedora Design System is documented in a single file called **DESIGN.md**. This file contains:
+The Teachable Design System is documented in a single file called **DESIGN.md**. This file contains:
 
 - 🎨 **All design tokens** (colors, fonts, spacing, corner radii)
 - 📐 **Component specifications** (buttons, inputs, cards, badges)
@@ -27,7 +27,7 @@ The Fedora Design System is documented in a single file called **DESIGN.md**. Th
 - Making decisions about colors, typography, or spacing
 
 ### 📖 Read DESIGN.md to find:
-- **Exact color values** → Example: Teachable Mustard is `#E7FF33`
+- **Exact color values** → Example: Teachable Lemon is `#E7FF33`
 - **Font sizes and styles** → Example: Headings use `Reckless-Light` at 32px
 - **Spacing values** → Example: Use 24px between major sections
 - **Component patterns** → Example: Primary buttons are 40px tall with 12px rounded corners
@@ -64,7 +64,7 @@ The file has two parts:
 **Part 1: Design Tokens (YAML - Top Section)**
 ```yaml
 colors:
-  primary: "#E7FF33"           # Teachable Mustard
+  primary: "#E7FF33"           # Teachable Lemon
   obsidian: "#222222"          # Main text color
 
 typography:
@@ -77,7 +77,7 @@ typography:
 ```markdown
 ## Brand & Style
 
-The Fedora Design System embodies the ethos of **Educational Empowerment**
+The Teachable Design System embodies the ethos of **Educational Empowerment**
 through **Professional Clarity**...
 ```
 
@@ -199,7 +199,7 @@ Think of it like this:
 ### Design Token Cheat Sheet
 
 **Colors:**
-- Primary action: `#E7FF33` (Teachable Mustard)
+- Primary action: `#E7FF33` (Teachable Lemon)
 - Text: `#222222` (Obsidian)
 - Background: `#fbfbfb` (Primary Container)
 - Error: `#ca483d`
@@ -226,7 +226,7 @@ Think of it like this:
 ### Button Specifications
 
 **Primary Button:**
-- Background: `#E7FF33` (Teachable Mustard)
+- Background: `#E7FF33` (Teachable Lemon)
 - Text: `#222222` (Obsidian)
 - Height: 40px
 - Padding: 12px vertical, 20px horizontal
@@ -261,11 +261,11 @@ Think of it like this:
 ### Tools
 
 - [DESIGN.md CLI](https://www.npmjs.com/package/@google/design.md) - Lint, diff, and export
-- [Fedora Storybook](https://uni.zeachable.cloud/) - Component documentation
+- [Teachable Storybook](https://uni.zeachable.cloud/) - Component documentation
 
 ### Internal
 
-- [Fedora UI README](./README.md) - Package documentation
+- [Teachable UI README](./README.md) - Package documentation
 - [Contributing Guidelines](./CONTRIBUTING.md) - How to contribute
 - [Design System Usage Script](../../tools/scripts/design-system/usage.mjs) - Adoption metrics
 
@@ -280,4 +280,4 @@ Think of it like this:
 ---
 
 **Last Updated:** June 2026
-**Maintained By:** Fedora Design Systems Team
+**Maintained By:** Teachable Design Systems Team

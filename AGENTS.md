@@ -4,7 +4,7 @@
 
 **CRITICAL: When creating ANY UI components, screens, or visual elements, you MUST reference `DESIGN.md` first.**
 
-The Fedora Design System specification lives in `DESIGN.md` (root of this repository). This file contains:
+The Teachable Design System specification lives in `DESIGN.md` (root of this repository). This file contains:
 - Design tokens (colors, typography, spacing, rounding)
 - Component definitions and patterns
 - Design philosophy and rationale
@@ -14,7 +14,7 @@ The Fedora Design System specification lives in `DESIGN.md` (root of this reposi
 1. Read `DESIGN.md` to understand the design system
 2. Use the exact color values, typography scales, and spacing tokens defined there
 3. Follow the component patterns and design guidelines
-4. Maintain consistency with the Teachable brand (Teachable Mustard #E7FF33, Obsidian text, etc.)
+4. Maintain consistency with the Teachable brand (Teachable Lemon #E6FF32, Obsidian text, etc.)
 
 **Never:**
 - Invent new colors, font sizes, or spacing values
