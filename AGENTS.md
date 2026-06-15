@@ -50,6 +50,21 @@ Conventions:
 - Everything in `site/` is fake-data only. `gate.js` (password `teachable`) is a
   deterrent, not real security.
 
+### Grounding: admin shell & reference screens
+
+Prototypes of admin UI should sit in the **real admin chrome**, not a re-invented
+one:
+
+- **Admin shell** — `site/admin-shell/` is the canonical Teachable two-tier nav +
+  layout, as code (transcribed from `mono-frontend/packages/ui`). Static prototypes
+  `<link>` `admin-shell.css` and copy the `.app` block from `admin-shell.html`;
+  React notebooks port it into an `<AdminShell>` wrapper. Open `admin-shell.html`
+  to see the bare chrome.
+- **Reference screens** — before composing a full admin screen, **Read the specific
+  relevant screenshot in `docs/screens/`** and match the real layout/IA. (Source
+  knowledge, like personas — `DESIGN.md` stays normative for tokens; the screens
+  ground composition.) They may lag the live product — see `docs/screens/README.md`.
+
 ## User Personas
 
 User personas live in `docs/context/personas.md`. Read that file before any

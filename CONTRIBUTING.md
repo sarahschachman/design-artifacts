@@ -34,6 +34,19 @@ Copy an existing `<a class="card">` in the Prototypes grid and set:
   the project's own README for build steps
   (e.g. `explorations/quiz-builder/README.md`).
 
+### Grounding (admin shell + reference screens)
+
+Prototypes of admin UI should sit in the **real Teachable admin chrome**, not a
+re-invented one.
+
+- **Admin shell** — [`site/admin-shell/`](site/admin-shell/) is the canonical two-tier
+  nav + layout as code (from `mono-frontend/packages/ui`). Static prototypes `<link>`
+  `admin-shell.css` and copy the `.app` block from `admin-shell.html`; React notebooks
+  port it into an `<AdminShell>` wrapper. Open `admin-shell.html` for the bare chrome.
+- **Reference screens** — `docs/screens/` holds screenshots of the real admin. Consult the
+  relevant one before composing a full screen so the layout/IA matches reality.
+  (`DESIGN.md` stays the source of truth for tokens; the screens ground composition.)
+
 ### Fonts
 
 Prototypes default to the brand display serif **Reckless** and fall back to
