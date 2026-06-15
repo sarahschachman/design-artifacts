@@ -38,6 +38,34 @@ built on the picked direction A:
 - **2b · Tag to a level** — no math; each answer is tagged to a level, a rule breaks ties.
 - **2c · Branching logic** — each answer routes to the next question or jumps to a result.
 
+## Shared preview link
+
+A static build is committed to `site/prototypes/quiz-builder/` so the design-artifacts Vercel
+deployment serves it (gated by `gate.js`, password `teachable`) at:
+
+```
+<deployment-url>/prototypes/quiz-builder/
+```
+
+On a PR, use that path on the Vercel **Preview** URL from the bot comment.
+
+### Updating the shared build
+
+The static copy doesn't auto-update — rebuild it after changing iterations:
+
+```bash
+cd explorations/quiz-builder
+npm run build                                   # base is baked in via vite.config.ts
+rm -rf ../../site/prototypes/quiz-builder
+mkdir -p ../../site/prototypes/quiz-builder
+cp -r dist/* ../../site/prototypes/quiz-builder/
+# re-add the gate to the built index.html:
+perl -0pi -e 's#(<head>)#$1\n    <script src="/gate.js"></script>#' \
+  ../../site/prototypes/quiz-builder/index.html
+```
+
+Then commit `site/prototypes/quiz-builder/` and push.
+
 ## Structure
 
 Each iteration is a self-contained folder under `src/iterations/` (`definition.ts`,

@@ -11,8 +11,11 @@ const Agentation = lazy(() =>
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <NotebookApp iterations={ITERATIONS} project={PROJECT} />
-    <Suspense>
-      <Agentation />
-    </Suspense>
+    {/* Agentation is a dev-only annotation tool — keep it out of the shared static build. */}
+    {import.meta.env.DEV && (
+      <Suspense>
+        <Agentation />
+      </Suspense>
+    )}
   </StrictMode>,
 )
