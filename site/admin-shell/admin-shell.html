@@ -21,7 +21,14 @@
        =================================================================== -->
   <div class="app">
 
-    <!-- Admin nav — dark two-tier: icon rail + section panel (236px) -->
+    <!-- Mobile-only top bar (hamburger). Hidden ≥768px. -->
+    <header class="admin-topbar">
+      <button class="admin-topbar__burger" type="button" aria-label="Open navigation" id="navToggle"><span class="material-symbols-outlined" aria-hidden="true">menu</span></button>
+      <span class="admin-topbar__school">Sarah&rsquo;s School</span>
+    </header>
+
+    <!-- Admin nav — dark two-tier: icon rail + section panel (236px).
+         On mobile it's an off-canvas drawer toggled by `.nav-open` on `.app`. -->
     <nav class="nav" aria-label="Admin navigation">
       <div class="nav-school">
         <span class="nav-school-name">Sarah&rsquo;s School</span>
@@ -60,6 +67,9 @@
       </div>
     </nav>
 
+    <!-- Mobile drawer backdrop (tap to close). Hidden ≥768px. -->
+    <div class="nav-backdrop" id="navBackdrop"></div>
+
     <div class="main">
       <main class="page">
         <!-- ▼▼▼ replace everything in `.page` with your screen ▼▼▼ -->
@@ -76,6 +86,13 @@
     document.fonts.load("20px 'Material Symbols Outlined'").then(function () {
       document.documentElement.setAttribute('data-gmsfontstatus', 'loaded');
     });
+
+    // Mobile nav drawer toggle.
+    var app = document.querySelector('.app');
+    var toggle = document.getElementById('navToggle');
+    var backdrop = document.getElementById('navBackdrop');
+    if (toggle) toggle.addEventListener('click', function () { app.classList.toggle('nav-open'); });
+    if (backdrop) backdrop.addEventListener('click', function () { app.classList.remove('nav-open'); });
   </script>
 </body>
 </html>

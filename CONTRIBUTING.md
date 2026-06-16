@@ -70,6 +70,9 @@ re-invented one.
   nav + layout as code (from `mono-frontend/packages/ui`). Static prototypes `<link>`
   `admin-shell.css` and copy the `.app` block from `admin-shell.html`; React notebooks
   port it into an `<AdminShell>` wrapper. Open `admin-shell.html` for the bare chrome.
+  The CSS shell is **responsive** — below 768px the nav collapses to a hamburger drawer
+  (matches `docs/screens/*-mobile.png`); copying the `.app` block + the small toggle
+  script from `admin-shell.html` gets that for free.
 - **Reference screens** — `docs/screens/` holds screenshots of the real admin. Consult the
   relevant one before composing a full screen so the layout/IA matches reality.
   (`DESIGN.md` stays the source of truth for tokens; the screens ground composition.)
