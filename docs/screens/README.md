@@ -54,8 +54,8 @@ Real captures from the Teachable admin (`sarah-schachman-s-school`), 2026-06-15.
 | `upsell-funnel-mobile.png` | `/admin-app/courses/:id/upsell/funnel` | **Mobile nav pattern** — hamburger (☰) opens the nav as a full-height dark two-tier drawer (icon rail + section panel) overlaying content |
 | `students-list-mobile.png` | `/admin-app/users/students` | Same mobile nav drawer, over the students list |
 
-> **Note on `*-students*` captures:** these show real student **names**. They read like a
-> test/demo school, but if any are real people, crop or remove those three.
+> **Top bar:** the slim top bar (school switcher, notifications) is **Home-only** — it shows
+> on `admin-home.png` but not the other screens, so it's a page-level element, not global
+> chrome. The shell's nav is the global chrome.
 >
-> **Top bar:** the real admin has a slim top bar (school switcher, notifications) above the
-> page content that `site/admin-shell/` doesn't yet model — see `admin-home.png`.
+> _Captures are from a personal **test/demo school** — no real student data._
