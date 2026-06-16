@@ -23,16 +23,43 @@ Copy an existing `<a class="card">` in the Prototypes grid and set:
 - `data-owner="<creator first name>"` → the pill color is auto-assigned
 - a one-line description of what it is
 
-### Static HTML vs a built app
+### Two kinds of prototype
 
-- **Static HTML prototype:** a self-contained `.html` (or folder) in
-  `site/prototypes/`, with `gate.js` referenced in the `<head>`.
-- **Built app** (e.g. a Vite design notebook): keep the source *outside* `site/`
-  (e.g. `explorations/<name>/`) and commit a **static build** into
-  `site/prototypes/<name>/`, with `gate.js` injected into the built `index.html`.
-  The static copy doesn't auto-update — rebuild it when the design changes. See
-  the project's own README for build steps
-  (e.g. `explorations/quiz-builder/README.md`).
+- **Static HTML** (e.g. the dashboard prototypes) — a self-contained `.html` file
+  with inline styles/scripts, in `site/prototypes/`, with `gate.js` in the `<head>`.
+  The file you edit *is* the file the browser runs: source = deployed artifact, no
+  build step.
+- **Built app** (e.g. a Vite design notebook — interactive, multi-direction) — a
+  React/TypeScript app. The browser can't run `.tsx` directly, so it's **compiled**:
+  source → a minified bundle.
+
+### Where built-app source lives, and why (`prototype-src/`)
+
+A built app is inherently **two things**, and they live in two places:
+
+| | What | Where | Editable? | Served? |
+|---|---|---|---|---|
+| **Source** | the `.tsx`/config you edit | `prototype-src/<name>/` | ✅ | ❌ (needs compiling) |
+| **Build** | the compiled, minified bundle | `site/prototypes/<name>/` | ❌ (machine-generated) | ✅ |
+
+Think of `prototype-src/` as the **`src/`** for these prototypes and
+`site/prototypes/<name>/` as their committed **`build/`**. The source lives *outside*
+`site/` on purpose:
+
+1. **`site/` is the deploy root** — Vercel serves everything under it. Source/config
+   (`.tsx`, `package.json`, `node_modules`) aren't deployable; you don't put the recipe
+   inside the served output.
+2. **`index.html` collision** — a Vite app needs `index.html` as its *dev entry*
+   (points at `/src/main.tsx`); the build *produces* a different `index.html` (points
+   at hashed `/assets/…`). They can't both be `site/prototypes/<name>/index.html`, so
+   source and build can't share that folder.
+
+**Practical notes:**
+- `node_modules/` and `dist/` are gitignored, so git only holds the source + the
+  committed build — not the heavy stuff.
+- The committed build **doesn't auto-update** — rebuild it when the design changes
+  (steps in each project's README, e.g. `prototype-src/quiz-builder/README.md`).
+- `gate.js` is injected into the built `index.html` during that copy step.
 
 ### Grounding (admin shell + reference screens)
 

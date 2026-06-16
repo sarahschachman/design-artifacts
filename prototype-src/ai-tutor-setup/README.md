@@ -14,7 +14,7 @@ with citations — from the actual lessons.
 ## Run it
 
 ```bash
-cd explorations/ai-tutor-setup
+cd prototype-src/ai-tutor-setup
 npm install
 npm run dev          # → http://localhost:5173
 ```
@@ -46,7 +46,7 @@ Vercel deploy serves it (gated, password `teachable`) at `…/prototypes/ai-tuto
 ### Updating the shared build
 
 ```bash
-cd explorations/ai-tutor-setup
+cd prototype-src/ai-tutor-setup
 npm run build                                   # base is baked in via vite.config.ts
 rm -rf ../../site/prototypes/ai-tutor-setup
 mkdir -p ../../site/prototypes/ai-tutor-setup

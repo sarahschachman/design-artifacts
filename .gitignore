@@ -3,5 +3,5 @@
 .playwright-mcp/
 
 # design-notebook exploration build artifacts
-explorations/**/node_modules/
-explorations/**/dist/
+prototype-src/**/node_modules/
+prototype-src/**/dist/
