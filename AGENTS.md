@@ -44,7 +44,7 @@ Conventions:
 - **Static HTML prototype:** a self-contained `.html` (or folder) in
   `site/prototypes/`, with `gate.js` referenced in the `<head>`.
 - **Built app** (e.g. a Vite design notebook): keep the source *outside* `site/`
-  (e.g. `explorations/<name>/`) and commit a **static build** into
+  (e.g. `prototype-src/<name>/`) and commit a **static build** into
   `site/prototypes/<name>/`; see that project's README for the build + gate steps.
   The static copy does not auto-update — rebuild it when the design changes.
 - Everything in `site/` is fake-data only. `gate.js` (password `teachable`) is a

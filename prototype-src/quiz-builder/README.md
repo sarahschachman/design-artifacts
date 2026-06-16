@@ -14,7 +14,7 @@ a learner's French level, captures their email, and recommends the right course.
 ## Run it
 
 ```bash
-cd explorations/quiz-builder
+cd prototype-src/quiz-builder
 npm install
 npm run dev          # → http://localhost:5173
 ```
@@ -54,7 +54,7 @@ On a PR, use that path on the Vercel **Preview** URL from the bot comment.
 The static copy doesn't auto-update — rebuild it after changing iterations:
 
 ```bash
-cd explorations/quiz-builder
+cd prototype-src/quiz-builder
 npm run build                                   # base is baked in via vite.config.ts
 rm -rf ../../site/prototypes/quiz-builder
 mkdir -p ../../site/prototypes/quiz-builder
