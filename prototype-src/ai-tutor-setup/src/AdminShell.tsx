@@ -1,6 +1,12 @@
 // Teachable admin shell — React port of site/admin-shell/ (the canonical chrome,
 // transcribed from mono-frontend/packages/ui). Keep values in sync with that file.
 // Prototypes wrap their screen in <AdminShell> so they sit in the real admin nav.
+//
+// Desktop-only by design: the canonical CSS shell (site/admin-shell/) is responsive
+// (hamburger drawer < 768px), but this notebook renders iterations at a fixed design
+// canvas and scales them — there's no responsive viewport for the breakpoint to act on,
+// so the port stays desktop. If you reuse it in a real viewport-responsive app, port
+// the mobile drawer rules from admin-shell.css too.
 
 const C = {
   grey100: '#222222', grey90: '#383838', grey40: '#a7a7a7', grey20: '#d3d3d3',
