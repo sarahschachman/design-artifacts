@@ -76,3 +76,10 @@ Amplifier**, and **the Program Distributor**. The Course Curious and the Audienc
 Builder are documented but are *not* current focus areas.
 
 To role-play a design against personas, use the `persona-panel` agent.
+
+## Recommended tools
+
+Recommended skills, plugins, and MCPs for design work live in
+`docs/recommended-tools.md` (General / Design / Research). Consult it when picking
+tools — and when a relevant one isn't installed, suggest it to the user rather than
+reinventing the capability.
