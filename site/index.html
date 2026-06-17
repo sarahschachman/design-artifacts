@@ -46,6 +46,17 @@
   .owner { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap; line-height: 1.35; letter-spacing: 0.01em; }
   .card-desc { font-size: 13px; color: var(--grey); margin-top: 3px; }
   .card-arrow { color: var(--grey-soft); font-size: 18px; }
+
+  /* Skills: cards carry two actions, so they're not whole-card links */
+  .section-note { font-size: 13px; color: var(--grey); margin: -4px 0 14px; max-width: 60ch; }
+  .section-note code { font-family: var(--mono); font-size: 0.9em; background: var(--card-soft); padding: 1px 5px; border-radius: 4px; }
+  .skill-card { display: flex; flex-direction: column; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; }
+  .skill-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; border: 1px solid var(--line); cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .btn-primary { background: var(--lemon); color: var(--obsidian); border-color: var(--obsidian); }
+  .btn-primary:hover { background: #d9f200; }
+  .btn-secondary { background: var(--card); color: var(--ink); }
+  .btn-secondary:hover { border-color: var(--obsidian); }
   .empty { border: 1px dashed var(--line); border-radius: 12px; padding: 22px; color: var(--grey); font-size: 13.5px; text-align: center; }
   .empty code, footer code { font-family: var(--mono); font-size: 0.9em; background: var(--card-soft); padding: 1px 5px; border-radius: 4px; }
   footer { margin-top: 60px; font-size: 12px; color: var(--grey-soft); border-top: 1px solid var(--line); padding-top: 20px; }
@@ -149,6 +160,35 @@
         </div>
         <span class="card-arrow">→</span>
       </a>
+    </div>
+
+    <div class="eyebrow">Skills</div>
+    <p class="section-note">Custom Claude skills you can install. Download the <code>.zip</code>, unzip it into <code>~/.claude/skills/&lt;name&gt;/</code>, and restart Claude. Or read the <code>SKILL.md</code> on GitHub first.</p>
+    <div class="grid">
+      <div class="card skill-card" data-owner="Sarah">
+        <div class="card-body">
+          <div class="card-titlerow">
+            <div class="card-title">iOS Commerce Compliance</div>
+          </div>
+          <div class="card-desc">Critique iOS purchase &amp; checkout designs against current Apple App Store rules (US storefront) — catches compliance problems early and suggests compliant alternatives. Not legal advice.</div>
+        </div>
+        <div class="skill-actions">
+          <a class="btn btn-primary" href="skills/ios-commerce-compliance.zip" download>↓ Download .zip</a>
+          <a class="btn btn-secondary" href="https://github.com/sarahschachman/design-artifacts/blob/main/site/skills/ios-commerce-compliance/SKILL.md" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </div>
+      <div class="card skill-card" data-owner="Sarah">
+        <div class="card-body">
+          <div class="card-titlerow">
+            <div class="card-title">Teachable Slides</div>
+          </div>
+          <div class="card-desc">Make on-brand presentations with Teachable's Google Slides template — which slides to copy, colors, fonts, logos, the image library, and accessibility.</div>
+        </div>
+        <div class="skill-actions">
+          <a class="btn btn-primary" href="skills/teachable-slides.zip" download>↓ Download .zip</a>
+          <a class="btn btn-secondary" href="https://github.com/sarahschachman/design-artifacts/blob/main/site/skills/teachable-slides/SKILL.md" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </div>
     </div>
 
     <footer>
