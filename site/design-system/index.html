@@ -373,7 +373,7 @@ function renderLogo(fm, prose){
     const grid=document.createElement('div'); grid.className='logo-grid';
     for(const su of surfaces){
       const card=document.createElement('div'); card.className='logo-card';
-      card.innerHTML='<div class="logo-stage '+grp.kind+'" style="background:'+su.bg+'"><img class="logo-img" src="assets/teachable-'+grp.kind+'-'+su.color+'.svg" alt="Teachable '+grp.title.toLowerCase()+', '+su.color+'"></div><div class="logo-cap">'+su.label+'</div>';
+      card.innerHTML='<div class="logo-stage '+grp.kind+'" style="background:'+su.bg+'"><img class="logo-img" src="/design-system/assets/teachable-'+grp.kind+'-'+su.color+'.svg" alt="Teachable '+grp.title.toLowerCase()+', '+su.color+'"></div><div class="logo-cap">'+su.label+'</div>';
       grid.appendChild(card);
     }
     s.appendChild(grid);
@@ -666,7 +666,7 @@ function renderGuidelines(prose){
 function renderHero(fm){
   const hero=document.createElement('div'); hero.className='hero';
   const left=document.createElement('div');
-  left.innerHTML='<img class="wordmark" src="assets/teachable-wordmark-black.svg" alt="Teachable">'+
+  left.innerHTML='<img class="wordmark" src="/design-system/assets/teachable-wordmark-black.svg" alt="Teachable">'+
     '<p class="lede">A live preview of <code>DESIGN.md</code> — the plain-text file AI agents read to generate on-brand Teachable prototypes. It captures design <strong>tokens and guidelines</strong>, not a full component library (Storybook is the source for the real components).</p>'+
     '<div class="cta"><a class="btn btn-primary" href="https://github.com/sarahschachman/design-artifacts/blob/main/DESIGN.md" target="_blank">View DESIGN.md</a><a class="btn btn-secondary" href="https://uni.zeachable.cloud/ui/index.html?path=/story/overview-about--page" target="_blank">View Storybook</a></div>';
   const right=document.createElement('div');
