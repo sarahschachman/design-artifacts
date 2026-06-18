@@ -196,10 +196,64 @@ Usage: /token-optimize <mode>
 
 ---
 
-## Token best practices (TL;DR)
+## Token best practices
 
-Three rules that cover 90% of savings — no skill invocation needed:
+### Session setup
 
-1. **Disable design MCPs for code-only work.** figma-console, claude-canvas, and framer add ~25–35k tokens per request when active. Turn them off in Claude Code settings when you're not doing design work.
-2. **Start fresh sessions per task.** Long sessions compound context. One focused session per task is cheaper than one sprawling session for everything.
-3. **Match the model to the task.** Haiku for lookups/renames, Sonnet for standard dev work, Opus only for complex multi-file reasoning. Opus costs ~5–10× Sonnet.
+**1. Use Claude Code Projects for repeated work**
+Projects persist context (CLAUDE.md, memory, permissions) across sessions without reloading it each time. Create a project per repo or workstream — e.g. one for fedora, one for design-artifacts, one for City Whispers. Claude already knows the codebase and your preferences from the start instead of re-explaining every session.
+→ Create via the Projects tab in Claude Code, or `claude --project <name>`.
+
+**2. Start a fresh session per task**
+Long sessions compound. Every tool call, file read, and response stays in context until compaction kicks in, which itself costs tokens to summarize. One focused session per task is cheaper and produces sharper results than one sprawling session covering multiple unrelated tasks.
+
+**3. Disable MCPs you don't need**
+Every active MCP server adds its full tool schema to every request — even if you never call it. figma-console, claude-canvas, and framer together add ~27,000–38,000 tokens per request. For pure code work, disable all design MCPs in Claude Code settings. Re-enable them only when you switch to design work.
+
+**4. Keep CLAUDE.md files tight**
+CLAUDE.md loads automatically on every session in that project. Every line costs tokens forever. Trim it to only what Claude genuinely needs: repo-specific commands, non-obvious conventions, things that would otherwise require re-explaining. Don't put things that are obvious from the code.
+
+---
+
+### Prompting
+
+**5. Reference code by file path, not by quoting it**
+Instead of pasting a block of code into your prompt, write `app/components/Sidebar.tsx:42`. Claude already has access to the file — quoting it just doubles the token cost.
+
+**6. Remove filler and hedges from prompts**
+Phrases like "I was wondering if you could", "maybe", "I think", "not totally sure" add tokens with no information. State the task directly. Use `/token-optimize compress` to clean up a prompt before sending it.
+
+**7. Be specific about scope upfront**
+Vague prompts lead to exploratory responses that read the whole codebase before answering. "Fix the CSV export bug" triggers more file reads than "the bug is in `app/exports/lesson_completion_exporter.rb` — header row is missing when the course has no students." Narrowing scope upfront costs nothing and saves many tool calls.
+
+---
+
+### Model selection
+
+**8. Match the model to the task**
+
+| Task | Model |
+|---|---|
+| Grep, rename, quick lookup | Haiku 4.5 |
+| Bug fix, feature, explanation, review | Sonnet 4.6 |
+| Multi-file refactor, architecture | Opus 4.8 |
+| Long research, synthesis, design docs | Opus 4.8 or Fable 5 |
+| Iterative UI work (many back-and-forths) | Sonnet 4.6 |
+
+Opus costs ~5–10× Sonnet. Reserve it for tasks where deep cross-file reasoning is genuinely needed — not just "this feels complex."
+
+**9. Use Haiku for exploration before committing to a solution**
+If you're unsure where a bug lives or how a system works, ask Haiku first. It's fast and cheap for read-only investigation. Switch to Sonnet or Opus once you know exactly what needs to change.
+
+---
+
+### Memory and context
+
+**10. Use memory files for stable facts, not task state**
+Memory files load at session start. Put things that are always true: your role, how you like to collaborate, project background. Don't put in-progress task state or things that change week to week — stale memory is worse than no memory.
+
+**11. Audit memory files periodically**
+Run `/token-optimize audit` every few weeks. Memory files accumulate — old project context, outdated preferences, and project-specific details you don't need in every session all add up. Delete or archive anything no longer relevant.
+
+**12. Use subagents for large independent tasks**
+When a task involves reading many files or running many searches, Claude Code can spawn a subagent to handle it in a separate context window. This keeps your main session lean. Ask Claude to "use an agent" or "delegate this to a subagent" for broad codebase exploration.
