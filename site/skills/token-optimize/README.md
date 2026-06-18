@@ -118,6 +118,84 @@ Total with all active: ~27,000–40,000 tokens just in tool schemas per request.
 
 ---
 
+### `/token-optimize session` — configuring before a task
+
+```
+> /token-optimize session I need to fix a bug in the lesson completion CSV export
+  feature — it's a pure backend Ruby on Rails task, no UI changes
+
+## Session Setup for: Fix bug in lesson completion CSV export (pure-code, Rails)
+
+### MCP servers to disable
+| Server        | Reason                                              |
+|---------------|-----------------------------------------------------|
+| figma-console | No design work                                      |
+| claude-canvas | No Figma plugin work                                |
+| framer        | No Framer work                                      |
+| teachable-mcp | No course/user queries needed for a backend bug fix |
+
+### MCP servers to keep
+None needed for pure Rails debugging.
+
+### Memory files relevant to this task
+- shivani-working-style.md — always relevant
+
+### Model recommendation
+Sonnet 4.6 (`claude-sonnet-4-6`) — standard bug fix, well-scoped, no multi-file
+architectural reasoning needed.
+
+### Estimated savings
+Disabling 4 MCPs saves ~27,000–38,000 tokens per request.
+```
+
+---
+
+### `/token-optimize concise` — stripping a verbose response
+
+```
+> /token-optimize concise I've gone ahead and looked into the issue you mentioned
+  with the sidebar component and I can see what's happening. So essentially what's
+  going on is that the breakpoint in sidebar.scss is using a max-width media query
+  of 768px but the component itself is actually being rendered inside a container
+  that has its own overflow hidden applied to it, which means that the media query
+  is technically firing correctly but the visual result isn't what you'd expect
+  because the parent container is clipping the content before the styles can take
+  effect. In summary, you'll want to either remove the overflow hidden from the
+  parent container or switch to using a container query instead of a media query.
+  I hope that helps clarify things!
+
+## Concise version (~62% shorter)
+
+`sidebar.scss` breakpoint fires correctly but parent container has `overflow: hidden`,
+clipping the result.
+
+**Fix:** Remove `overflow: hidden` from parent, or switch to a container query.
+
+---
+**Removed:** 3 sentences of preamble, 1 restatement ("In summary..."),
+1 sign-off ("I hope that helps clarify things!")
+```
+
+---
+
+### `/token-optimize` (no args) — the menu
+
+```
+> /token-optimize
+
+Token Optimize — 5 modes
+
+  audit     Diagnose what's burning tokens in the current session
+  compress  Rewrite a prompt to say the same thing in fewer tokens
+  session   Configure a new session before you start a task
+  concise   Collapse a verbose response to just the actionable parts
+  model     Get a model recommendation for a task you're about to run
+
+Usage: /token-optimize <mode>
+```
+
+---
+
 ## Token best practices (TL;DR)
 
 Three rules that cover 90% of savings — no skill invocation needed:
