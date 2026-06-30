@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Import Rewards — over-limit first-time experience</title>
+<script src="../../gate.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --lemon:#e7ff33;--obsidian:#222222;--grey90:#383838;--grey70:#646464;--grey60:#7a7a7a;
+    --grey50:#919191;--grey40:#a7a7a7;--grey20:#d3d3d3;--grey12:#e4e4e4;--grey9:#ebebeb;
+    --grey6:#f2f2f2;--grey3:#f8f8f8;--white:#fff;--brand:#faffd6;
+    --warn:#f8c821;--warnD:#957814;--warnL:#fef4d3;--success:#38ba5f;--successD:#227039;--successL:#d7f1df;--navy:#13233b;
+    --serif:'Fraunces',Palatino,Georgia,serif;--sans:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--obsidian);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .material-symbols-outlined{font-size:20px;line-height:1;vertical-align:middle}
+
+  /* faux dashboard backdrop */
+  .backdrop{position:fixed;inset:0;background:var(--grey3);overflow:hidden}
+  .backdrop::before{content:"";position:absolute;inset:0;background:
+    linear-gradient(var(--white),var(--white)) 0 0/100% 64px no-repeat,
+    radial-gradient(circle at 20% 30%, #e9ecff 0, transparent 40%),
+    radial-gradient(circle at 80% 60%, #fff7d6 0, transparent 45%);
+    filter:blur(2px);opacity:.7}
+  .scrim{position:fixed;inset:0;background:rgba(18,20,24,.55);backdrop-filter:blur(3px)}
+
+  /* prototype switcher */
+  .proto{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;gap:14px;align-items:center;justify-content:center;background:#111;color:#fff;padding:8px 14px;font-size:12px}
+  .proto b{color:#9a9a9a;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:11px}
+  .seg{display:inline-flex;gap:6px}
+  .seg button{font:600 12.5px var(--sans);color:#ccc;background:#222;border:1px solid #3a3a3a;border-radius:999px;padding:6px 13px;cursor:pointer}
+  .seg button[aria-pressed=true]{background:var(--lemon);color:#222;border-color:var(--lemon)}
+
+  /* modal */
+  .wrap{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:64px 20px 28px}
+  .modal{background:var(--white);width:600px;max-width:100%;border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.3);overflow:hidden;display:flex;flex-direction:column;max-height:calc(100vh - 100px)}
+  .m-top{display:flex;align-items:center;justify-content:space-between;padding:18px 24px 0}
+  .brand{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--grey60)}
+  .brand .spark{width:22px;height:22px;border-radius:6px;background:var(--obsidian);display:flex;align-items:center;justify-content:center}
+  .brand .spark .material-symbols-outlined{font-size:14px;color:var(--lemon)}
+  .dots{display:flex;gap:6px}
+  .dot{width:7px;height:7px;border-radius:999px;background:var(--grey12)}
+  .dot.on{background:var(--obsidian)}
+  .x{border:none;background:none;color:var(--grey40);cursor:pointer}
+  .m-body{padding:20px 24px 8px;overflow-y:auto}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--grey60);margin-bottom:10px}
+  h2.title{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.15;letter-spacing:-.3px;margin-bottom:10px}
+  h2.title .em{background:linear-gradient(transparent 62%, var(--lemon) 62%)}
+  .lede{font-size:15px;color:var(--grey70);line-height:1.55;margin-bottom:18px}
+  .lede b{color:var(--obsidian)}
+
+  /* model explainer rows */
+  .model{display:flex;flex-direction:column;gap:2px;margin:6px 0 4px}
+  .mrow{display:flex;gap:13px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--grey9)}
+  .mrow:first-child{border-top:none}
+  .mrow .ic{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--grey3)}
+  .mrow .ic.b{background:var(--brand)}
+  .mrow .ic .material-symbols-outlined{font-size:19px;color:var(--obsidian)}
+  .mrow .h{font-size:15px;font-weight:600}
+  .mrow .s{font-size:13.5px;color:var(--grey70)}
+
+  /* big over figure + meter */
+  .figure{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+  .figure .num{font-family:var(--serif);font-size:40px;line-height:1;color:var(--warnD)}
+  .figure .unit{font-size:14px;color:var(--grey60)}
+  .meter{position:relative;height:12px;border-radius:999px;background:var(--grey9);overflow:hidden;margin:14px 0 8px}
+  .seg-full{position:absolute;left:0;top:0;bottom:0;background:var(--lemon)}
+  .seg-over{position:absolute;top:0;bottom:0;background:var(--warn)}
+  .tick{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--obsidian);z-index:2}
+  .meter-key{display:flex;gap:16px;font-size:12.5px;color:var(--grey70)}
+  .meter-key .k{display:flex;align-items:center;gap:6px}
+  .sw{width:10px;height:10px;border-radius:3px}
+
+  /* cost callout */
+  .cost{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--warnL);border:1px solid var(--warn);border-radius:10px;padding:14px 16px;margin:16px 0}
+  .cost .l{font-size:13.5px;color:var(--grey90)}
+  .cost .l b{color:var(--obsidian)}
+  .cost .amt{font-family:var(--serif);font-size:26px;color:var(--warnD);white-space:nowrap}
+  .grace{display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--grey70);background:var(--grey3);border-radius:8px;padding:11px 13px;margin-bottom:6px}
+  .grace .material-symbols-outlined{font-size:17px;color:var(--grey90)}
+  .grace b{color:var(--obsidian)}
+
+  /* two paths / doors */
+  .doors{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:6px 0 4px}
+  .door{border:1px solid var(--grey12);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px;cursor:pointer;transition:border-color .12s,box-shadow .12s}
+  .door:hover{border-color:var(--obsidian);box-shadow:0 6px 18px rgba(0,0,0,.06)}
+  .door.reco{border-color:var(--obsidian);background:#fffef2}
+  .door .tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--successD)}
+  .door h3{font-family:var(--serif);font-weight:400;font-size:18px;line-height:1.15}
+  .door .d{font-size:13px;color:var(--grey70);flex:1}
+  .door .price{font-size:13px;font-weight:600}
+  .door .price.free{color:var(--successD)}
+  .door .go{display:flex;align-items:center;justify-content:center;gap:7px;height:36px;border-radius:6px;font-weight:600;font-size:13px;border:1px solid var(--obsidian);cursor:pointer}
+  .door .go.pri{background:var(--lemon)} .door .go.sec{background:#fff}
+
+  /* calculator */
+  .calc{background:var(--grey3);border:1px solid var(--grey12);border-radius:12px;padding:16px;margin:4px 0 6px}
+  .calc label{font-size:13px;font-weight:600;display:flex;justify-content:space-between;margin-bottom:8px}
+  .calc label .v{font-family:var(--serif);font-size:18px}
+  .calc input[type=range]{width:100%;accent-color:var(--obsidian)}
+  .calc .out{display:flex;gap:20px;margin-top:14px}
+  .calc .out .b{flex:1}
+  .calc .out .lbl{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--grey60)}
+  .calc .out .big{font-family:var(--serif);font-size:24px;margin-top:3px}
+  .calc .out .big.save{color:var(--successD)}
+  .calc .out .big.cost{color:var(--warnD)}
+
+  /* footer */
+  .m-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 24px;border-top:1px solid var(--grey9);flex-shrink:0}
+  .btn{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 20px;border-radius:6px;font-weight:600;font-size:14px;cursor:pointer;border:1px solid var(--obsidian)}
+  .btn-pri{background:var(--lemon);color:var(--obsidian)}
+  .btn-ghost{background:#fff;color:var(--obsidian)}
+  .btn-text{background:none;border:none;color:var(--grey60);font-weight:600;font-size:13.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+  .talk{font-size:13px;color:var(--grey60)}
+  .talk a{color:var(--obsidian);font-weight:600}
+
+  @media(max-width:560px){.doors{grid-template-columns:1fr}h2.title{font-size:24px}.modal{max-height:calc(100vh - 80px)}}
+</style>
+</head>
+<body>
+  <div class="backdrop"></div>
+  <div class="scrim"></div>
+
+  <div class="proto">
+    <b>Prototype</b>
+    <span style="color:#888">Direction</span>
+    <div class="seg" id="segD">
+      <button data-d="A" aria-pressed="true">A · Transition &amp; grace</button>
+      <button data-d="B" aria-pressed="false">B · Earn your way down</button>
+      <button data-d="C" aria-pressed="false">C · Choose your path</button>
+    </div>
+  </div>
+
+  <div class="wrap"><div class="modal" id="modal"></div></div>
+
+<script>
+document.fonts && document.fonts.load("20px 'Material Symbols Outlined'");
+/* Scenario: free allowance 100 (plan baseline; earned 0 — they haven't sold here).
+   Imported 7,000 → 6,900 over → $0.50/student/mo → $3,450/mo. Grace to Aug 1. */
+var FREE=100, IMPORTED=7000, PRICE=0.5;
+var OVER=IMPORTED-FREE, COST=OVER*PRICE, GRACE='August 1, 2026';
+function n(x){return Math.round(x).toLocaleString('en-US')}
+function money(x){return '$'+x.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}
+
+function meterOver(){
+  var lp=FREE/IMPORTED*100;
+  return '<div class="meter"><div class="seg-full" style="width:'+lp+'%"></div>'
+    +'<div class="seg-over" style="left:'+lp+'%;right:0"></div><div class="tick" style="left:'+lp+'%"></div></div>'
+    +'<div class="meter-key"><span class="k"><span class="sw" style="background:var(--lemon)"></span>'+n(FREE)+' free</span>'
+    +'<span class="k"><span class="sw" style="background:var(--warn)"></span>'+n(OVER)+' beyond free</span></div>';
+}
+function talk(){return '<span class="talk">Questions about your account? <a href="#">Talk to our team</a></span>';}
+
+/* ---------------- Direction A: transition & grace ---------------- */
+var A=[
+  function(){return {eyebrow:'A change to imported students',
+    html:'<h2 class="title">You’ve grown to <span class="em">7,000 students</span> 🎉</h2>'
+      +'<p class="lede">That’s a serious audience. We’re updating how imported students work on Teachable — here’s exactly what it means for you, and the ways forward.</p>'
+      +'<div class="grace"><span class="material-symbols-outlined">schedule</span><span>Nothing changes today. Your new billing starts <b>'+GRACE+'</b>, so you have time to decide.</span></div>',
+    primary:'See what’s changing'};},
+  function(){return {eyebrow:'How imports work now',
+    html:'<h2 class="title">Free imports, tied to your sales</h2>'
+      +'<div class="model">'
+      +'<div class="mrow"><span class="ic b"><span class="material-symbols-outlined">redeem</span></span><div><div class="h">100 imports included</div><div class="s">Free with your plan, always.</div></div></div>'
+      +'<div class="mrow"><span class="ic b"><span class="material-symbols-outlined">sell</span></span><div><div class="h">Earn 1 more with every sale</div><div class="s">Each paid sale on Teachable adds 1 free import — automatically.</div></div></div>'
+      +'<div class="mrow"><span class="ic"><span class="material-symbols-outlined">add_card</span></span><div><div class="h">Beyond that, $0.50 per student / month</div><div class="s">Only for imported students past your free amount. Importing is never blocked.</div></div></div>'
+      +'</div>',
+    primary:'What this means for me'};},
+  function(){return {eyebrow:'Your account',
+    html:'<h2 class="title">6,900 students beyond your free imports</h2>'
+      +'<p class="lede">You’ve earned <b>0 extra free imports</b> so far because your sales happen off Teachable — so 6,900 of your 7,000 students are billable.</p>'
+      +meterOver()
+      +'<div class="cost"><span class="l">Starting <b>'+GRACE+'</b>, billed at $0.50/student/month</span><span class="amt">'+money(COST)+'/mo</span></div>'
+      +'<div class="doors">'
+      +'<div class="door reco"><span class="tag">Lower your bill</span><h3>Sell on Teachable</h3><div class="d">Every sale earns 1 free import and shrinks this — toward $0.</div><button class="go pri">Start selling</button></div>'
+      +'<div class="door"><h3>Prefer to keep hosting here?</h3><div class="d">That’s okay — selling elsewhere is fine. For an account your size, our team can walk you through the pricing and options that fit best.</div><button class="go sec">Talk to our team</button></div>'
+      +'</div>',
+    primary:'Got it',primaryGhost:true,foot:'<span class="talk"><a href="#">Review terms</a></span>'};}
+];
+
+/* ---------------- Direction B: earn your way down ---------------- */
+var B=[
+  function(){return {eyebrow:'An opportunity, not just a bill',
+    html:'<h2 class="title">Turn your <span class="em">7,000 students</span> into a business here</h2>'
+      +'<p class="lede">Imported students past your free limit are <b>$0.50/month each</b> — but every sale you make on Teachable earns <b>2 free imports</b> and lowers what you pay. Sell here, and your import cost goes down as your revenue goes up.</p>'
+      +'<div class="grace"><span class="material-symbols-outlined">schedule</span><span>New billing starts <b>'+GRACE+'</b>. See how much selling here could save you first.</span></div>',
+    primary:'Show me'};},
+  function(){return {eyebrow:'What selling here could save',
+    html:'<h2 class="title">Every sale brings your bill down</h2>'
+      +'<p class="lede">Drag to see how selling to your own audience on Teachable changes your monthly import cost.</p>'
+      +'<div class="calc">'
+      +'<label>Students who buy from you on Teachable <span class="v" id="cv">500</span></label>'
+      +'<input type="range" id="cr" min="0" max="3500" step="50" value="500">'
+      +'<div class="out"><div class="b"><div class="lbl">New import cost</div><div class="big cost" id="cc">$0/mo</div></div>'
+      +'<div class="b"><div class="lbl">You’d save</div><div class="big save" id="cs">$0/mo</div></div></div>'
+      +'</div>'
+      +'<p class="lede" style="margin:6px 0 0" id="cnote"></p>',
+    primary:'Start selling on Teachable',foot:'<button class="btn-text" id="bAlt">Or keep as-is — '+money(COST)+'/mo</button>'};},
+];
+
+/* ---------------- Direction C: choose your path ---------------- */
+var C=[
+  function(){return {eyebrow:'How you use Teachable decides what you pay',
+    html:'<h2 class="title">You have 7,000 imported students</h2>'
+      +'<p class="lede"><b>6,900 are beyond your 100 free imports.</b> There’s no wrong answer here — pick the path that matches how you work, and you’ll always know exactly what you pay.</p>'
+      +meterOver()
+      +'<div class="doors" style="margin-top:18px">'
+      +'<div class="door reco"><span class="tag">Earn it back</span><h3>I sell through Teachable</h3><div class="d">Every sale earns 2 free imports. Your fee shrinks as you sell — and can reach <b>$0</b>.</div><div class="price free">Free imports grow with sales</div><button class="go pri">Set up selling</button></div>'
+      +'<div class="door"><h3>I host or sell elsewhere</h3><div class="d">Keep importing freely — simple, transparent pricing for students over your free limit. Never blocked.</div><div class="price">$0.50 / student / month · '+money(COST)+'/mo</div><button class="go sec">Continue this way</button></div>'
+      +'</div>',
+    primary:null,foot:'<span class="talk">Not sure which fits? <a href="#">Talk to our team</a> — we’ll help you choose.</span>'};}
+];
+
+var DIRS={A:A,B:B,C:C};
+var D='A', step=0;
+
+function calcUpdate(){
+  var sales=+document.getElementById('cr').value;
+  var allowance=FREE+sales*2;
+  var over=Math.max(0,IMPORTED-allowance);
+  var cost=over*PRICE, save=COST-cost;
+  document.getElementById('cv').textContent=n(sales);
+  document.getElementById('cc').textContent=money(cost)+'/mo';
+  document.getElementById('cs').textContent=money(save)+'/mo';
+  var note=document.getElementById('cnote');
+  if(over===0) note.innerHTML='🎉 At this level your imports are <b>fully covered</b> — $0/mo.';
+  else note.innerHTML='Selling to <b>'+n(sales)+'</b> of your students frees <b>'+n(sales*2)+' imports</b> and saves <b>'+money(save)+'/mo</b>.';
+}
+
+function render(){
+  var steps=DIRS[D]; if(step>=steps.length) step=steps.length-1;
+  var s=steps[step]();
+  var dots='';
+  if(steps.length>1){dots='<div class="dots">';for(var i=0;i<steps.length;i++)dots+='<span class="dot'+(i<=step?' on':'')+'"></span>';dots+='</div>';}
+  var foot='';
+  var back = step>0 ? '<button class="btn btn-ghost" id="back"><span class="material-symbols-outlined">arrow_back</span> Back</button>' : '<span></span>';
+  var right='';
+  if(s.primary) right='<button class="btn '+(s.primaryGhost?'btn-ghost':'btn-pri')+'" id="next">'+s.primary+'</button>';
+  if(s.foot && !s.primary) { back = '<span></span>'; right=''; foot='<div class="m-foot">'+ (step>0?'<button class="btn btn-ghost" id="back"><span class="material-symbols-outlined">arrow_back</span> Back</button>':'<span></span>') + '<div>'+s.foot+'</div></div>'; }
+  else foot='<div class="m-foot">'+back+'<div style="display:flex;align-items:center;gap:14px">'+(s.foot||'')+right+'</div></div>';
+
+  document.getElementById('modal').innerHTML=
+    '<div class="m-top"><span class="brand"><span class="spark"><span class="material-symbols-outlined">bolt</span></span> '+(s.eyebrow||'')+'</span>'
+    +dots
+    +'<button class="x" aria-label="Close"><span class="material-symbols-outlined">close</span></button></div>'
+    +'<div class="m-body">'+s.html+'</div>'
+    +foot;
+
+  var nx=document.getElementById('next'); if(nx) nx.onclick=function(){ if(step<steps.length-1){step++;render();} else {/* end */ } };
+  var bk=document.getElementById('back'); if(bk) bk.onclick=function(){ if(step>0){step--;render();} };
+  if(D==='B' && step===1){ var cr=document.getElementById('cr'); if(cr){cr.oninput=calcUpdate;calcUpdate();}
+    var alt=document.getElementById('bAlt'); if(alt) alt.onclick=function(){alert('Keep as-is (prototype)');}; }
+}
+document.getElementById('segD').addEventListener('click',function(e){var b=e.target.closest('button[data-d]');if(!b)return;
+  this.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b)});D=b.dataset.d;step=0;render();});
+render();
+</script>
+</body>
+</html>

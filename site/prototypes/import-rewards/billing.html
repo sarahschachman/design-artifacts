@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Import Rewards — Billing page</title>
+<script src="../../gate.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin-shell/admin-shell.css">
+<style>
+  :root {
+    --color-on-primary: #222222;
+    --color-warning-primary: #f8c821;
+    --color-warning-dark: #957814;
+    --color-warning-light: #fef4d3;
+    --color-success-primary: #38ba5f;
+    --color-error-primary: #ca483d;
+    --color-error-light: #ffcac5;
+    --color-container-brand: #faffd6;
+    --color-grey-3: #f8f8f8;
+    --color-grey-30: #bdbdbd;
+    --color-grey-50: #919191;
+  }
+  /* widen content column for the billing layout */
+  .page { max-width: 1080px; }
+
+  .page-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-bottom: 18px; border-bottom: 1px solid var(--color-grey-12); margin-bottom: 22px; }
+  .page-title { font-family: var(--font-family-display); font-weight: 400; font-size: 2rem; line-height: 1.1; letter-spacing: -0.3px; margin: 0; }
+  .btn-ghost { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-family-system); font-size: 14px; font-weight: 600; height: 40px; padding: 0 16px; border-radius: 6px; background: var(--color-white); color: var(--color-grey-100); border: 1px solid var(--color-grey-100); cursor: pointer; }
+  .btn-ghost .material-symbols-outlined { font-size: 18px; width: 18px; height: 18px; }
+
+  /* Prototype-only state switcher */
+  .proto-controls { border: 1px dashed var(--color-grey-20); border-radius: 8px; padding: 12px 14px; margin-bottom: 26px; background: var(--color-grey-3); }
+  .proto-controls__label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-grey-50); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .proto-controls__label .material-symbols-outlined { font-size: 15px; width: 15px; height: 15px; }
+  .seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+  .seg button { font-family: var(--font-family-system); font-size: 13px; font-weight: 600; color: var(--color-grey-70); background: var(--color-white); border: 1px solid var(--color-grey-20); border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: all 0.12s; }
+  .seg button:hover { border-color: var(--color-grey-100); color: var(--color-grey-100); }
+  .seg button[aria-pressed="true"] { background: var(--color-grey-100); color: var(--color-white); border-color: var(--color-grey-100); }
+
+  /* Billing sections */
+  .bill-section { border: 1px solid var(--color-grey-12); border-radius: 6px; overflow: hidden; margin-bottom: 26px; background: var(--color-white); }
+  .bill-section__band { background: var(--color-grey-6); text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-grey-70); padding: 8px; }
+
+  /* Current plan */
+  .plan { padding: 22px 24px 24px; }
+  .plan__row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .plan__name { font-family: var(--font-family-display); font-weight: 400; font-size: 1.7rem; line-height: 1; }
+  .plan__price { font-size: 0.95rem; color: var(--color-grey-70); margin-left: 6px; }
+  .plan__note { font-size: 12.5px; color: var(--color-grey-60); margin-top: 6px; }
+  .plan__link { font-size: 14px; font-weight: 600; color: var(--color-grey-100); text-decoration: underline; text-underline-offset: 3px; }
+  .plan__badges { display: flex; gap: 8px; margin-top: 14px; }
+  .badge { font-size: 11px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 4px; padding: 5px 9px; display: inline-flex; align-items: center; gap: 5px; }
+  .badge--trial { background: var(--color-grey-100); color: var(--color-white); }
+  .badge--trial .material-symbols-outlined { font-size: 13px; width: 13px; height: 13px; color: var(--color-brand-primary-100); }
+  .badge--cycle { background: var(--color-grey-6); color: var(--color-grey-70); }
+
+  /* Track usage */
+  .usage { padding: 4px 24px 22px; }
+  .usage__title { font-family: var(--font-family-display); font-weight: 400; font-size: 1.4rem; margin: 14px 0 14px; }
+  .utable { border: 1px solid var(--color-grey-12); border-radius: 6px; overflow: hidden; }
+  .uhead, .urow { display: grid; grid-template-columns: 2.2fr 1.1fr 2.4fr; align-items: center; gap: 16px; padding: 14px 18px; }
+  .uhead { background: var(--color-grey-3); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-grey-70); padding: 11px 18px; }
+  .urow { border-top: 1px solid var(--color-grey-12); }
+  .urow:first-of-type { border-top: none; }
+  .urow--hero { background: #fcfdf4; }
+  .ufeature { font-size: 14px; font-weight: 600; color: var(--color-grey-100); display: flex; align-items: center; gap: 6px; }
+  .ufeature .material-symbols-outlined { font-size: 15px; width: 15px; height: 15px; color: var(--color-grey-40); }
+  .ufeature__sub { font-size: 12px; font-weight: 400; color: var(--color-grey-60); margin-top: 3px; }
+  .ulimit { font-size: 14px; color: var(--color-grey-90); }
+  .ustatus { display: flex; align-items: center; gap: 12px; }
+  .ubar { position: relative; flex: 1; height: 8px; border-radius: 999px; background: var(--color-grey-9); overflow: hidden; }
+  .ubar__seg { position: absolute; top: 0; bottom: 0; }
+  .ubar__seg--fill { left: 0; background: var(--color-grey-100); }
+  .ubar__seg--full { left: 0; background: var(--color-brand-primary-100); }
+  .ubar__seg--over { background: var(--color-warning-primary); }
+  .ubar__tick { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--color-grey-100); z-index: 2; }
+  .upct { font-size: 13px; font-weight: 600; color: var(--color-grey-90); min-width: 38px; text-align: right; }
+
+  /* Banner rows inside the table (match Figma tooltip/alert rows) */
+  .ubanner { display: flex; gap: 11px; align-items: flex-start; padding: 12px 18px; border-top: 1px solid var(--color-grey-9); font-size: 13.5px; line-height: 1.5; }
+  .ubanner__icon { width: 22px; height: 22px; border-radius: 999px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .ubanner__icon .material-symbols-outlined { font-size: 14px; width: 14px; height: 14px; }
+  .ubanner__body { color: var(--color-grey-90); }
+  .ubanner__body b { color: var(--color-grey-100); }
+  .ubanner a { color: var(--color-grey-100); font-weight: 600; text-underline-offset: 2px; }
+  .ubanner--info { background: var(--color-grey-3); }
+  .ubanner--info .ubanner__icon { background: var(--color-grey-100); color: var(--color-white); }
+  .ubanner--reward { background: var(--color-container-brand); }
+  .ubanner--reward .ubanner__icon { background: var(--color-brand-primary-100); color: var(--color-on-primary); }
+  .ubanner--warn { background: var(--color-warning-light); }
+  .ubanner--warn .ubanner__icon { background: var(--color-warning-primary); color: var(--color-warning-dark); }
+  .ubanner.is-pop { animation: pop 0.45s cubic-bezier(.2,.9,.3,1.2) both; }
+  @keyframes pop { 0%{opacity:0;transform:translateY(6px)} 100%{opacity:1;transform:none} }
+
+  /* Allowance breakdown chips under the hero row */
+  .alloc-note { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 18px 14px; border-top: 1px solid var(--color-grey-9); background: #fcfdf4; }
+  .chip-stat { display: inline-flex; align-items: baseline; gap: 6px; background: var(--color-white); border: 1px solid var(--color-grey-12); border-radius: 999px; padding: 6px 12px; font-size: 12.5px; color: var(--color-grey-70); }
+  .chip-stat b { font-size: 14px; color: var(--color-grey-100); }
+  .chip-stat--earned { background: var(--color-container-brand); border-color: var(--color-on-primary); }
+  .chip-op { align-self: center; color: var(--color-grey-40); font-weight: 600; }
+
+  /* Invoice */
+  .invoice { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; padding: 24px; }
+  .invoice__when { font-family: var(--font-family-display); font-weight: 400; font-size: 1.35rem; margin: 0 0 18px; }
+  .line { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--color-grey-9); font-size: 14px; }
+  .line__label { color: var(--color-grey-90); }
+  .line__sub { font-size: 12px; color: var(--color-grey-60); margin-top: 2px; }
+  .line__amt { color: var(--color-grey-100); font-weight: 600; white-space: nowrap; }
+  .line--over .line__amt { color: var(--color-warning-dark); }
+  .line--total { border-bottom: none; padding-top: 16px; align-items: baseline; }
+  .line--total .line__label { font-family: var(--font-family-display); font-size: 1.5rem; }
+  .line--total .line__amt { font-family: var(--font-family-display); font-size: 1.5rem; font-weight: 400; }
+  .pay__title { font-family: var(--font-family-display); font-weight: 400; font-size: 1.35rem; margin: 0 0 14px; display: flex; align-items: center; justify-content: space-between; }
+  .pm { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--color-grey-12); border-radius: 6px; padding: 12px 14px; margin-bottom: 10px; }
+  .pm__left { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .pm__card { font-size: 10px; font-weight: 700; letter-spacing: 0.04em; color: var(--color-grey-60); border: 1px solid var(--color-grey-20); border-radius: 3px; padding: 3px 5px; }
+  .pm__primary { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-grey-50); background: var(--color-grey-6); border-radius: 3px; padding: 3px 6px; margin-bottom: 8px; display: inline-block; }
+  .pm__edit, .add-pm { font-size: 13px; font-weight: 600; color: var(--color-grey-100); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .addr { font-size: 14px; color: var(--color-grey-90); margin-top: 18px; }
+  .addr__title { font-family: var(--font-family-display); font-weight: 400; font-size: 1.2rem; margin: 0 0 8px; }
+
+  /* History */
+  .hrow { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 16px; padding: 14px 24px; border-top: 1px solid var(--color-grey-12); font-size: 14px; color: var(--color-grey-90); align-items: center; }
+  .hhead { display: grid; grid-template-columns: 2fr 2fr 1fr; gap: 16px; padding: 11px 24px; background: var(--color-grey-3); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-grey-70); }
+  .hrow a { text-align: right; color: var(--color-grey-100); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
+  @media (max-width: 720px) {
+    .invoice { grid-template-columns: 1fr; gap: 28px; }
+    .uhead { display: none; }
+    .urow { grid-template-columns: 1fr; gap: 8px; }
+    .ustatus { margin-top: 2px; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="admin-topbar">
+      <button class="admin-topbar__burger" type="button" aria-label="Open navigation" id="navToggle"><span class="material-symbols-outlined" aria-hidden="true">menu</span></button>
+      <span class="admin-topbar__school">Sarah&rsquo;s School</span>
+    </header>
+
+    <nav class="nav" aria-label="Admin navigation">
+      <div class="nav-school"><span class="nav-school-name">Sarah&rsquo;s School</span></div>
+      <div class="nav-body">
+        <div class="nav-rail">
+          <button class="rail-item" type="button" aria-label="Dashboard"><span class="material-symbols-outlined" aria-hidden="true">show_chart</span></button>
+          <button class="rail-item" type="button" aria-label="Users"><span class="material-symbols-outlined" aria-hidden="true">group</span></button>
+          <button class="rail-item" type="button" aria-label="Site"><span class="material-symbols-outlined" aria-hidden="true">devices</span></button>
+          <button class="rail-item" type="button" aria-label="Sales"><span class="material-symbols-outlined" aria-hidden="true">paid</span></button>
+          <button class="rail-item" type="button" aria-label="Emails"><span class="material-symbols-outlined" aria-hidden="true">mail</span></button>
+          <button class="rail-item" type="button" aria-label="Apps"><span class="material-symbols-outlined" aria-hidden="true">dashboard_customize</span></button>
+          <button class="rail-item rail-item--active" type="button" aria-label="Settings" aria-current="page"><span class="material-symbols-outlined" aria-hidden="true">settings</span></button>
+          <button class="rail-item rail-item--whatsnew" type="button" aria-label="What's new"><span class="material-symbols-outlined" aria-hidden="true">bolt</span></button>
+        </div>
+        <div class="nav-sub" aria-label="Settings menu">
+          <div class="nav-sub-header">Settings</div>
+          <a class="nav-sub-item" href="#">Account</a>
+          <a class="nav-sub-item nav-sub-item--active" href="#" aria-current="page">Billing</a>
+          <a class="nav-sub-item" href="#">Plans</a>
+          <a class="nav-sub-item" href="#">Payouts</a>
+        </div>
+      </div>
+      <div class="nav-user">
+        <span class="nav-user-name">Sarah Schachman</span>
+        <button class="nav-user-menu" type="button" aria-label="Account menu"><span class="material-symbols-outlined" aria-hidden="true">more_vert</span></button>
+      </div>
+    </nav>
+
+    <div class="nav-backdrop" id="navBackdrop"></div>
+
+    <div class="main">
+      <main class="page">
+        <div class="page-head">
+          <h1 class="page-title">Billing</h1>
+          <button class="btn-ghost" type="button">Manage plan <span class="material-symbols-outlined">expand_more</span></button>
+        </div>
+
+        <div class="proto-controls" role="group" aria-label="Prototype state switcher">
+          <div class="proto-controls__label"><span class="material-symbols-outlined" aria-hidden="true">tune</span> Prototype state &mdash; not part of the real UI</div>
+          <div class="seg" id="seg">
+            <button data-state="empty" aria-pressed="false">New user</button>
+            <button data-state="earning" aria-pressed="true">Within allowance</button>
+            <button data-state="rewarded" aria-pressed="false">Just unlocked</button>
+            <button data-state="near" aria-pressed="false">Near allowance</button>
+            <button data-state="over" aria-pressed="false">Over allowance</button>
+          </div>
+        </div>
+
+        <!-- CURRENT PLAN -->
+        <div class="bill-section">
+          <div class="bill-section__band">Current plan</div>
+          <div class="plan">
+            <div class="plan__row">
+              <div>
+                <span class="plan__name">Builder</span><span class="plan__price">$89 /month</span>
+                <div class="plan__note">*Base rate shown. Your invoice reflects applied coupons, taxes, and add-ons.</div>
+              </div>
+              <a class="plan__link" href="#">Compare plans</a>
+            </div>
+            <div class="plan__badges">
+              <span class="badge badge--trial"><span class="material-symbols-outlined">bolt</span> Trial &middot; ends 06/25</span>
+              <span class="badge badge--cycle">Monthly</span>
+            </div>
+          </div>
+
+          <!-- TRACK USAGE -->
+          <div class="usage">
+            <h2 class="usage__title">Track usage</h2>
+            <div class="utable" id="utable"><!-- rendered --></div>
+          </div>
+        </div>
+
+        <!-- UPCOMING PAYMENT INVOICE -->
+        <div class="bill-section">
+          <div class="bill-section__band">Upcoming payment invoice</div>
+          <div class="invoice">
+            <div>
+              <h3 class="invoice__when">Next auto pay scheduled for Sept 30, 2025</h3>
+              <div id="invoiceLines"><!-- rendered --></div>
+            </div>
+            <div>
+              <h3 class="pay__title">Payment methods <span class="add-pm">Add payment method</span></h3>
+              <div>
+                <span class="pm__primary">Primary</span>
+                <div class="pm"><span class="pm__left"><span class="pm__card">VISA</span> Visa **** **** **** 1234</span><span class="pm__edit">Edit</span></div>
+                <div class="pm"><span class="pm__left"><span class="pm__card">AMEX</span> Amex **** **** **** 5678</span><span class="pm__edit">Edit</span></div>
+              </div>
+              <div class="addr">
+                <h4 class="addr__title">Billing address</h4>
+                1 Park Street, Unit 17,<br>New York, NY 10012
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- BILLING HISTORY -->
+        <div class="bill-section">
+          <div class="bill-section__band">Billing history</div>
+          <div class="hhead"><span>Date</span><span>Total</span><span></span></div>
+          <div class="hrow"><span>July 27, 2025</span><span>$58.00</span><a href="#">View</a></div>
+          <div class="hrow"><span>June 27, 2025</span><span>$58.00</span><a href="#">View</a></div>
+          <div class="hrow"><span>May 27, 2025</span><span>$58.00</span><a href="#">View</a></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.fonts.load("20px 'Material Symbols Outlined'").then(function () {
+      document.documentElement.setAttribute('data-gmsfontstatus', 'loaded');
+    });
+    var app = document.querySelector('.app');
+    var toggle = document.getElementById('navToggle');
+    var backdrop = document.getElementById('navBackdrop');
+    if (toggle) toggle.addEventListener('click', function () { app.classList.toggle('nav-open'); });
+    if (backdrop) backdrop.addEventListener('click', function () { app.classList.remove('nav-open'); });
+  </script>
+
+  <script>
+  /* ============================================================
+     Ratio-based import allowance, surfaced on the Billing page.
+     Model (per Monetization Briefing, §3):
+       • Plan includes a baseline import allowance (Builder = 50).
+       • Every 1 paid sale on Teachable adds 2 imports to the allowance.
+       • Imports beyond the allowance bill at $0.50 / student / MONTH.
+     Framing: "hybrid" — the earning side reads positively; the
+     paid-overage side is an honest usage + cost statement.
+     ============================================================ */
+  var PLAN = { name: 'Builder', baseline: 50 };
+  var PER_SALE = 2;
+  var PRICE = 0.50;                 // per excess imported student, per month
+
+  // Static invoice base (Builder), so the overage line stacks on top.
+  var INVOICE_BASE = { rate: 39, taxes: 9, coupon: -30 };
+
+  // Each state = a snapshot of one account's sales + imports.
+  var STATES = {
+    empty:    { sales: 0,  imported: 0,   newSales: 0 },
+    earning:  { sales: 30, imported: 70,  newSales: 0 },
+    rewarded: { sales: 32, imported: 70,  newSales: 2 },
+    near:     { sales: 30, imported: 104, newSales: 0 },
+    over:     { sales: 30, imported: 140, newSales: 0 }
+  };
+
+  function n(x){ return x.toLocaleString('en-US'); }
+  function money(x){ return '$' + x.toFixed(2); }
+
+  function derive(s) {
+    var earned = s.sales * PER_SALE;
+    var allowance = PLAN.baseline + earned;
+    var used = s.imported;
+    var remaining = Math.max(0, allowance - used);
+    var excess = Math.max(0, used - allowance);
+    return {
+      sales: s.sales, earned: earned, allowance: allowance, used: used,
+      remaining: remaining, excess: excess, monthlyCost: excess * PRICE,
+      newSales: s.newSales, newImports: s.newSales * PER_SALE,
+      pct: allowance > 0 ? Math.round(Math.min(used, allowance) / allowance * 100) : 0
+    };
+  }
+
+  /* ---- The hero "Imported students" row + its banner ---- */
+  function importedRow(d, stateKey) {
+    var sub = '50 with plan + 2 per sale &middot; extra imports $0.50/student&#8203;/mo';
+    var limit, bar, pct;
+
+    if (d.excess > 0) {
+      var total = d.used;
+      var limitPct = (d.allowance / total) * 100;
+      bar = '<div class="ubar__seg ubar__seg--full" style="width:' + limitPct + '%"></div>'
+          + '<div class="ubar__seg ubar__seg--over" style="left:' + limitPct + '%;right:0"></div>';
+      bar += '<div class="ubar__tick" style="left:' + limitPct + '%"></div>';
+      limit = n(d.used) + ' / ' + n(d.allowance);
+      pct = '+' + n(d.excess);
+    } else if (d.allowance > 0 && d.remaining === 0) {
+      bar = '<div class="ubar__seg ubar__seg--full" style="width:100%"></div>';
+      limit = n(d.used) + ' / ' + n(d.allowance);
+      pct = '100%';
+    } else {
+      bar = '<div class="ubar__seg ubar__seg--fill" style="width:' + d.pct + '%"></div>';
+      limit = n(d.used) + ' / ' + n(d.allowance);
+      pct = d.pct + '%';
+    }
+
+    var row = '<div class="urow urow--hero">'
+      + '<div><div class="ufeature"><span class="material-symbols-outlined">redeem</span> Imported students</div>'
+      +   '<div class="ufeature__sub">' + sub + '</div></div>'
+      + '<div class="ulimit">' + limit + '</div>'
+      + '<div class="ustatus"><div class="ubar">' + bar + '</div><div class="upct">' + pct + '</div></div>'
+      + '</div>';
+
+    // Allowance breakdown chips (how the limit is built)
+    if (d.allowance > 0) {
+      row += '<div class="alloc-note">'
+        + '<span class="chip-stat"><b>' + n(PLAN.baseline) + '</b> with ' + PLAN.name + '</span>'
+        + '<span class="chip-op">+</span>'
+        + '<span class="chip-stat chip-stat--earned"><b>' + n(d.earned) + '</b> earned from ' + n(d.sales) + ' sales</span>'
+        + '<span class="chip-op">=</span>'
+        + '<span class="chip-stat"><b>' + n(d.allowance) + '</b> import allowance</span>'
+        + '</div>';
+    }
+
+    // State banner row
+    var b = '';
+    if (stateKey === 'rewarded') {
+      b = banner('reward', 'redeem', true,
+        '<b>Your last ' + d.newSales + ' sales added ' + d.newImports + ' imports</b> to your allowance &mdash; you now have <b>' + n(d.remaining) + ' free to use</b>. Every sale on Teachable keeps it growing.');
+    } else if (d.excess > 0) {
+      b = banner('warn', 'info', false,
+        'You&rsquo;re <b>' + n(d.excess) + ' imports over</b> your allowance. These bill at <b>$0.50/student&#8203;/month (' + money(d.monthlyCost) + '/mo)</b>. Every paid sale on Teachable adds 2 imports back to your allowance &mdash; <a href="#">see how it works</a>.');
+    } else if (stateKey === 'near') {
+      b = banner('warn', 'info', false,
+        'You&rsquo;ve used <b>' + n(d.used) + ' of ' + n(d.allowance) + '</b> imports &mdash; <b>' + n(d.remaining) + ' left</b>. Keep selling to add more, or extra imports bill at $0.50/student&#8203;/month.');
+    } else if (d.allowance > 0) {
+      b = banner('info', 'redeem', false,
+        'Your allowance grows as you sell &mdash; every paid sale on Teachable adds <b>2 imports</b>. You&rsquo;ve earned <b>' + n(d.earned) + '</b> from ' + n(d.sales) + ' sales, on top of the <b>' + n(PLAN.baseline) + '</b> included with ' + PLAN.name + '.');
+    } else {
+      b = banner('info', 'redeem', false,
+        '<b>' + PLAN.name + ' includes ' + n(PLAN.baseline) + ' imports.</b> Every paid sale you make on Teachable adds 2 more to your allowance. Extra imports beyond that are $0.50/student&#8203;/month.');
+    }
+    return row + b;
+  }
+
+  function banner(kind, icon, pop, body) {
+    return '<div class="ubanner ubanner--' + kind + (pop ? ' is-pop' : '') + '">'
+      + '<span class="ubanner__icon"><span class="material-symbols-outlined">' + icon + '</span></span>'
+      + '<div class="ubanner__body">' + body + '</div></div>';
+  }
+
+  /* ---- Static usage rows around the hero row ---- */
+  function plainRow(feature, sub, used, limit) {
+    var pct = Math.round(used / limit * 100);
+    return '<div class="urow">'
+      + '<div><div class="ufeature">' + feature + '</div>' + (sub ? '<div class="ufeature__sub">' + sub + '</div>' : '') + '</div>'
+      + '<div class="ulimit">' + n(used) + ' / ' + n(limit) + '</div>'
+      + '<div class="ustatus"><div class="ubar"><div class="ubar__seg ubar__seg--fill" style="width:' + pct + '%"></div></div><div class="upct">' + pct + '%</div></div>'
+      + '</div>';
+  }
+
+  function renderTable(d, stateKey) {
+    var html = '<div class="uhead"><span>Feature</span><span>Limit</span><span>Status</span></div>';
+    html += plainRow('Active students', 'extra students at $5/mo', 500, 1000);
+    html += importedRow(d, stateKey);
+    html += plainRow('Admins', 'add-ons at $20/mo', 1, 2);
+    html += plainRow('Products published', '', 50, 100);
+    html += plainRow('Apps installed', '', 0, 1);
+    document.getElementById('utable').innerHTML = html;
+  }
+
+  function renderInvoice(d) {
+    var subtotal = INVOICE_BASE.rate + INVOICE_BASE.taxes + INVOICE_BASE.coupon;
+    var total = subtotal + d.monthlyCost;
+    var html = ''
+      + '<div class="line"><span class="line__label">Base rate</span><span class="line__amt">' + money(INVOICE_BASE.rate) + '</span></div>'
+      + '<div class="line"><span class="line__label">Taxes</span><span class="line__amt">' + money(INVOICE_BASE.taxes) + '</span></div>'
+      + '<div class="line"><span class="line__label">Coupon<div class="line__sub">&ldquo;WELCOME30&rdquo; applied. Save $30 on your next three payments.</div></span><span class="line__amt">&minus;' + money(Math.abs(INVOICE_BASE.coupon)) + '</span></div>';
+    if (d.excess > 0) {
+      html += '<div class="line line--over"><span class="line__label">Imported students overage<div class="line__sub">' + n(d.excess) + ' over allowance &times; ' + money(PRICE) + '/student/mo</div></span><span class="line__amt">' + money(d.monthlyCost) + '</span></div>';
+    }
+    html += '<div class="line line--total"><span class="line__label">Total</span><span class="line__amt">' + money(total) + '</span></div>';
+    document.getElementById('invoiceLines').innerHTML = html;
+  }
+
+  function render(stateKey) {
+    var d = derive(STATES[stateKey]);
+    renderTable(d, stateKey);
+    renderInvoice(d);
+  }
+
+  var seg = document.getElementById('seg');
+  seg.addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-state]');
+    if (!btn) return;
+    seg.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+    render(btn.getAttribute('data-state'));
+  });
+
+  render('earning');
+  </script>
+</body>
+</html>

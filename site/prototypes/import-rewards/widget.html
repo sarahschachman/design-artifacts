@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Import Rewards — Teachable</title>
+<script src="../../gate.js"></script>
+<!-- Icons: Material Symbols Outlined (as the real admin uses) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+<!-- Display serif fallback: Fraunces (real Reckless renders where installed) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/admin-shell/admin-shell.css">
+<style>
+  :root {
+    /* Semantic + container tokens from DESIGN.md (not in admin-shell.css) */
+    --color-on-primary: #222222;
+    --color-warning-primary: #f8c821;
+    --color-warning-dark: #957814;
+    --color-warning-light: #fef4d3;
+    --color-success-primary: #38ba5f;
+    --color-success-dark: #227039;
+    --color-success-light: #d7f1df;
+    --color-error-primary: #ca483d;
+    --color-error-light: #ffcac5;
+    --color-container-brand: #faffd6;
+    --color-grey-3: #f8f8f8;
+    --color-grey-50: #919191;
+  }
+
+  /* ===== Page scaffolding ===== */
+  .page-head { margin-bottom: 24px; }
+  .page-title { font-family: var(--font-family-display); font-weight: 400; font-size: 2rem; line-height: 1.2; letter-spacing: -0.3px; margin: 0 0 6px; }
+  .page-sub { color: var(--color-text-helper); font-size: 1rem; margin: 0; max-width: 64ch; }
+
+  /* ===== Prototype-only state switcher ===== */
+  .proto-controls { border: 1px dashed var(--color-grey-20); border-radius: 8px; padding: 12px 14px; margin-bottom: 28px; background: var(--color-grey-3); }
+  .proto-controls__label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-grey-50); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .proto-controls__label .material-symbols-outlined { font-size: 15px; width: 15px; height: 15px; }
+  .seg { display: inline-flex; flex-wrap: wrap; gap: 6px; }
+  .seg button { font-family: var(--font-family-system); font-size: 13px; font-weight: 600; color: var(--color-grey-70); background: var(--color-white); border: 1px solid var(--color-grey-20); border-radius: 999px; padding: 7px 14px; cursor: pointer; transition: all 0.12s; }
+  .seg button:hover { border-color: var(--color-grey-100); color: var(--color-grey-100); }
+  .seg button[aria-pressed="true"] { background: var(--color-grey-100); color: var(--color-white); border-color: var(--color-grey-100); }
+
+  /* ===== Reward card ===== */
+  .reward-card { background: var(--color-white); border: 1px solid var(--color-grey-12); border-radius: 12px; overflow: hidden; }
+  .reward-card__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 22px 24px 0; }
+  .reward-card__eyebrow { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--color-grey-70); }
+  .reward-card__eyebrow .material-symbols-outlined { font-size: 18px; width: 18px; height: 18px; color: var(--color-grey-90); }
+  .status-pill { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .status-pill--neutral { background: var(--color-grey-6); color: var(--color-grey-70); }
+  .status-pill--brand { background: var(--color-brand-primary-100); color: var(--color-on-primary); }
+  .status-pill--paid { background: var(--color-warning-light); color: var(--color-warning-dark); }
+
+  .reward-card__body { padding: 8px 24px 24px; }
+
+  /* Headline ratio readout */
+  .ratio-readout { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 14px 0 4px; }
+  .ratio-readout__num { font-family: var(--font-family-display); font-weight: 400; font-size: 2.2rem; line-height: 1.1; }
+  .ratio-readout__arrow { color: var(--color-grey-40); font-size: 1.4rem; }
+  .ratio-readout__sub { color: var(--color-text-helper); font-size: 0.95rem; }
+
+  /* Ratio tracker — sales pairs minting import tokens */
+  .tracker { margin: 22px 0 10px; }
+  .tracker__caption { font-size: 13px; color: var(--color-grey-70); margin-bottom: 12px; }
+  .tracker__caption b { color: var(--color-grey-100); }
+  .pairs { display: flex; flex-wrap: wrap; gap: 14px; }
+  .pair { display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 8px; border: 1px solid var(--color-grey-12); border-radius: 10px; background: var(--color-grey-3); }
+  .pair--complete { border-color: var(--color-on-primary); background: var(--color-container-brand); }
+  .pair__sales { display: flex; gap: 5px; }
+  .dot { width: 16px; height: 16px; border-radius: 999px; background: var(--color-grey-20); display: flex; align-items: center; justify-content: center; }
+  .dot--sold { background: var(--color-grey-100); }
+  .dot .material-symbols-outlined { font-size: 11px; width: 11px; height: 11px; color: var(--color-white); }
+  .pair__arrow { color: var(--color-grey-40); font-size: 14px; display: flex; }
+  .pair__arrow .material-symbols-outlined { font-size: 16px; width: 16px; height: 16px; }
+  .token { width: 26px; height: 26px; border-radius: 999px; display: flex; align-items: center; justify-content: center; }
+  .token--earned { background: var(--color-brand-primary-100); }
+  .token--pending { background: transparent; border: 1.5px dashed var(--color-grey-30); }
+  .token .material-symbols-outlined { font-size: 16px; width: 16px; height: 16px; color: var(--color-on-primary); }
+  .token--pending .material-symbols-outlined { color: var(--color-grey-40); }
+
+  /* Free-vs-paid meter (modeled on Figma "Limit progress bars") */
+  .meter-block { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--color-grey-9); }
+  .meter-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+  .meter-label { font-size: 14px; font-weight: 600; color: var(--color-grey-100); }
+  .meter-label .material-symbols-outlined { font-size: 16px; width: 16px; height: 16px; color: var(--color-grey-40); vertical-align: -3px; margin-left: 2px; }
+  .meter-value { font-size: 13px; color: var(--color-grey-70); font-weight: 600; }
+  .meter { position: relative; height: 10px; border-radius: 999px; background: var(--color-grey-9); overflow: hidden; }
+  .meter__seg { position: absolute; top: 0; bottom: 0; }
+  .meter__seg--free { left: 0; background: var(--color-grey-100); }
+  .meter__seg--full { left: 0; background: var(--color-brand-primary-100); }
+  .meter__seg--paid { background: var(--color-warning-primary); }
+  /* tick marking the earned limit when overflowing */
+  .meter__tick { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--color-grey-100); z-index: 2; }
+  .meter-legend { display: flex; gap: 18px; margin-top: 12px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--color-grey-70); }
+  .swatch { width: 11px; height: 11px; border-radius: 3px; flex-shrink: 0; }
+  .swatch--free { background: var(--color-grey-100); }
+  .swatch--remain { background: var(--color-grey-20); }
+  .swatch--earned { background: var(--color-brand-primary-100); }
+  .swatch--paid { background: var(--color-warning-primary); }
+
+  /* Banners (info / reward / paid) */
+  .banner { display: flex; gap: 12px; align-items: flex-start; border-radius: 8px; padding: 14px 16px; margin-top: 20px; font-size: 14px; line-height: 1.5; }
+  .banner__icon { width: 24px; height: 24px; border-radius: 999px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .banner__icon .material-symbols-outlined { font-size: 15px; width: 15px; height: 15px; }
+  .banner__body { color: var(--color-grey-90); }
+  .banner__body b { color: var(--color-grey-100); }
+  .banner a { color: var(--color-grey-100); font-weight: 600; text-underline-offset: 2px; }
+  .banner--info { background: var(--color-grey-3); }
+  .banner--info .banner__icon { background: var(--color-grey-100); color: var(--color-white); }
+  .banner--reward { background: var(--color-container-brand); border: 1px solid var(--color-on-primary); }
+  .banner--reward .banner__icon { background: var(--color-brand-primary-100); color: var(--color-on-primary); }
+  .banner--paid { background: var(--color-warning-light); }
+  .banner--paid .banner__icon { background: var(--color-warning-primary); color: var(--color-warning-dark); }
+
+  /* Reward toast entrance animation */
+  .banner--reward.is-pop { animation: rewardPop 0.5s cubic-bezier(.2,.9,.3,1.2) both; }
+  @keyframes rewardPop { 0% { opacity: 0; transform: translateY(8px) scale(.98); } 100% { opacity: 1; transform: none; } }
+  .sparkle { display: inline-block; animation: sparkleSpin 0.7s ease both; }
+  @keyframes sparkleSpin { 0% { transform: rotate(-25deg) scale(0); } 100% { transform: none; } }
+
+  /* Empty-state explainer */
+  .explainer { text-align: center; padding: 12px 8px 4px; }
+  .explainer__hero { width: 56px; height: 56px; border-radius: 999px; background: var(--color-container-brand); border: 1px solid var(--color-on-primary); display: flex; align-items: center; justify-content: center; margin: 4px auto 16px; }
+  .explainer__hero .material-symbols-outlined { font-size: 28px; width: 28px; height: 28px; color: var(--color-on-primary); }
+  .explainer__title { font-family: var(--font-family-display); font-weight: 400; font-size: 1.6rem; margin: 0 0 8px; }
+  .explainer__lede { color: var(--color-text-helper); font-size: 0.95rem; max-width: 46ch; margin: 0 auto 22px; }
+  .how { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; max-width: 460px; margin: 0 auto 22px; }
+  .how__card { border: 1px solid var(--color-grey-12); border-radius: 10px; padding: 16px 12px; background: var(--color-grey-3); }
+  .how__card .material-symbols-outlined { font-size: 26px; width: 26px; height: 26px; color: var(--color-grey-90); margin-bottom: 8px; }
+  .how__big { font-family: var(--font-family-display); font-size: 1.5rem; line-height: 1; }
+  .how__small { font-size: 12.5px; color: var(--color-grey-70); margin-top: 4px; }
+  .how__eq { font-size: 1.4rem; color: var(--color-grey-40); }
+  .explainer__foot { font-size: 13px; color: var(--color-grey-70); }
+  .explainer__foot b { color: var(--color-grey-100); }
+
+  /* Primary action button (DESIGN.md button-primary) */
+  .btn-primary { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-family-system); font-size: 14px; font-weight: 600; height: 40px; padding: 0 18px; border-radius: 6px; background: var(--color-brand-primary-100); color: var(--color-on-primary); border: 1px solid var(--color-on-primary); cursor: pointer; text-decoration: none; }
+  .btn-primary:hover { background: #d9f200; }
+  .btn-primary .material-symbols-outlined { font-size: 18px; width: 18px; height: 18px; }
+  .reward-card__actions { margin-top: 20px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .cost-tally { font-size: 13px; color: var(--color-grey-70); }
+  .cost-tally b { color: var(--color-grey-100); font-size: 14px; }
+</style>
+</head>
+<body>
+  <div class="app">
+    <!-- Mobile-only top bar -->
+    <header class="admin-topbar">
+      <button class="admin-topbar__burger" type="button" aria-label="Open navigation" id="navToggle"><span class="material-symbols-outlined" aria-hidden="true">menu</span></button>
+      <span class="admin-topbar__school">Sarah&rsquo;s School</span>
+    </header>
+
+    <nav class="nav" aria-label="Admin navigation">
+      <div class="nav-school"><span class="nav-school-name">Sarah&rsquo;s School</span></div>
+      <div class="nav-body">
+        <div class="nav-rail">
+          <button class="rail-item" type="button" aria-label="Dashboard"><span class="material-symbols-outlined" aria-hidden="true">show_chart</span></button>
+          <button class="rail-item rail-item--active" type="button" aria-label="Users" aria-current="page"><span class="material-symbols-outlined" aria-hidden="true">group</span></button>
+          <button class="rail-item" type="button" aria-label="Site"><span class="material-symbols-outlined" aria-hidden="true">devices</span></button>
+          <button class="rail-item" type="button" aria-label="Sales"><span class="material-symbols-outlined" aria-hidden="true">paid</span></button>
+          <button class="rail-item" type="button" aria-label="Emails"><span class="material-symbols-outlined" aria-hidden="true">mail</span></button>
+          <button class="rail-item" type="button" aria-label="Apps"><span class="material-symbols-outlined" aria-hidden="true">dashboard_customize</span></button>
+          <button class="rail-item" type="button" aria-label="Settings"><span class="material-symbols-outlined" aria-hidden="true">settings</span></button>
+          <button class="rail-item rail-item--whatsnew" type="button" aria-label="What's new"><span class="material-symbols-outlined" aria-hidden="true">bolt</span></button>
+        </div>
+        <div class="nav-sub" aria-label="Users menu">
+          <div class="nav-sub-header">Users</div>
+          <a class="nav-sub-item" href="#">All students</a>
+          <a class="nav-sub-item nav-sub-item--active" href="#" aria-current="page">Import students</a>
+          <a class="nav-sub-item" href="#">Groups</a>
+          <a class="nav-sub-item" href="#">Admin access</a>
+        </div>
+      </div>
+      <div class="nav-user">
+        <span class="nav-user-name">Sarah Schachman</span>
+        <button class="nav-user-menu" type="button" aria-label="Account menu"><span class="material-symbols-outlined" aria-hidden="true">more_vert</span></button>
+      </div>
+    </nav>
+
+    <div class="nav-backdrop" id="navBackdrop"></div>
+
+    <div class="main">
+      <main class="page">
+        <div class="page-head">
+          <h1 class="page-title">Import students</h1>
+          <p class="page-sub">Bring your existing students into Teachable. Every 2 paid sales you make earns you a free import &mdash; so growth pays for itself.</p>
+        </div>
+
+        <!-- Prototype-only control -->
+        <div class="proto-controls" role="group" aria-label="Prototype state switcher">
+          <div class="proto-controls__label"><span class="material-symbols-outlined" aria-hidden="true">tune</span> Prototype state &mdash; not part of the real UI</div>
+          <div class="seg" id="seg">
+            <button data-state="empty" aria-pressed="false">New user</button>
+            <button data-state="earning" aria-pressed="true">Earning</button>
+            <button data-state="rewarded" aria-pressed="false">Just rewarded</button>
+            <button data-state="remaining" aria-pressed="false">Free imports left</button>
+            <button data-state="paid" aria-pressed="false">Paid territory</button>
+          </div>
+        </div>
+
+        <!-- Reward widget renders here -->
+        <div id="widget"></div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.fonts.load("20px 'Material Symbols Outlined'").then(function () {
+      document.documentElement.setAttribute('data-gmsfontstatus', 'loaded');
+    });
+    var app = document.querySelector('.app');
+    var toggle = document.getElementById('navToggle');
+    var backdrop = document.getElementById('navBackdrop');
+    if (toggle) toggle.addEventListener('click', function () { app.classList.toggle('nav-open'); });
+    if (backdrop) backdrop.addEventListener('click', function () { app.classList.remove('nav-open'); });
+  </script>
+
+  <script>
+  /* ============================================================
+     Import Rewards — usage-based reward model
+       • Every 2 paid sales  → 1 free import earned
+       • Imports beyond earned → $0.50 each
+     ============================================================ */
+  var PRICE = 0.50;
+
+  // Each state is an illustrative snapshot of one seller's account.
+  var STATES = {
+    empty:     { sales: 0,  used: 0,  pop: false },
+    earning:   { sales: 7,  used: 1,  pop: false },
+    rewarded:  { sales: 8,  used: 1,  pop: true  },
+    remaining: { sales: 8,  used: 3,  pop: false },
+    paid:      { sales: 8,  used: 8,  pop: false }
+  };
+
+  function derive(s) {
+    var earned = Math.floor(s.sales / 2);
+    var freeUsed = Math.min(s.used, earned);
+    var freeRemaining = Math.max(0, earned - s.used);
+    var paidImports = Math.max(0, s.used - earned);
+    var intoPair = s.sales % 2;                 // sales toward the next pair (0 or 1)
+    var salesUntilNext = intoPair === 0 ? 2 : 1;
+    return {
+      sales: s.sales, earned: earned, used: s.used,
+      freeUsed: freeUsed, freeRemaining: freeRemaining,
+      paidImports: paidImports, paidCost: paidImports * PRICE,
+      intoPair: intoPair, salesUntilNext: salesUntilNext, pop: s.pop
+    };
+  }
+
+  function money(n){ return '$' + n.toFixed(2); }
+
+  /* ---- Sub-renderers ---- */
+
+  function renderTracker(d) {
+    // Show completed pairs as earned tokens, plus the in-progress pair.
+    var completePairs = Math.floor(d.sales / 2);
+    var capPairs = 6;                            // keep the row tidy
+    var shown = Math.min(completePairs, capPairs);
+    var html = '';
+    for (var i = 0; i < shown; i++) {
+      html += '<div class="pair pair--complete">'
+            +   '<span class="pair__sales"><span class="dot dot--sold"><span class="material-symbols-outlined">sell</span></span><span class="dot dot--sold"><span class="material-symbols-outlined">sell</span></span></span>'
+            +   '<span class="pair__arrow"><span class="material-symbols-outlined">arrow_forward</span></span>'
+            +   '<span class="token token--earned"><span class="material-symbols-outlined">redeem</span></span>'
+            + '</div>';
+    }
+    if (completePairs > capPairs) {
+      html += '<div class="pair pair--complete" style="font-weight:600;color:var(--color-grey-90)">+' + (completePairs - capPairs) + ' more</div>';
+    }
+    // In-progress pair (only when there is partial progress toward the next import)
+    if (d.intoPair === 1) {
+      html += '<div class="pair">'
+            +   '<span class="pair__sales"><span class="dot dot--sold"><span class="material-symbols-outlined">sell</span></span><span class="dot"></span></span>'
+            +   '<span class="pair__arrow"><span class="material-symbols-outlined">arrow_forward</span></span>'
+            +   '<span class="token token--pending"><span class="material-symbols-outlined">redeem</span></span>'
+            + '</div>';
+    }
+    var caption = d.sales === 0
+      ? 'Make your first sale to start earning.'
+      : '<b>' + d.salesUntilNext + ' more ' + (d.salesUntilNext === 1 ? 'sale' : 'sales') + '</b> until your next free import.';
+    return '<div class="tracker"><div class="tracker__caption">' + caption + '</div><div class="pairs">' + html + '</div></div>';
+  }
+
+  function renderMeter(d) {
+    var label, valueText, segs = '', tick = '', legend = '';
+    if (d.paidImports > 0) {
+      // Overflow: lemon fill to the earned limit + a tick, then warning overflow.
+      var total = d.used;
+      var limitPct = (d.earned / total) * 100;
+      segs = '<div class="meter__seg meter__seg--full" style="width:' + limitPct + '%"></div>'
+           + '<div class="meter__seg meter__seg--paid" style="left:' + limitPct + '%;right:0"></div>';
+      tick = '<div class="meter__tick" style="left:' + limitPct + '%"></div>';
+      label = 'Imports used';
+      valueText = d.used + ' used &middot; ' + d.earned + ' free + ' + d.paidImports + ' paid';
+      legend = '<span class="legend-item"><span class="swatch swatch--earned"></span>Free (earned)</span>'
+             + '<span class="legend-item"><span class="swatch swatch--paid"></span>Paid &middot; ' + money(PRICE) + ' each</span>';
+    } else if (d.earned > 0 && d.freeRemaining === 0) {
+      // Exactly at limit — all free imports used, none paid yet.
+      segs = '<div class="meter__seg meter__seg--full" style="width:100%"></div>';
+      label = 'Free imports used';
+      valueText = d.used + ' / ' + d.earned + ' used';
+      legend = '<span class="legend-item"><span class="swatch swatch--earned"></span>All free imports used</span>';
+    } else {
+      // Under limit — black fill for used, grey track for remaining.
+      var usedPct = d.earned > 0 ? (d.freeUsed / d.earned) * 100 : 0;
+      segs = '<div class="meter__seg meter__seg--free" style="width:' + usedPct + '%"></div>';
+      label = 'Free imports';
+      valueText = d.earned === 0 ? '0 earned yet' : (d.freeRemaining + ' of ' + d.earned + ' remaining');
+      legend = '<span class="legend-item"><span class="swatch swatch--free"></span>Used (' + d.freeUsed + ')</span>'
+             + '<span class="legend-item"><span class="swatch swatch--remain"></span>Remaining (' + d.freeRemaining + ')</span>';
+    }
+    return '<div class="meter-block">'
+         +   '<div class="meter-row"><span class="meter-label">' + label + ' <span class="material-symbols-outlined" title="Info">info</span></span><span class="meter-value">' + valueText + '</span></div>'
+         +   '<div class="meter">' + segs + tick + '</div>'
+         +   '<div class="meter-legend">' + legend + '</div>'
+         + '</div>';
+  }
+
+  function renderEmpty() {
+    return '<div class="reward-card">'
+      + '<div class="reward-card__top"><span class="reward-card__eyebrow"><span class="material-symbols-outlined">redeem</span> Import rewards</span>'
+      +   '<span class="status-pill status-pill--neutral">Not started</span></div>'
+      + '<div class="reward-card__body">'
+      +   '<div class="explainer">'
+      +     '<div class="explainer__hero"><span class="material-symbols-outlined">redeem</span></div>'
+      +     '<h2 class="explainer__title">Your sales earn you free imports</h2>'
+      +     '<p class="explainer__lede">Bring your audience over without the upfront cost. Every 2 paid sales you make through Teachable earns you 1 free student import.</p>'
+      +     '<div class="how">'
+      +       '<div class="how__card"><span class="material-symbols-outlined">sell</span><div class="how__big">2 sales</div><div class="how__small">paid through Teachable</div></div>'
+      +       '<div class="how__eq">=</div>'
+      +       '<div class="how__card"><span class="material-symbols-outlined">redeem</span><div class="how__big">1 import</div><div class="how__small">free, yours to keep</div></div>'
+      +     '</div>'
+      +     '<p class="explainer__foot">Need to import more than you&rsquo;ve earned? Extra imports are just <b>' + money(PRICE) + ' each</b> &mdash; no subscription, pay only for what you use.</p>'
+      +     '<div class="reward-card__actions" style="justify-content:center"><a class="btn-primary" href="#"><span class="material-symbols-outlined">upload</span> Start an import</a></div>'
+      +   '</div>'
+      + '</div></div>';
+  }
+
+  function renderActive(d, stateKey) {
+    var pill, banner = '';
+    if (stateKey === 'rewarded') {
+      pill = '<span class="status-pill status-pill--brand">Reward earned</span>';
+    } else if (d.paidImports > 0) {
+      pill = '<span class="status-pill status-pill--paid">Paid imports</span>';
+    } else {
+      pill = '<span class="status-pill status-pill--neutral">Earning</span>';
+    }
+
+    // Headline readout
+    var readout = '<div class="ratio-readout">'
+      + '<span class="ratio-readout__num">' + d.sales + ' ' + (d.sales === 1 ? 'sale' : 'sales') + '</span>'
+      + '<span class="ratio-readout__arrow material-symbols-outlined">arrow_forward</span>'
+      + '<span class="ratio-readout__num">' + d.earned + ' free ' + (d.earned === 1 ? 'import' : 'imports') + '</span>'
+      + '<span class="ratio-readout__sub">earned so far</span>'
+      + '</div>';
+
+    // State banners
+    if (stateKey === 'rewarded') {
+      banner = '<div class="banner banner--reward is-pop">'
+        + '<span class="banner__icon"><span class="material-symbols-outlined sparkle">redeem</span></span>'
+        + '<div class="banner__body"><b>You just earned a free import! &#127873;</b><br>That&rsquo;s 2 more sales rewarded. You now have <b>' + d.freeRemaining + ' free imports</b> ready to use &mdash; no charge.</div>'
+        + '</div>';
+    } else if (d.paidImports > 0) {
+      banner = '<div class="banner banner--paid">'
+        + '<span class="banner__icon"><span class="material-symbols-outlined">info</span></span>'
+        + '<div class="banner__body">You&rsquo;ve used all <b>' + d.earned + ' free imports</b> you earned. Keep importing &mdash; extra imports are just <b>' + money(PRICE) + ' each</b>, and every 2 sales still earns another free one. <a href="#">See how it works</a></div>'
+        + '</div>';
+    } else if (d.freeRemaining > 0) {
+      banner = '<div class="banner banner--info">'
+        + '<span class="banner__icon"><span class="material-symbols-outlined">redeem</span></span>'
+        + '<div class="banner__body">You have <b>' + d.freeRemaining + ' free ' + (d.freeRemaining === 1 ? 'import' : 'imports') + '</b> ready to use. Keep selling to earn more &mdash; <b>' + d.salesUntilNext + ' more ' + (d.salesUntilNext === 1 ? 'sale' : 'sales') + '</b> unlocks the next one.</div>'
+        + '</div>';
+    }
+
+    // Actions / tally
+    var actions = '<div class="reward-card__actions">'
+      + '<a class="btn-primary" href="#"><span class="material-symbols-outlined">upload</span> Import students</a>';
+    if (d.paidImports > 0) {
+      actions += '<span class="cost-tally">This month&rsquo;s paid imports: <b>' + d.paidImports + ' &times; ' + money(PRICE) + ' = ' + money(d.paidCost) + '</b></span>';
+    }
+    actions += '</div>';
+
+    return '<div class="reward-card">'
+      + '<div class="reward-card__top"><span class="reward-card__eyebrow"><span class="material-symbols-outlined">redeem</span> Import rewards</span>' + pill + '</div>'
+      + '<div class="reward-card__body">'
+      +   readout
+      +   renderTracker(d)
+      +   renderMeter(d)
+      +   banner
+      +   actions
+      + '</div></div>';
+  }
+
+  function render(stateKey) {
+    var d = derive(STATES[stateKey]);
+    var html = stateKey === 'empty' ? renderEmpty() : renderActive(d, stateKey);
+    document.getElementById('widget').innerHTML = html;
+  }
+
+  var seg = document.getElementById('seg');
+  seg.addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-state]');
+    if (!btn) return;
+    seg.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'); });
+    render(btn.getAttribute('data-state'));
+  });
+
+  render('earning');
+  </script>
+</body>
+</html>
